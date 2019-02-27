@@ -1,3 +1,5 @@
 defmodule FinancialSystem.UserStruct do
-  defstruct name: nil, email: nil, value: nil
+  @moduledoc false
+  
+  defstruct [:name, :email, :value]
 end
