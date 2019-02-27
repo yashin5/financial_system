@@ -2,7 +2,7 @@ defmodule FinancialSystem do
   @moduledoc false  # TODO
   
   def create_user(name, email, currency, initial_value) do
-    %FinancialSystem.UserStruct{name: name, email: email, currency: currency, value: initial_value}
+    %FinancialSystem.UserStruct{name: name, email: email, currency: String.upcase(currency), value: initial_value}
   end
 
   def deposit(%FinancialSystem.UserStruct{value: value} = account, deposit_amount) when deposit_amount > 0 do
