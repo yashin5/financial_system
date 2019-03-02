@@ -7,7 +7,7 @@ defmodule FinancialSystem do
   alias FinancialSystem.SplitList, as: SplitList
 
   def create_user(name, email, currency, initial_value) do
-    %Account{name: name, email: email, currency: String.upcase(currency), value: initial_value}
+    %Account{name: name, email: email, currency: String.upcase(currency), value: to_decimal(initial_value)}
   end
 
   def deposit(%Account{value: value_to, currency: currency_to} = account_to, currency_from, deposit_amount) when deposit_amount > 0 do
@@ -86,10 +86,10 @@ defmodule FinancialSystem do
   end
 
   def add_value(account_to, value_to, currency_to, currency_from, action_amount) do
-    balance_value = convert(action_amount, currency_to, currency_from)
+    balance_value = convert(to_decimal(action_amount), currency_to, currency_from)
 
-    new_value_to = balance_value + value_to
-  
+    new_value_to = Decimal.add(balance_value, value_to)
+    |> Decimal.round(2)
     %Account{account_to | value: new_value_to}
   end
 
@@ -107,7 +107,7 @@ defmodule FinancialSystem do
     account_code = currency_rate()["quotes"]["USD#{account_code}"]
 
     if Map.has_key?(currency_rate()["quotes"], "USD#{code}") &&
-        value > 0 do
+        value > Decimal.add(0, 0) do
       cond do
         code == "USD" -> convert_to_USD(account_code, value)
         code != "USD" -> convert_to_others(code, value, account_code)
@@ -118,10 +118,25 @@ defmodule FinancialSystem do
   end
   
   def convert_to_USD(account_code, value) do
-    account_code * value
+    to_decimal(account_code)
+    |> Decimal.mult(value)
   end
 
   def convert_to_others(code, value, account_code) do
-    value / currency_rate()["quotes"]["USD#{code}"] * account_code
+    Decimal.div(value, to_decimal(currency_rate()["quotes"]["USD#{code}"]))
+    |> Decimal.mult( to_decimal(account_code))
+  end
+
+  def to_decimal(number) when is_number(number) do
+    cond do
+      is_integer(number) -> 
+        number = Integer.to_string(number)
+        {number, _rest} = Float.parse(number)
+        Decimal.from_float(number)
+      is_float(number) ->
+        Decimal.from_float(number)
+      true ->
+        raise(ArgumentError, message: "Please use a integer or float value.")
+    end
   end
 end
