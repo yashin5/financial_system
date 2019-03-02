@@ -104,9 +104,9 @@ defmodule FinancialSystem do
   def convert(value, code, account_code) do
     code = String.upcase(code)
     account_code = String.upcase(account_code)
-    account_code = currency_rate["quotes"]["USD#{account_code}"]
+    account_code = currency_rate()["quotes"]["USD#{account_code}"]
 
-    if Map.has_key?(currency_rate["quotes"], "USD#{code}") &&
+    if Map.has_key?(currency_rate()["quotes"], "USD#{code}") &&
         value > 0 do
       cond do
         code == "USD" -> convert_to_USD(account_code, value)
@@ -122,6 +122,6 @@ defmodule FinancialSystem do
   end
 
   def convert_to_others(code, value, account_code) do
-    value / currency_rate["quotes"]["USD#{code}"] * account_code
+    value / currency_rate()["quotes"]["USD#{code}"] * account_code
   end
 end

@@ -22,7 +22,8 @@ defmodule FinancialSystem.MixProject do
   defp deps do
     [
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
-      {:poison, "~> 3.1"}
+      {:poison, "~> 3.1"},
+      {:decimal, "~> 1.0"}
     ]
   end
 end
