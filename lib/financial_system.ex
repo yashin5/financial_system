@@ -47,14 +47,16 @@ defmodule FinancialSystem do
   end
 
   def map_split(account_to, split_amount) when split_amount > 0 do
-    cond do
-      percent_ok?(account_to) == true -> account_ok?(account_to) |> do_split(split_amount)
-      true -> "The total percent must be 100"
+    if percent_ok?(account_to) do 
+      account_ok?(account_to) 
+      |> do_split(split_amount)
+    else
+      raise(ArgumentError, message: "The total percent must be 100")
     end
   end
 
   def list_to_ok?(email_from, list_to) do 
-    Enum.map(list_to, fn %SplitList{ account: %Account{email: email_to}} -> email_from == email_to end)
+    Enum.map(list_to, fn %SplitList{account: %Account{email: email_to}} -> email_from == email_to end)
     |> Enum.member?(true)
   end
 
