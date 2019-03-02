@@ -25,6 +25,11 @@ defmodule FinancialSystem do
       add_value(account_to, value_to, transfer_amount)
   end
 
+  def list_to_ok?(email_from, list_to) do 
+    Enum.map(list_to, fn %SplitList{ account: %Account{email: email_to}} -> email_from == email_to end)
+    |> Enum.member?(true)
+  end
+
   def subtracts_value(account_from, value_from, action_amount) do
     new_value_from = value_from - action_amount
 
@@ -37,3 +42,4 @@ defmodule FinancialSystem do
     %Account{account_to | value: new_value_to}
   end
 end
+
