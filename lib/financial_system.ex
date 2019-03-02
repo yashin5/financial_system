@@ -25,6 +25,17 @@ defmodule FinancialSystem do
       add_value(account_to, value_to, transfer_amount)
   end
 
+  def do_split(account_to, split_amount) do
+    account_to
+    |> Enum.map(fn %SplitList{
+      account: %Account{value: value_to} = account, percent: percent} ->
+  
+      split_to = percent / 100 * split_amount
+  
+      add_value(account, value_to, split_to)
+    end)
+  end
+
   def map_split(account_to, split_amount) when split_amount > 0 do
     cond do
       percent_ok?(account_to) == true -> account_ok?(account_to) |> do_split(split_amount)
