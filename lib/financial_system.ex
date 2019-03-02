@@ -41,6 +41,14 @@ defmodule FinancialSystem do
     |> Enum.map(fn {_, res} -> res end)
   end
 
+  def percent_ok?(account_to) do
+    account_to
+    |> Enum.map(fn %SplitList{percent: percent} ->
+      percent
+    end)
+    |> Enum.sum() == 100
+  end
+
   def subtracts_value(account_from, value_from, action_amount) do
     new_value_from = value_from - action_amount
 
