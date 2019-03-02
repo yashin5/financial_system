@@ -89,4 +89,12 @@ defmodule FinancialSystem do
 
     %Account{account_to | value: new_value_to}
   end
+
+  def currency_rate() do
+    # Getting currency list
+    case File.read("currency_rate.json") do
+      {:ok, body} -> Poison.decode!(body)
+      {:error, _reason} -> {:error}
+    end
+  end
 end
