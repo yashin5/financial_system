@@ -7,7 +7,12 @@ defmodule FinancialSystem do
   alias FinancialSystem.SplitList, as: SplitList
 
   def create_user(name, email, currency, initial_value) do
-    %Account{name: name, email: email, currency: String.upcase(currency), value: to_decimal(initial_value)}
+    currency = String.upcase(currency)
+    if Map.has_key?(currency_rate()["quotes"], "USD#{currency}") do
+      %Account{name: name, email: email, currency: currency, value: to_decimal(initial_value)}
+    else
+      raise(ArgumentError, message: "Please add a valid currency.")
+    end
   end
 
   def deposit(%Account{value: value_to, currency: currency_to} = account_to, currency_from, deposit_amount) when deposit_amount > 0 do
