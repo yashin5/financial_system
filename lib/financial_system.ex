@@ -25,6 +25,16 @@ defmodule FinancialSystem do
       add_value(account_to, value_to, transfer_amount)
   end
 
+  def split(%Account{email: email_from, value: value_from} = account_from, list_to, split_amount)
+    when value_from >= split_amount and split_amount > 0 do
+    if list_to_ok?(email_from, list_to) do
+      raise(ArgumentError, message: "Cannot split from one account to the same.")
+    else
+      subtracts_value(account_from, value_from, split_amount)  
+      map_split(list_to, split_amount)
+    end
+  end
+
   def do_split(account_to, split_amount) do
     account_to
     |> Enum.map(fn %SplitList{
