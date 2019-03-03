@@ -1,4 +1,8 @@
 defmodule FinancialSystem.FinHelpers do
+  @moduledoc """
+  This module is responsable for helper other modules with
+  add, subtract and transform values to decimal.
+  """
   alias FinancialSystem.Account, as: Account
   alias FinancialSystem.CurrencyConvert, as: CurrencyConvert
 

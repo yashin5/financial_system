@@ -1,4 +1,8 @@
 defmodule FinancialSystem.CreateAccount do
+  @moduledoc """
+  This module is responsable for create user accounts.
+  """
+  
   alias FinancialSystem.Account, as: Account
   alias FinancialSystem.CurrencyConvert, as: CurrencyConvert
   alias FinancialSystem.FinHelpers, as: FinHelpers

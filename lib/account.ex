@@ -1,5 +1,7 @@
 defmodule FinancialSystem.Account do
-  @moduledoc false
+  @moduledoc """
+  This module make a struct for the user account.
+  """
 
   defstruct [:name, :email, :currency, :value]
 end

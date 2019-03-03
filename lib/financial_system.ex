@@ -1,7 +1,8 @@
 defmodule FinancialSystem do
-  # TODO
-
-  @moduledoc false
+  @moduledoc """
+  This module is responsable for all the transactions:
+  deposit, transfer, split transfer and show the account balance .
+  """
 
   alias FinancialSystem.Account, as: Account
   alias FinancialSystem.CurrencyConvert, as: CurrencyConvert
