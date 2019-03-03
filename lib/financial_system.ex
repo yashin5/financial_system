@@ -10,6 +10,10 @@ defmodule FinancialSystem do
     currency_is_valid?(currency, %Account{name: name, email: email, currency: currency, value: to_decimal(initial_value)})
   end
 
+  def get_value_in_account(%Account{value: value}) do
+    value
+  end
+
   def deposit(%Account{value: value_to, currency: currency_to} = account_to, currency_from, deposit_amount) when deposit_amount > 0 do
     currency_is_valid?(currency_to, add_value(account_to, value_to, currency_from, currency_to, deposit_amount))
   end
