@@ -133,7 +133,8 @@ defmodule FinancialSystem do
       func
     else
       raise(ArgumentError, message: "Please add a valid currency.")
-    end  end
+    end  
+  end
 
   def to_decimal(number) when is_number(number) do
     cond do
