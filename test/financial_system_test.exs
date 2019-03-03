@@ -182,6 +182,7 @@ defmodule FinancialSystemTest do
       %FinancialSystem.SplitList{account: account2, percent: 10},
       %FinancialSystem.SplitList{account: account3, percent: 90}
     ]
+
     list_to_ok = FinancialSystem.list_to_ok?("lotta", list_to)
 
     assert list_to_ok == true
