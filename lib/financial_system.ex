@@ -116,14 +116,14 @@ defmodule FinancialSystem do
     code = String.upcase(code)
     account_code = String.upcase(account_code)
     if currency_is_valid?(code, true) and
-      currency_is_valid?(account_code, true) and  value > Decimal.add(0, 0) do
+      currency_is_valid?(account_code, true) and value > Decimal.add(0, 0) do
         if code == "USD" do
           convert_to_USD(account_code, value)
         else  
           convert_to_others(code, value, account_code)
         end
     else
-      raise(ArgumentError, message: "invalid currency or value")
+      raise(ArgumentError, message: "invalid value")
     end
   end
   
