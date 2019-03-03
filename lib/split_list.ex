@@ -1,3 +1,3 @@
 defmodule FinancialSystem.SplitList do
-    defstruct [:account, :percent]
+  defstruct [:account, :percent]
 end
