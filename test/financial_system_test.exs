@@ -186,4 +186,28 @@ defmodule FinancialSystemTest do
 
     assert list_to_ok == true
   end
+
+  test "check if percent is 100" do
+    account2 = %FinancialSystem.Account{
+      name: "Is",
+      email: "this",
+      currency: "usd",
+      value: FinancialSystem.FinHelpers.to_decimal(100)
+    }
+
+    account3 = %FinancialSystem.Account{
+      name: "Whole",
+      email: "lotta",
+      currency: "usd",
+      value: FinancialSystem.FinHelpers.to_decimal(100)
+    }
+
+    list_to = [
+      %FinancialSystem.SplitList{account: account2, percent: 10},
+      %FinancialSystem.SplitList{account: account3, percent: 90}
+    ]
+
+    percent_ok = FinancialSystem.percent_ok?(list_to)
+    assert percent_ok == true
+  end
 end
