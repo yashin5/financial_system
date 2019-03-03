@@ -1,7 +1,5 @@
 # FinancialSystem
 
-**TODO: Add description**
-
 ## Features
 - Create account
 - Show value in account
