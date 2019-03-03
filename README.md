@@ -41,11 +41,11 @@ To run this project locally you need to have Elixir installed in your machine. A
 ##### Create user account
 
 ```elixir
-account1 = FinancialSystem.create_user("Mario Freitas", "marios@email.com", "BRL", 100)
-account2 = FinancialSystem.create_user("Mario Marcelo", "mm@email.com", "USD", 100)
-account3 = FinancialSystem.create_user("Maria Julia", "mjulia@email.com", "EUR", 100)
-account4 = FinancialSystem.create_user("Fernando Francisco", "ff@email.com", "CZK", 100)
-account5 = FinancialSystem.create_user("Antonio Marques", "antonio@email.com", "BRL", 100)
+account1 = FinancialSystem.CreateAccount.create_user("Mario Freitas", "marios@email.com", "BRL", 100)
+account2 = FinancialSystem.CreateAccount.create_user("Mario Marcelo", "mm@email.com", "USD", 100)
+account3 = FinancialSystem.CreateAccount.create_user("Maria Julia", "mjulia@email.com", "EUR", 100)
+account4 = FinancialSystem.CreateAccount.create_user("Fernando Francisco", "ff@email.com", "CZK", 100)
+account5 = FinancialSystem.CreateAccount.create_user("Antonio Marques", "antonio@email.com", "BRL", 100)
 ```
 ##### Show value in account
 
