@@ -137,4 +137,53 @@ defmodule FinancialSystemTest do
     map_split = FinancialSystem.map_split(list_to, 100, "usd")
     assert is_list(map_split)
   end
+
+  test "make the division of value" do
+    account2 = %FinancialSystem.Account{
+      name: "Is",
+      email: "this",
+      currency: "usd",
+      value: FinancialSystem.FinHelpers.to_decimal(100)
+    }
+
+    account3 = %FinancialSystem.Account{
+      name: "Whole",
+      email: "lotta",
+      currency: "usd",
+      value: FinancialSystem.FinHelpers.to_decimal(100)
+    }
+
+    list_to = [
+      %FinancialSystem.SplitList{account: account2, percent: 10},
+      %FinancialSystem.SplitList{account: account2, percent: 10},
+      %FinancialSystem.SplitList{account: account3, percent: 80}
+    ]
+
+    do_split = FinancialSystem.do_split(list_to, 100, "usd")
+    assert is_list(do_split)
+  end
+
+  test "check if have a same account in from and to list" do
+    account2 = %FinancialSystem.Account{
+      name: "Is",
+      email: "this",
+      currency: "usd",
+      value: FinancialSystem.FinHelpers.to_decimal(100)
+    }
+
+    account3 = %FinancialSystem.Account{
+      name: "Whole",
+      email: "lotta",
+      currency: "usd",
+      value: FinancialSystem.FinHelpers.to_decimal(100)
+    }
+
+    list_to = [
+      %FinancialSystem.SplitList{account: account2, percent: 10},
+      %FinancialSystem.SplitList{account: account3, percent: 90}
+    ]
+    list_to_ok = FinancialSystem.list_to_ok?("lotta", list_to)
+
+    assert list_to_ok == true
+  end
 end
