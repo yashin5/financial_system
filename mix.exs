@@ -23,7 +23,8 @@ defmodule FinancialSystem.MixProject do
     [
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:poison, "~> 3.1"},
-      {:decimal, "~> 1.0"}
+      {:decimal, "~> 1.0"},
+      {:ex_doc, "~> 0.12"}
     ]
   end
 end
