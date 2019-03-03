@@ -7,16 +7,11 @@ defmodule FinancialSystem do
   alias FinancialSystem.SplitList, as: SplitList
 
   def create_user(name, email, currency, initial_value) do
-    currency = String.upcase(currency)
-    if Map.has_key?(currency_rate()["quotes"], "USD#{currency}") do
-      %Account{name: name, email: email, currency: currency, value: to_decimal(initial_value)}
-    else
-      raise(ArgumentError, message: "Please add a valid currency.")
-    end
+    currency_is_valid?(currency, %Account{name: name, email: email, currency: currency, value: to_decimal(initial_value)})
   end
 
   def deposit(%Account{value: value_to, currency: currency_to} = account_to, currency_from, deposit_amount) when deposit_amount > 0 do
-    add_value(account_to, value_to, currency_from, currency_to, deposit_amount)
+    currency_is_valid?(currency_to, add_value(account_to, value_to, currency_from, currency_to, deposit_amount))
   end
 
   def transfer(
@@ -54,7 +49,7 @@ defmodule FinancialSystem do
 
   def map_split(account_to, split_amount, currency_from) when split_amount > 0 do
     if percent_ok?(account_to) do 
-      account_ok?(account_to) 
+      unite_equal_accounts(account_to) 
       |> do_split(split_amount, currency_from)
     else
       raise(ArgumentError, message: "The total percent must be 100")
@@ -66,7 +61,7 @@ defmodule FinancialSystem do
     |> Enum.member?(true)
   end
 
-  def account_ok?(account_to) do
+  def unite_equal_accounts(account_to) do
     account_to
     |> Enum.reduce(%{}, fn %SplitList{
                             account: %Account{email: email}} = sp,
@@ -118,7 +113,7 @@ defmodule FinancialSystem do
         code != "USD" -> convert_to_others(code, value, account_code)
       end
     else
-      raise(ArgumentError, message: "\ninvalid currency or value\n")
+      raise(ArgumentError, message: "invalid currency or value")
     end
   end
   
@@ -131,6 +126,14 @@ defmodule FinancialSystem do
     Decimal.div(value, to_decimal(currency_rate()["quotes"]["USD#{code}"]))
     |> Decimal.mult( to_decimal(account_code))
   end
+
+  def currency_is_valid?(currency, func)do
+    currency = String.upcase(currency)
+    if Map.has_key?(currency_rate()["quotes"], "USD#{currency}") do
+      func
+    else
+      raise(ArgumentError, message: "Please add a valid currency.")
+    end  end
 
   def to_decimal(number) when is_number(number) do
     cond do
