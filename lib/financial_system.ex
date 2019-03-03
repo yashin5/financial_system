@@ -19,10 +19,11 @@ defmodule FinancialSystem do
         %Account{email: email_to, value: value_to, currency: currency_to} = account_to,
         transfer_amount
       )
-      when email_from != email_to and value_from >= transfer_amount and transfer_amount > 0 do
+      when email_from != email_to and transfer_amount > 0 do
       subtracts_value(account_from, value_from, transfer_amount) 
 
       add_value(account_to, value_to, currency_from, currency_to, transfer_amount)
+      
   end
 
   def split(%Account{email: email_from, value: value_from, currency: currency_from} = account_from, list_to, split_amount)
@@ -80,9 +81,15 @@ defmodule FinancialSystem do
   end
 
   def subtracts_value(account_from, value_from, action_amount) do
-    new_value_from = value_from - action_amount
-
-    %Account{account_from | value: new_value_from}    
+    if Decimal.to_float(value_from) >= action_amount do
+      new_value_from = value_from 
+      |> Decimal.sub(action_amount)
+  
+      %Account{account_from | value: new_value_from}    
+    else
+      raise(ArgumentError, message: "This account dont have funds for this operation.")
+    end
+    
   end
 
   def add_value(account_to, value_to, currency_to, currency_from, action_amount) do
