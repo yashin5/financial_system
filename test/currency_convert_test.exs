@@ -41,4 +41,10 @@ defmodule CurrencyConvert do
 
     assert convert_from_others == 4.37
   end
+
+  test "check if currency is valid" do
+    currency_is_valid = FinancialSystem.CurrencyConvert.currency_is_valid?("brl", true)
+
+    assert currency_is_valid == true
+  end
 end
