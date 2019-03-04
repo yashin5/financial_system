@@ -9,10 +9,24 @@ defmodule FinancialSystem do
   alias FinancialSystem.FinHelpers, as: FinHelpers
   alias FinancialSystem.SplitList, as: SplitList
 
+  @doc """
+  Show the value in account.
+  ## Example
+      iex> account = FinancialSystem.CreateAccount.create_user("This", "email@email.com", "BRL", 100)
+      iex> FinancialSystem.get_value_in_account(account)
+      Decimal.add(100,0) |> Decimal.round(1)
+  """
   def get_value_in_account(%Account{value: value}) do
     value
   end
 
+  @doc """
+  Deposit a value in account.
+  ## Example
+      iex> account = FinancialSystem.CreateAccount.create_user("This", "email@email.com", "BRL", 100)
+      iex> FinancialSystem.deposit(account, "BRL", 100)
+      %FinancialSystem.Account{currency: "BRL", email: "email@email.com", name: "This", value: Decimal.add(200,0) |> Decimal.round(2)}
+  """
   def deposit(
         %Account{value: value_to, currency: currency_to} = account_to,
         currency_from,
@@ -25,6 +39,14 @@ defmodule FinancialSystem do
     )
   end
 
+  @doc """
+  Transfer value between accounts.
+  ## Example
+      iex> account = FinancialSystem.CreateAccount.create_user("This", "email@email.com", "BRL", 100)
+      iex> account2 = FinancialSystem.CreateAccount.create_user("is", "this@email.com", "BRL", 100)
+      iex> FinancialSystem.transfer(account2, account, 100)
+      %FinancialSystem.Account{currency: "BRL", email: "email@email.com", name: "This", value: Decimal.add(200,0) |> Decimal.round(2)}
+  """
   def transfer(
         %Account{email: email_from, value: value_from, currency: currency_from} = account_from,
         %Account{email: email_to, value: value_to, currency: currency_to} = account_to,
@@ -36,6 +58,15 @@ defmodule FinancialSystem do
     FinHelpers.add_value(account_to, value_to, currency_from, currency_to, transfer_amount)
   end
 
+  @doc """
+  Transfer value between accounts.
+  ## Example
+      iex> account = FinancialSystem.CreateAccount.create_user("This", "email@email.com", "BRL", 100)
+      iex> account2 = FinancialSystem.CreateAccount.create_user("is", "this@email.com", "BRL", 100)
+      iex> list = [%FinancialSystem.SplitList{account: account, percent: 100}]
+      iex> FinancialSystem.split(account2, list, 100)
+      [%FinancialSystem.Account{currency: "BRL", email: "email@email.com", name: "This", value: Decimal.add(200,0) |> Decimal.round(2)}]
+  """
   def split(
         %Account{email: email_from, value: value_from, currency: currency_from} = account_from,
         list_to,
@@ -50,6 +81,14 @@ defmodule FinancialSystem do
     end
   end
 
+  @doc """
+  Make the division of values.
+  ## Example
+      iex> account = FinancialSystem.CreateAccount.create_user("This", "email@email.com", "BRL", 100)
+      iex> list = [%FinancialSystem.SplitList{account: account, percent: 100}]
+      iex> FinancialSystem.do_split(list, 100, "BRL")
+      [%FinancialSystem.Account{currency: "BRL", email: "email@email.com", name: "This", value: Decimal.add(200,0) |> Decimal.round(2)}]
+  """
   def do_split(account_to, split_amount, currency_from) do
     account_to
     |> Enum.map(fn %SplitList{
@@ -62,6 +101,14 @@ defmodule FinancialSystem do
     end)
   end
 
+  @doc """
+  Treat the error in split.
+  ## Example
+      iex> account = FinancialSystem.CreateAccount.create_user("This", "email@email.com", "BRL", 100)
+      iex> list = [%FinancialSystem.SplitList{account: account, percent: 100}]
+      iex> FinancialSystem.map_split(list, 100, "BRL")
+      [%FinancialSystem.Account{currency: "BRL", email: "email@email.com", name: "This", value: Decimal.add(200,0) |> Decimal.round(2)}]
+  """
   def map_split(account_to, split_amount, currency_from) when split_amount > 0 do
     if percent_ok?(account_to) do
       unite_equal_accounts(account_to)
@@ -71,6 +118,14 @@ defmodule FinancialSystem do
     end
   end
 
+  @doc """
+  Treat the error in split.
+  ## Example
+      iex> account = FinancialSystem.CreateAccount.create_user("This", "email@email.com", "BRL", 100)
+      iex> list = [%FinancialSystem.SplitList{account: account, percent: 100}]
+      iex> FinancialSystem.list_to_ok?("email@email.com", list)
+      true
+  """
   def list_to_ok?(email_from, list_to) do
     Enum.map(list_to, fn %SplitList{account: %Account{email: email_to}} ->
       email_from == email_to
@@ -78,6 +133,15 @@ defmodule FinancialSystem do
     |> Enum.member?(true)
   end
 
+  @doc """
+  Check if have equal accounts and unite them
+  ## Example
+      iex> account = FinancialSystem.CreateAccount.create_user("This", "email@email.com", "BRL", 100)
+      iex> list = [%FinancialSystem.SplitList{account: account, percent: 90}, %FinancialSystem.SplitList{account: account, percent: 10}]
+      iex> unite_equal_accounts = FinancialSystem.unite_equal_accounts(list)
+      iex> Enum.reduce(unite_equal_accounts, %{}, fn x, acc -> Map.put(acc, :percent, x.percent) end)
+      %{percent: 100}
+  """
   def unite_equal_accounts(account_to) do
     account_to
     |> Enum.reduce(%{}, fn %SplitList{account: %Account{email: email}} = sp, acc ->
@@ -86,6 +150,14 @@ defmodule FinancialSystem do
     |> Enum.map(fn {_, res} -> res end)
   end
 
+  @doc """
+  Make the struct for split.
+  ## Example
+      iex> account = FinancialSystem.CreateAccount.create_user("This", "email@email.com", "BRL", 100)
+      iex> list = [%FinancialSystem.SplitList{account: account, percent: 100}]
+      iex> FinancialSystem.percent_ok?(list)
+      true
+  """
   def percent_ok?(account_to) do
     account_to
     |> Enum.map(fn %SplitList{percent: percent} ->
