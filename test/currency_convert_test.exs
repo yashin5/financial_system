@@ -14,10 +14,21 @@ defmodule CurrencyConvert do
       |> Decimal.from_float()
       |> Decimal.round(2)
 
-    decimal_value =
+    convert =
       Decimal.add(1, 0)
       |> FinancialSystem.CurrencyConvert.convert("USD", "BRL")
 
-    assert decimal_value == brl_value
+    assert convert == brl_value
+  end
+
+  test "convert currency for usd" do
+    eur_value =
+      FinancialSystem.CurrencyConvert.currency_rate()["quotes"]["USDEUR"]
+      |> Decimal.from_float()
+      |> Decimal.round(2)
+
+    convert_from_usd = FinancialSystem.CurrencyConvert.convert_from_USD("EUR", 1)
+
+    assert convert_from_usd == eur_value
   end
 end
