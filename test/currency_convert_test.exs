@@ -21,7 +21,7 @@ defmodule CurrencyConvert do
     assert convert == brl_value
   end
 
-  test "convert currency for usd" do
+  test "convert currency from usd to others" do
     eur_value =
       FinancialSystem.CurrencyConvert.currency_rate()["quotes"]["USDEUR"]
       |> Decimal.from_float()
@@ -30,5 +30,15 @@ defmodule CurrencyConvert do
     convert_from_usd = FinancialSystem.CurrencyConvert.convert_from_USD("EUR", 1)
 
     assert convert_from_usd == eur_value
+  end
+
+  test "convert currency from others to others" do
+    value_test = Decimal.add(1, 0)
+
+    convert_from_others =
+      FinancialSystem.CurrencyConvert.convert_from_others("EUR", value_test, "BRL")
+      |> Decimal.to_float()
+
+    assert convert_from_others == 4.37
   end
 end
