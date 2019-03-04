@@ -15,4 +15,12 @@ defmodule FinHelpersTest do
 
     assert add_value.value > account1.value
   end
+
+  test "transform number integer or float to decimal" do
+    to_decimal_integer = FinancialSystem.FinHelpers.to_decimal(10)
+    to_decimal_float = FinancialSystem.FinHelpers.to_decimal(10.0)
+    decimal_test = Decimal.add(10,0) |> Decimal.round(1)
+
+    assert to_decimal_integer == decimal_test and to_decimal_float == decimal_test
+  end
 end
