@@ -7,7 +7,14 @@ defmodule FinancialSystem.MixProject do
       version: "0.1.0",
       elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ]
     ]
   end
 
@@ -24,7 +31,8 @@ defmodule FinancialSystem.MixProject do
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:poison, "~> 3.1"},
       {:decimal, "~> 1.0"},
-      {:ex_doc, "~> 0.12"}
+      {:ex_doc, "~> 0.12"},
+      {:excoveralls, "~> 0.10", only: :test}
     ]
   end
 end

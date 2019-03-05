@@ -1,7 +1,7 @@
 defmodule FinancialSystem.CurrencyConvert do
-@moduledoc """
-This module make the conversion of values to this application.
-"""
+  @moduledoc """
+  This module make the conversion of values to this application.
+  """
 
   alias FinancialSystem.FinHelpers, as: FinHelpers
 
