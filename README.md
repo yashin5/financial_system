@@ -36,6 +36,7 @@ To run this project locally you need to have Elixir installed in your machine. A
 ## Useful commands
 - mix test
 - mix credo --strict
+- mix coveralls
 - mix docs
 - mix deps.get
 - mix format
