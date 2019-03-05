@@ -1,4 +1,8 @@
 defmodule FinancialSystem.CurrencyConvert do
+@moduledoc """
+This module make the conversion of values to this application.
+"""
+
   alias FinancialSystem.FinHelpers, as: FinHelpers
 
   @doc """
@@ -6,7 +10,7 @@ defmodule FinancialSystem.CurrencyConvert do
   ## Example
       FinancialSystem.CurrencyConvert.currency_rate()["quotes"]
   """
-  def currency_rate() do
+  def currency_rate do
     # Getting currency list
     case File.read("currency_rate.json") do
       {:ok, body} -> Poison.decode!(body)
@@ -65,7 +69,8 @@ defmodule FinancialSystem.CurrencyConvert do
     code = FinHelpers.to_decimal(currency_rate()["quotes"]["USD#{code}"])
     account_code = FinHelpers.to_decimal(currency_rate()["quotes"]["USD#{account_code}"])
 
-    Decimal.div(value, code)
+    value
+    |> Decimal.div(code)
     |> Decimal.mult(account_code)
     |> Decimal.round(2)
   end

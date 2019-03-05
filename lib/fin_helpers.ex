@@ -36,7 +36,8 @@ defmodule FinancialSystem.FinHelpers do
     balance_value = CurrencyConvert.convert(to_decimal(action_amount), currency_to, currency_from)
 
     new_value_to =
-      Decimal.add(balance_value, value_to)
+      balance_value
+      |> Decimal.add(value_to)
       |> Decimal.round(2)
 
     %Account{account_to | value: new_value_to}

@@ -24,7 +24,7 @@ defmodule FinancialSystemTest do
     }
 
     deposit = FinancialSystem.deposit(account1, "USD", 10)
-    new_value = Decimal.add(account1.value, 10) |> Decimal.round(2)
+    new_value = account1.value |> Decimal.add(10) |> Decimal.round(2)
 
     account1 = %FinancialSystem.Account{
       name: "This",
@@ -51,7 +51,7 @@ defmodule FinancialSystemTest do
       value: FinancialSystem.FinHelpers.to_decimal(100)
     }
 
-    new_value = Decimal.add(account2.value, 50) |> Decimal.round(2)
+    new_value = account2.value |> Decimal.add(50) |> Decimal.round(2)
     make_transfer = FinancialSystem.transfer(account1, account2, 50)
 
     account2 = %FinancialSystem.Account{
