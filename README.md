@@ -36,6 +36,9 @@ To run this project locally you need to have Elixir installed in your machine. A
 ## Useful commands
 - mix test
 - mix credo --strict
+- mix docs
+- mix deps.get
+- mix format
 - iex -S mix
 
 ##### Create user account
@@ -79,3 +82,7 @@ list_to = [
 FinancialSystem.split(account1, list_to, 100)
 ```
 
+## Reference
+- [Elixir school](https://elixirschool.com/pt/)
+- [O Guia de estilo elixir](https://github.com/gusaiani/elixir_style_guide/blob/master/README_ptBR.md)
+- [The complete Elixir and Phoenix bootcamp](https://www.udemy.com/the-complete-elixir-and-phoenix-bootcamp-and-tutorial/learn/v4/t/lecture/5911740?start=540)
