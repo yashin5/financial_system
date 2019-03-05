@@ -41,6 +41,8 @@ To run this project locally you need to have Elixir installed in your machine. A
 - mix format
 - iex -S mix
 
+## Usage
+
 ##### Create user account
 
 ```elixir
