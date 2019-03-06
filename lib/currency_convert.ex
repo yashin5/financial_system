@@ -10,6 +10,7 @@ defmodule FinancialSystem.CurrencyConvert do
   ## Example
       FinancialSystem.CurrencyConvert.currency_rate()["quotes"]
   """
+  @spec currency_rate() :: false | nil | true | binary() | [any()] | number() | {:error} | map()
   def currency_rate do
     # Getting currency list
     case File.read("currency_rate.json") do
@@ -26,6 +27,7 @@ defmodule FinancialSystem.CurrencyConvert do
       iex> FinancialSystem.CurrencyConvert.convert(Decimal.add(1,0), "EUR", "BRL") |> Decimal.to_float()
       4.37
   """
+  @spec convert(binary() | integer() | Decimal.t(), binary(), binary()) :: Decimal.t()
   def convert(value, code, account_code) do
     code = String.upcase(code)
     account_code = String.upcase(account_code)
@@ -50,6 +52,7 @@ defmodule FinancialSystem.CurrencyConvert do
       iex> FinancialSystem.CurrencyConvert.convert_from_USD("EUR", 1) |> Decimal.to_float()
       0.85
   """
+  @spec convert_from_USD(any(), binary() | integer() | Decimal.t()) :: Decimal.t()
   def convert_from_USD(account_code, value) do
     currency_rate()["quotes"]["USD#{account_code}"]
     |> FinHelpers.to_decimal()
@@ -65,6 +68,7 @@ defmodule FinancialSystem.CurrencyConvert do
       iex> FinancialSystem.CurrencyConvert.convert_from_others("EUR", Decimal.add(1,0), "BRL") |> Decimal.to_float()
       4.37
   """
+  @spec convert_from_others(any(), binary() | integer() | Decimal.t(), any()) :: Decimal.t()
   def convert_from_others(code, value, account_code) do
     code = FinHelpers.to_decimal(currency_rate()["quotes"]["USD#{code}"])
     account_code = FinHelpers.to_decimal(currency_rate()["quotes"]["USD#{account_code}"])
@@ -81,6 +85,7 @@ defmodule FinancialSystem.CurrencyConvert do
       iex> FinancialSystem.CurrencyConvert.currency_is_valid?("BRL", true)
       true
   """
+  @spec currency_is_valid?(binary(), any()) :: any()
   def currency_is_valid?(currency, func) do
     currency = String.upcase(currency)
 

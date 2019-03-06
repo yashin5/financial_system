@@ -13,6 +13,11 @@ defmodule FinancialSystem.FinHelpers do
       iex> FinancialSystem.FinHelpers.subtracts_value(account1, account1.value, 50)
       %FinancialSystem.Account{currency: "BRL", email: "is@email.com", name: "This", value: Decimal.add(50,0) |> Decimal.round(1)}
   """
+  @spec subtracts_value(
+          FinancialSystem.Account.t(),
+          Decimal.t(),
+          binary() | integer() | Decimal.t()
+        ) :: FinancialSystem.Account.t()
   def subtracts_value(account_from, value_from, action_amount) do
     if Decimal.to_float(value_from) >= action_amount do
       new_value_from =
@@ -32,6 +37,13 @@ defmodule FinancialSystem.FinHelpers do
       iex> FinancialSystem.FinHelpers.add_value(account1, account1.value, "BRL", account1.currency, 50)
       %FinancialSystem.Account{currency: "BRL", email: "is@email.com", name: "This", value: Decimal.add(150,0) |> Decimal.round(2)}
   """
+  @spec add_value(
+          FinancialSystem.Account.t(),
+          binary() | integer() | Decimal.t(),
+          binary(),
+          binary(),
+          number()
+        ) :: FinancialSystem.Account.t()
   def add_value(account_to, value_to, currency_to, currency_from, action_amount) do
     balance_value = CurrencyConvert.convert(to_decimal(action_amount), currency_to, currency_from)
 
@@ -51,6 +63,7 @@ defmodule FinancialSystem.FinHelpers do
       iex> _to_decimal_float = FinancialSystem.FinHelpers.to_decimal(10.0)
       Decimal.add(10,0) |> Decimal.round(1)
   """
+  @spec to_decimal(number()) :: Decimal.t()
   def to_decimal(number) when is_number(number) do
     cond do
       is_integer(number) ->

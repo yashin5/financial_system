@@ -16,6 +16,7 @@ defmodule FinancialSystem do
       iex> FinancialSystem.get_value_in_account(account)
       Decimal.add(100,0) |> Decimal.round(1)
   """
+  @spec get_value_in_account(FinancialSystem.Account.t()) :: any()
   def get_value_in_account(%Account{value: value}) do
     value
   end
@@ -27,6 +28,7 @@ defmodule FinancialSystem do
       iex> FinancialSystem.deposit(account, "BRL", 100)
       %FinancialSystem.Account{currency: "BRL", email: "email@email.com", name: "This", value: Decimal.add(200,0) |> Decimal.round(2)}
   """
+  @spec deposit(FinancialSystem.Account.t(), binary(), number()) :: any()
   def deposit(
         %Account{value: value_to, currency: currency_to} = account_to,
         currency_from,
@@ -47,6 +49,8 @@ defmodule FinancialSystem do
       iex> FinancialSystem.transfer(account2, account, 100)
       %FinancialSystem.Account{currency: "BRL", email: "email@email.com", name: "This", value: Decimal.add(200,0) |> Decimal.round(2)}
   """
+  @spec transfer(FinancialSystem.Account.t(), FinancialSystem.Account.t(), pos_integer()) ::
+          FinancialSystem.Account.t()
   def transfer(
         %Account{email: email_from, value: value_from, currency: currency_from} = account_from,
         %Account{email: email_to, value: value_to, currency: currency_to} = account_to,
@@ -67,6 +71,7 @@ defmodule FinancialSystem do
       iex> FinancialSystem.split(account2, list, 100)
       [%FinancialSystem.Account{currency: "BRL", email: "email@email.com", name: "This", value: Decimal.add(200,0) |> Decimal.round(2)}]
   """
+  @spec split(FinancialSystem.Account.t(), any(), binary() | integer() | Decimal.t()) :: [any()]
   def split(
         %Account{email: email_from, value: value_from, currency: currency_from} = account_from,
         list_to,
@@ -89,6 +94,7 @@ defmodule FinancialSystem do
       iex> FinancialSystem.do_split(list, 100, "BRL")
       [%FinancialSystem.Account{currency: "BRL", email: "email@email.com", name: "This", value: Decimal.add(200,0) |> Decimal.round(2)}]
   """
+  @spec do_split(any(), any(), any()) :: [any()]
   def do_split(account_to, split_amount, currency_from) do
     account_to
     |> Enum.map(fn %SplitList{
@@ -109,6 +115,7 @@ defmodule FinancialSystem do
       iex> FinancialSystem.map_split(list, 100, "BRL")
       [%FinancialSystem.Account{currency: "BRL", email: "email@email.com", name: "This", value: Decimal.add(200,0) |> Decimal.round(2)}]
   """
+  @spec map_split(any(), any(), any()) :: [any()]
   def map_split(account_to, split_amount, currency_from) when split_amount > 0 do
     if percent_ok?(account_to) do
       account_to
@@ -127,6 +134,7 @@ defmodule FinancialSystem do
       iex> FinancialSystem.list_to_ok?("email@email.com", list)
       true
   """
+  @spec list_to_ok?(any(), any()) :: boolean()
   def list_to_ok?(email_from, list_to) do
     list_to
     |> Enum.map(fn %SplitList{account: %Account{email: email_to}} ->
@@ -144,6 +152,7 @@ defmodule FinancialSystem do
       iex> Enum.reduce(unite_equal_accounts, %{}, fn x, acc -> Map.put(acc, :percent, x.percent) end)
       %{percent: 100}
   """
+  @spec unite_equal_accounts(any()) :: [any()]
   def unite_equal_accounts(account_to) do
     account_to
     |> Enum.reduce(%{}, fn %SplitList{account: %Account{email: email}} = sp, acc ->
@@ -160,6 +169,7 @@ defmodule FinancialSystem do
       iex> FinancialSystem.percent_ok?(list)
       true
   """
+  @spec percent_ok?(any()) :: boolean()
   def percent_ok?(account_to) do
     account_to
     |> Enum.map(fn %SplitList{percent: percent} ->
