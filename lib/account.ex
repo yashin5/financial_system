@@ -9,5 +9,6 @@ defmodule FinancialSystem.Account do
       iex> %FinancialSystem.Account{name: "This", email: "is@email.com", currency: "BRL", value: 200}
       %FinancialSystem.Account{currency: "BRL", email: "is@email.com", name: "This", value: 200}
   """
+
   defstruct [:name, :email, :currency, :value]
 end
