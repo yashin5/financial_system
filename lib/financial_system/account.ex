@@ -3,5 +3,8 @@ defmodule FinancialSystem.AccountDefinition do
   This module is responsable for detemrinate the struct of accounts.
   """
 
-  defstruct [:name, :email, :currency, :value]
+  @enforce_keys [:name, :currency, :value]
+
+
+  defstruct [:name, :currency, :value]
 end
