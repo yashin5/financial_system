@@ -42,4 +42,13 @@ defmodule FinancialSystem do
 
   def split() do
   end
+
+  def funds?(pid, value) do
+    %AccountDefinition{
+      name: _, currency: _, value: value_account} = GenServer.call(pid, :get_data)
+      case value_account >= value do
+        true -> {:ok, pid}
+        false -> {:error, "Does not have the necessary funds"}
+      end
+  end
 end
