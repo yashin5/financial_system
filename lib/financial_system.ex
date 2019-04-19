@@ -12,7 +12,7 @@ defmodule FinancialSystem do
   end
 
   def create(%AccountDefinition{name: name, currency: currency, value: value}) when not is_binary(name) or not is_binary(currency) or not is_number(value) do
-    IO.inspect("Name - #{name} and Currency - #{currency} must be a string and Value - #{value} must be a number.")
+    "Name - #{name} and Currency - #{currency} must be a string and Value - #{value} must be a number."
   end
 
   def create(_state), do: "Please use the correct data struct."
@@ -23,7 +23,12 @@ defmodule FinancialSystem do
 
   def show(_), do: "Please insert a valid PID"
 
-  def deposit() do
+  def deposit(pid, value) when is_pid(pid) and is_number(value) do
+    GenServer.cast(pid, {:deposit, value})
+  end
+
+  def deposit(pid, value) when not is_pid(pid) or not is_number(value) do
+    "The first arg - #{} - must be a pid and de second arg - #{} - must be a number"
   end
 
   def withdraw() do
