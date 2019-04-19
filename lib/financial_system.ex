@@ -26,15 +26,15 @@ defmodule FinancialSystem do
 
   def deposit(pid, value) when is_pid(pid) and is_number(value) do
     GenServer.cast(pid, {:deposit, value})
-    GenServer.call(pid, :get_data)
+    show(pid)
   end
 
   def deposit(_, _), do: "The first arg must be a pid and de second arg must be a number"
 
   def withdraw(pid, value) when is_pid(pid) and is_number(value) do
-    with {:ok, pid_ok} <- funds?(pid, value) do
-      GenServer.cast(pid_ok, {:withdraw, value})
-      GenServer.call(pid_ok, :get_data)
+    with {:ok, _} <- funds?(pid, value) do
+      GenServer.cast(pid, {:withdraw, value})
+      show(pid)
     else
       {:error, message} -> message
     end
@@ -46,10 +46,9 @@ defmodule FinancialSystem do
     when is_pid(pid_from) and is_pid(pid_to) and is_number(value) do
     with {:ok, _} <- funds?(pid_from, value) do
       GenServer.cast(pid_from, {:withdraw, value})
-      GenServer.call(pid_from, :get_data)
 
       GenServer.cast(pid_to, {:deposit, value})
-      GenServer.call(pid_to, :get_data)
+      show(pid_to)
     else
       {:error, message} -> message
     end
@@ -63,7 +62,7 @@ defmodule FinancialSystem do
       |> Enum.map(fn %SplitDefinition{account: pid_to, percent: percent} ->
         value_to_this_account = percent / 100 * value
 
-        split(pid_from, pid_to, value_to_this_account)
+        transfer(pid_from, pid_to, value_to_this_account)
       end)
     end
   end
