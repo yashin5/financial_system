@@ -86,7 +86,7 @@ defmodule FinancialSystem do
 
       case total_percent == 100 do
         true -> {:ok, true}
-        false -> {:error, raise(ArgumentError, message: "The percent must be 100.")}
+        false -> {:error, raise(ArgumentError, message: "The total percent must be 100.")}
       end
   end
 end
