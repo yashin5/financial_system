@@ -42,7 +42,7 @@ defmodule FinancialSystem do
 
   def withdraw(_, _), do: "The first arg must be a pid and de second arg must be a number"
 
-  def transfer(pid_from, pid_to, value)
+  def transfer(value, pid_from, pid_to)
     when is_pid(pid_from) and is_pid(pid_to) and is_number(value) do
     with {:ok, _} <- funds?(pid_from, value) do
       GenServer.cast(pid_from, {:withdraw, value})
@@ -60,9 +60,8 @@ defmodule FinancialSystem do
     with {:ok, _} <- funds?(pid_from, value) do
       split_list
       |> Enum.map(fn %SplitDefinition{account: pid_to, percent: percent} ->
-        value_to_this_account = percent / 100 * value
-
-        transfer(pid_from, pid_to, value_to_this_account)
+        percent / 100 * value
+        |> transfer(pid_from, pid_to)
       end)
     end
   end
