@@ -17,9 +17,11 @@ defmodule FinancialSystem do
 
   def create(_state), do: "Please use the correct data struct."
 
-  def show(pid) do
+  def show(pid) when is_pid(pid) do
     GenServer.call(pid, :get_data)
   end
+
+  def show(_), do: "Please insert a valid PID"
 
   def deposit() do
   end
