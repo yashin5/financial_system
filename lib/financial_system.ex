@@ -41,7 +41,16 @@ defmodule FinancialSystem do
 
   def withdraw(_, _), do: "The first arg must be a pid and de second arg must be a number"
 
-  def transfer() do
+  def transfer(pid_from, pid_to, value) do
+    with {:ok, pid_ok} <- funds?(pid_from, value) do
+      GenServer.cast(pid_ok, {:withdraw, value})
+      GenServer.call(pid_ok, :get_data)
+
+      GenServer.cast(pid_to, {:deposit, value})
+      GenServer.call(pid_to, :get_data)
+    else
+      {:error, message} -> message
+    end
   end
 
   def split() do
