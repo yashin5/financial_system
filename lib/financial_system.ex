@@ -25,6 +25,7 @@ defmodule FinancialSystem do
 
   def deposit(pid, value) when is_pid(pid) and is_number(value) do
     GenServer.cast(pid, {:deposit, value})
+    GenServer.call(pid, :get_data)
   end
 
   def deposit(pid, value) when not is_pid(pid) or not is_number(value) do
