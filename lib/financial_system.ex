@@ -31,7 +31,9 @@ defmodule FinancialSystem do
     "The first arg - #{} - must be a pid and de second arg - #{} - must be a number"
   end
 
-  def withdraw() do
+  def withdraw(pid, value) do
+    GenServer.cast(pid, {:withdraw, value})
+    GenServer.call(pid, :get_data)
   end
 
   def transfer() do
