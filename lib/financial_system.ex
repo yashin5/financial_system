@@ -28,14 +28,14 @@ defmodule FinancialSystem do
     GenServer.call(pid, :get_data)
   end
 
-  def deposit(pid, value) when not is_pid(pid) or not is_number(value) do
-    "The first arg - #{} - must be a pid and de second arg - #{} - must be a number"
-  end
+  def deposit(_, _), do: "The first arg must be a pid and de second arg must be a number"
 
-  def withdraw(pid, value) do
+  def withdraw(pid, value) when is_pid(pid) and is_number(value) do
     GenServer.cast(pid, {:withdraw, value})
     GenServer.call(pid, :get_data)
   end
+
+  def withdraw(_, _), do: "The first arg must be a pid and de second arg must be a number"
 
   def transfer() do
   end
