@@ -13,23 +13,23 @@ defmodule FinancialSystem do
   end
 
   def create(%AccountDefinition{name: name, currency: currency, value: value}) do
-    "Name -> #{name} <- and Currency -> #{currency} <- must be a string and Value -> #{value} <- must be a number and greater than 0."
+    raise(ArgumentError, message: "Name -> #{name} <- and Currency -> #{currency} <- must be a string and Value -> #{value} <- must be a number greater than 0.")
   end
 
-  def create(_), do: "Please use the correct data struct."
+  def create(_), do: raise(ArgumentError, message: "Please use the correct data struct.")
 
   def show(pid) when is_pid(pid) do
     GenServer.call(pid, :get_data)
   end
 
-  def show(_), do: "Please insert a valid PID"
+  def show(_), do: raise(ArgumentError, message: "Please insert a valid PID")
 
   def deposit(pid, value) when is_pid(pid) and is_number(value) do
     GenServer.cast(pid, {:deposit, value})
     show(pid)
   end
 
-  def deposit(_, _), do: "The first arg must be a pid and de second arg must be a number"
+  def deposit(_, _), do: raise(ArgumentError, message: "The first arg must be a pid and de second arg must be a number")
 
   def withdraw(pid, value) when is_pid(pid) and is_number(value) do
     with {:ok, _} <- funds?(pid, value) do
@@ -40,7 +40,7 @@ defmodule FinancialSystem do
     end
   end
 
-  def withdraw(_, _), do: "The first arg must be a pid and de second arg must be a number"
+  def withdraw(_, _), do: raise(ArgumentError, message: "The first arg must be a pid and de second arg must be a number")
 
   def transfer(value, pid_from, pid_to)
     when is_pid(pid_from) and is_pid(pid_to) and is_number(value) do
@@ -54,7 +54,7 @@ defmodule FinancialSystem do
     end
   end
 
-  def transfer(_, _, _), do: "The first and second args must be a pid and de third arg must be a number"
+  def transfer(_, _, _), do: raise(ArgumentError, message: "The first and second args must be a pid and de third arg must be a number")
 
   def split(pid_from, split_list, value) when is_pid(pid_from) and is_list(split_list) and is_number(value) do
     with {:ok, _} <- funds?(pid_from, value) do
@@ -63,6 +63,8 @@ defmodule FinancialSystem do
         percent / 100 * value
         |> transfer(pid_from, pid_to)
       end)
+    else
+      {:error, message} -> message
     end
   end
 
@@ -71,7 +73,7 @@ defmodule FinancialSystem do
       name: _, currency: _, value: value_account} = GenServer.call(pid, :get_data)
       case value_account >= value do
         true -> {:ok, pid}
-        false -> {:error, "Does not have the necessary funds"}
+        false -> {:error, raise(ArgumentError, message: "Does not have the necessary funds")}
       end
   end
 end
