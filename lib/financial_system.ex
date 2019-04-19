@@ -11,8 +11,8 @@ defmodule FinancialSystem do
       |> AccountState.start()
   end
 
-  def create(%AccountDefinition{name: name, currency: currency, value: value}) when not is_binary(name) or not is_binary(currency) or not is_number(value) do
-    "Name - #{name} and Currency - #{currency} must be a string and Value - #{value} must be a number and greater than 0."
+  def create(%AccountDefinition{name: name, currency: currency, value: value}) do
+    "Name -> #{name} <- and Currency -> #{currency} <- must be a string and Value -> #{value} <- must be a number and greater than 0."
   end
 
   def create(_), do: "Please use the correct data struct."
