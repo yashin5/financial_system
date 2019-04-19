@@ -1,5 +1,6 @@
 defmodule FinancialSystem do
   use GenServer
+
   alias FinancialSystem.AccountDefinition, as: AccountDefinition
   alias FinancialSystem.AccountState, as: AccountState
 
@@ -17,7 +18,7 @@ defmodule FinancialSystem do
   def create(_state), do: "Please use the correct data struct."
 
   def show(pid) do
-    Gen
+    GenServer.call(pid, :get_data)
   end
 
   def deposit() do
