@@ -3,6 +3,7 @@ defmodule FinancialSystem do
 
   alias FinancialSystem.AccountDefinition, as: AccountDefinition
   alias FinancialSystem.AccountState, as: AccountState
+  alias FinancialSystem.SplitDefinition, as: SplitDefinition
 
   def create(%AccountDefinition{
     name: name, currency: currency, value: value} = account)
@@ -56,7 +57,15 @@ defmodule FinancialSystem do
 
   def transfer(_, _, _), do: "The first and second args must be a pid and de third arg must be a number"
 
-  def split() do
+  def split(pid_from, split_list, value) when is_pid(pid_from) and is_list(split_list) and is_number(value) do
+    with {:ok, _} <- funds?(pid_from, value) do
+      split_list
+      |> Enum.map(fn %SplitDefinition{account: pid_to, percent: percent} ->
+        value_to_this_account = percent / 100 * value
+
+        split(pid_from, pid_to, value_to_this_account)
+      end)
+    end
   end
 
   def funds?(pid, value) do
