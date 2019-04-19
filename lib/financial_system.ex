@@ -53,6 +53,8 @@ defmodule FinancialSystem do
     end
   end
 
+  def transfer(_, _, _), do: "The first and second args must be a pid and de third arg must be a number"
+
   def split() do
   end
 
