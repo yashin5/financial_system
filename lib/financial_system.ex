@@ -27,11 +27,15 @@ defmodule FinancialSystem do
   def show(_), do: raise(ArgumentError, message: "Please insert a valid PID")
 
   def deposit(pid, currency_from, value) when is_pid(pid) and is_number(value) == value > 0 do
-    converted_value =
-      Currency.convert(currency_from, GenServer.call(pid, :get_data).currency, value)
+    with {:ok, _} <- Currency.currency_is_valid?(currency_from) do
+      converted_value =
+        Currency.convert(currency_from, GenServer.call(pid, :get_data).currency, value)
 
-    GenServer.cast(pid, {:deposit, converted_value})
-    GenServer.call(pid, :get_data)
+      GenServer.cast(pid, {:deposit, converted_value})
+      GenServer.call(pid, :get_data)
+    end
+  else
+    {:error, message} -> message
   end
 
   def deposit(_, _), do: raise(ArgumentError, message: "The first arg must be a pid and de second arg must be a number")
