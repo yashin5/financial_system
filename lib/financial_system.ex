@@ -4,6 +4,7 @@ defmodule FinancialSystem do
   alias FinancialSystem.AccountDefinition, as: AccountDefinition
   alias FinancialSystem.AccountState, as: AccountState
   alias FinancialSystem.Currency, as: Currency
+  alias FinancialSystem.FinHelper, as: FinHelper
   alias FinancialSystem.SplitDefinition, as: SplitDefinition
 
   def create(name, currency, value)
@@ -21,7 +22,8 @@ defmodule FinancialSystem do
   end
 
   def show(pid) when is_pid(pid) do
-    GenServer.call(pid, :get_data)
+    GenServer.call(pid, :get_data).value
+    |> FinHelper.to_decimal("USD#{GenServer.call(pid, :get_data).currency}")
   end
 
   def show(_), do: raise(ArgumentError, message: "Please insert a valid PID")
@@ -90,7 +92,7 @@ defmodule FinancialSystem do
 
   def split(_, _), do: raise(ArgumentError, message: "The first arg must be a pid, the second must be a list with %SplitDefinition{} and the third must be a value.")
 
-  def funds?(pid, value) when is_pid(pid) and is_number(value) do
+  def funds?(pid, value) do
     %AccountDefinition{value: value_account} = GenServer.call(pid, :get_data)
       case value_account >= value do
         true -> {:ok, pid}
@@ -109,7 +111,7 @@ defmodule FinancialSystem do
     end
   end
 
-  def percent_ok?(split_list) when is_list(split_list) do
+  def percent_ok?(split_list) do
     total_percent =
       split_list
       |>Enum.reduce(0, fn %SplitDefinition{percent: percent}, acc ->
@@ -122,7 +124,7 @@ defmodule FinancialSystem do
       end
   end
 
-  def unite_equal_account_split(split_list) when is_list(split_list) do
+  def unite_equal_account_split(split_list) do
     split_list
     |> Enum.reduce(%{}, fn %FinancialSystem.SplitDefinition{
     account: account, percent: percent} = sp, acc ->
