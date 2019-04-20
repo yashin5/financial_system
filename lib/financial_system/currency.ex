@@ -16,14 +16,14 @@ defmodule FinancialSystem.Currency do
     end
   end
 
-  def convert_value("USD", currency_to, value) do
+  def convert("USD", currency_to, value) do
     mult = &(&1 * currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"])
 
     value
     |> mult.()
   end
 
-  def convert_value(currency_from, currency_to, value) do
+  def convert(currency_from, currency_to, value) do
     div = &( &1 / currency_rate()["quotes"]["USD#{String.upcase(currency_from)}"])
     mult = &(&1 * currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"])
 
