@@ -8,11 +8,27 @@ defmodule FinancialSystem.Currency do
   end
 
   def currency_is_valid?(currency) do
-    is_valid? = Map.has_key?(currency_rate["quotes"], "USD#{String.upcase(currency)}")
+    is_valid? = Map.has_key?(currency_rate()["quotes"], "USD#{String.upcase(currency)}")
 
     case is_valid? do
       true -> {:ok, String.upcase(currency)}
       false -> {:error, raise(ArgumentError, message: "The currency is not valid. Please, check it and try again.")}
     end
+  end
+
+  def convert_value("USD", currency_to, value) do
+    mult = &(&1 * currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"])
+
+    value
+    |> mult.()
+  end
+
+  def convert_value(currency_from, currency_to, value) do
+    div = &( &1 / currency_rate()["quotes"]["USD#{String.upcase(currency_from)}"])
+    mult = &(&1 * currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"])
+
+    value
+    |> div.()
+    |> mult.()
   end
 end
