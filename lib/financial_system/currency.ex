@@ -8,7 +8,7 @@ defmodule FinancialSystem.Currency do
   end
 
   def currency_is_valid?(currency) do
-    is_valid? = Map.has_key?(currency["quotes"], "USD#{String.upcase(currency)}")
+    is_valid? = Map.has_key?(currency_rate["quotes"], "USD#{String.upcase(currency)}")
 
     case is_valid? do
       true -> {:ok, String.upcase(currency)}
