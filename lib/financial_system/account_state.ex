@@ -1,7 +1,6 @@
 defmodule FinancialSystem.AccountState do
   use GenServer
   alias FinancialSystem.AccountDefinition, as: AccountDefinition
-  alias FinancialSystem.Currency, as: Currency
 
   def start(state) do
     GenServer.start(__MODULE__, state)
