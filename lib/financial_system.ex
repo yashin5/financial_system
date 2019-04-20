@@ -59,7 +59,8 @@ defmodule FinancialSystem do
   def split(pid_from, split_list, value)
     when is_pid(pid_from) and is_list(split_list) and is_number(value) do
     with {:ok, _} <- funds?(pid_from, value),
-         {:ok, _} <- percent_ok?(split_list) do
+         {:ok, _} <- percent_ok?(split_list),
+         {:ok, _} <- split_list_have_account_from?(pid_from, split_list) do
 
       split_list
       |> unite_equal_account_split()
@@ -79,6 +80,17 @@ defmodule FinancialSystem do
         true -> {:ok, pid}
         false -> {:error, raise(ArgumentError, message: "Does not have the necessary funds")}
       end
+  end
+
+  def split_list_have_account_from?(account_from, split_list) do
+    have_or_not = split_list
+      |> Enum.map(fn %SplitDefinition{account: account_to} -> account_from == account_to end)
+      |> Enum.member?(true)
+
+    case have_or_not do
+      false -> {:ok, false}
+      true -> {:error, raise(ArgumentError, message: "You can not send to the same account as you are sending")}
+    end
   end
 
   def percent_ok?(split_list) do
