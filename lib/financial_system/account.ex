@@ -5,6 +5,5 @@ defmodule FinancialSystem.AccountDefinition do
 
   @enforce_keys [:name, :currency, :value]
 
-
   defstruct [:name, :currency, :value]
 end
