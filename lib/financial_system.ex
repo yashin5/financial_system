@@ -24,14 +24,14 @@ defmodule FinancialSystem do
 
   def show(_), do: raise(ArgumentError, message: "Please insert a valid PID")
 
-  def deposit(pid, value) when is_pid(pid) and is_number(value) do
+  def deposit(pid, value) when is_pid(pid) and is_number(value) == value > 0 do
     GenServer.cast(pid, {:deposit, value})
     GenServer.call(pid, :get_data)
   end
 
   def deposit(_, _), do: raise(ArgumentError, message: "The first arg must be a pid and de second arg must be a number")
 
-  def withdraw(pid, value) when is_pid(pid) and is_number(value) do
+  def withdraw(pid, value) when is_pid(pid) and is_number(value) == value > 0 do
     with {:ok, _} <- funds?(pid, value) do
       GenServer.cast(pid, {:withdraw, value})
       GenServer.call(pid, :get_data)
@@ -43,7 +43,7 @@ defmodule FinancialSystem do
   def withdraw(_, _), do: raise(ArgumentError, message: "The first arg must be a pid and de second arg must be a number")
 
   def transfer(value, pid_from, pid_to)
-    when is_pid(pid_from) and is_pid(pid_to) and is_number(value) do
+    when is_pid(pid_from) and is_pid(pid_to) and is_number(value) == value > 0 do
     with {:ok, _} <- funds?(pid_from, value) do
       GenServer.cast(pid_from, {:withdraw, value})
 
@@ -57,7 +57,7 @@ defmodule FinancialSystem do
   def transfer(_, _, _), do: raise(ArgumentError, message: "The second and third args must be a pid and de first arg must be a number")
 
   def split(pid_from, split_list, value)
-    when is_pid(pid_from) and is_list(split_list) and is_number(value) do
+    when is_pid(pid_from) and is_list(split_list) and is_number(value) == value > 0 do
     with {:ok, _} <- funds?(pid_from, value),
          {:ok, _} <- percent_ok?(split_list),
          {:ok, _} <- split_list_have_account_from?(pid_from, split_list) do
@@ -74,7 +74,9 @@ defmodule FinancialSystem do
     end
   end
 
-  def funds?(pid, value) do
+  def split(_, _), do: raise(ArgumentError, message: "The first arg must be a pid, the second must be a list with %SplitDefinition{} and the third must be a value.")
+
+  def funds?(pid, value) when is_pid(pid) and is_number(value) do
     %AccountDefinition{value: value_account} = GenServer.call(pid, :get_data)
       case value_account >= value do
         true -> {:ok, pid}
@@ -82,7 +84,7 @@ defmodule FinancialSystem do
       end
   end
 
-  def split_list_have_account_from?(account_from, split_list) do
+  def split_list_have_account_from?(account_from, split_list) when is_pid(account_from) and is_list(split_list) do
     have_or_not = split_list
       |> Enum.map(fn %SplitDefinition{account: account_to} -> account_from == account_to end)
       |> Enum.member?(true)
@@ -93,7 +95,7 @@ defmodule FinancialSystem do
     end
   end
 
-  def percent_ok?(split_list) do
+  def percent_ok?(split_list) when is_list(split_list) do
     total_percent =
       split_list
       |>Enum.reduce(0, fn %SplitDefinition{percent: percent}, acc ->
@@ -106,7 +108,7 @@ defmodule FinancialSystem do
       end
   end
 
-  def unite_equal_account_split(split_list) do
+  def unite_equal_account_split(split_list) when is_list(split_list) do
     split_list
     |> Enum.reduce(%{}, fn %FinancialSystem.SplitDefinition{
     account: account, percent: percent} = sp, acc ->
