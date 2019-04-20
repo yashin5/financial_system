@@ -16,11 +16,9 @@ defmodule FinancialSystem do
       end
   end
 
-  def create(%AccountDefinition{name: name, currency: currency, value: value}) do
+  def create(name, currency, value) do
     raise(ArgumentError, message: "Name -> #{name} <- and Currency -> #{currency} <- must be a string and Value -> #{value} <- must be a number greater than 0.")
   end
-
-  def create(_), do: raise(ArgumentError, message: "Please use the correct data struct.")
 
   def show(pid) when is_pid(pid) do
     GenServer.call(pid, :get_data)
@@ -28,8 +26,11 @@ defmodule FinancialSystem do
 
   def show(_), do: raise(ArgumentError, message: "Please insert a valid PID")
 
-  def deposit(pid, value) when is_pid(pid) and is_number(value) == value > 0 do
-    GenServer.cast(pid, {:deposit, value})
+  def deposit(pid, currency_from, value) when is_pid(pid) and is_number(value) == value > 0 do
+    converted_value =
+      Currency.convert(currency_from, GenServer.call(pid, :get_data).currency, value)
+
+    GenServer.cast(pid, {:deposit, converted_value})
     GenServer.call(pid, :get_data)
   end
 
@@ -51,7 +52,12 @@ defmodule FinancialSystem do
     with {:ok, _} <- funds?(pid_from, value) do
       GenServer.cast(pid_from, {:withdraw, value})
 
-      GenServer.cast(pid_to, {:deposit, value})
+      converted_value =
+        Currency.convert(
+          GenServer.call(pid_from, :get_data).currency,
+          GenServer.call(pid_to, :get_data).currency, value)
+
+      GenServer.cast(pid_to, {:deposit, converted_value})
       GenServer.call(pid_to, :get_data)
     else
       {:error, message} -> message
