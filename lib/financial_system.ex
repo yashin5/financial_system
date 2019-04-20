@@ -3,13 +3,17 @@ defmodule FinancialSystem do
 
   alias FinancialSystem.AccountDefinition, as: AccountDefinition
   alias FinancialSystem.AccountState, as: AccountState
+  alias FinancialSystem.Currency, as: Currency
   alias FinancialSystem.SplitDefinition, as: SplitDefinition
 
-  def create(%AccountDefinition{
-    name: name, currency: currency, value: value} = account)
+  def create(name, currency, value)
      when is_binary(name) and is_binary(currency) and is_number(value) == value > 0 do
-      account
-      |> AccountState.start()
+      with {:ok, currency_upcase} <- Currency.currency_is_valid?(currency) do
+        %AccountDefinition{ name: name, currency: currency_upcase, value: value }
+        |> AccountState.start()
+      else
+        {:error, message} -> message
+      end
   end
 
   def create(%AccountDefinition{name: name, currency: currency, value: value}) do
