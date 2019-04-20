@@ -56,11 +56,15 @@ defmodule FinancialSystem do
 
   def transfer(_, _, _), do: raise(ArgumentError, message: "The second and third args must be a pid and de first arg must be a number")
 
-  def split(pid_from, split_list, value) when is_pid(pid_from) and is_list(split_list) and is_number(value) do
+  def split(pid_from, split_list, value)
+    when is_pid(pid_from) and is_list(split_list) and is_number(value) do
     with {:ok, _} <- funds?(pid_from, value),
          {:ok, _} <- percent_ok?(split_list) do
+
       split_list
+      |> unite_qual_account_split()
       |> Enum.map(fn %SplitDefinition{account: pid_to, percent: percent} ->
+
         percent / 100 * value
         |> transfer(pid_from, pid_to)
       end)
@@ -79,7 +83,8 @@ defmodule FinancialSystem do
   end
 
   def percent_ok?(split_list) do
-    total_percent =split_list
+    total_percent =
+      split_list
       |>Enum.reduce(0, fn %SplitDefinition{percent: percent}, acc ->
         acc + percent
       end)
@@ -88,5 +93,15 @@ defmodule FinancialSystem do
         true -> {:ok, true}
         false -> {:error, raise(ArgumentError, message: "The total percent must be 100.")}
       end
+  end
+
+  def unite_qual_account_split(split_list) do
+    split_list
+    |> Enum.reduce(%{}, fn %FinancialSystem.SplitDefinition{
+    account: account, percent: percent} = sp, acc ->
+       Map.update(acc, account,sp, fn acc ->%{acc | percent: acc.percent + sp.percent}
+       end)
+    end)
+    |> Enum.map(fn {_, resp} -> resp end)
   end
 end
