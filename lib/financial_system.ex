@@ -94,7 +94,7 @@ defmodule FinancialSystem do
       end
   end
 
-  def unite_qual_account_split(split_list) do
+  def unite_equal_account_split(split_list) do
     split_list
     |> Enum.reduce(%{}, fn %FinancialSystem.SplitDefinition{
     account: account, percent: percent} = sp, acc ->
