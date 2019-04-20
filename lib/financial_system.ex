@@ -62,7 +62,7 @@ defmodule FinancialSystem do
          {:ok, _} <- percent_ok?(split_list) do
 
       split_list
-      |> unite_qual_account_split()
+      |> unite_equal_account_split()
       |> Enum.map(fn %SplitDefinition{account: pid_to, percent: percent} ->
 
         percent / 100 * value
