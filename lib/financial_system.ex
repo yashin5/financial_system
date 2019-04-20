@@ -26,7 +26,7 @@ defmodule FinancialSystem do
 
   def deposit(pid, value) when is_pid(pid) and is_number(value) do
     GenServer.cast(pid, {:deposit, value})
-    show(pid)
+    GenServer.call(pid, :get_data)
   end
 
   def deposit(_, _), do: raise(ArgumentError, message: "The first arg must be a pid and de second arg must be a number")
@@ -34,7 +34,7 @@ defmodule FinancialSystem do
   def withdraw(pid, value) when is_pid(pid) and is_number(value) do
     with {:ok, _} <- funds?(pid, value) do
       GenServer.cast(pid, {:withdraw, value})
-      show(pid)
+      GenServer.call(pid, :get_data)
     else
       {:error, message} -> message
     end
@@ -48,7 +48,7 @@ defmodule FinancialSystem do
       GenServer.cast(pid_from, {:withdraw, value})
 
       GenServer.cast(pid_to, {:deposit, value})
-      show(pid_to)
+      GenServer.call(pid_to, :get_data)
     else
       {:error, message} -> message
     end
@@ -74,8 +74,7 @@ defmodule FinancialSystem do
   end
 
   def funds?(pid, value) do
-    %AccountDefinition{
-      name: _, currency: _, value: value_account} = GenServer.call(pid, :get_data)
+    %AccountDefinition{value: value_account} = GenServer.call(pid, :get_data)
       case value_account >= value do
         true -> {:ok, pid}
         false -> {:error, raise(ArgumentError, message: "Does not have the necessary funds")}
