@@ -17,6 +17,7 @@ defmodule FinancialSystemTest do
     {:ok, pid} = FinancialSystem.create("Yashin Santos", "BRL", 10)
 
     assert FinancialSystem.show(pid)
+    assert FinancialSystem.show(pid) == Decimal.from_float(10.0) |> Decimal.round(2)
   end
 
   test "User should be able to deposit a value in account" do
