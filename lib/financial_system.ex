@@ -1,4 +1,8 @@
 defmodule FinancialSystem do
+  @moduledoc """
+  This module is responsable to implement the financial operations.
+  """
+
   use GenServer
 
   alias FinancialSystem.AccountDefinition, as: AccountDefinition

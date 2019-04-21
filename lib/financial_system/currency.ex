@@ -1,4 +1,8 @@
 defmodule FinancialSystem.Currency do
+  @moduledoc """
+  This module is responsable for make conversion of the values in financial operations.
+  """
+
   @spec currency_rate() :: map()
   defp currency_rate do
     case File.read("currency_rate.json") do

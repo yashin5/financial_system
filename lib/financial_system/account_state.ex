@@ -1,4 +1,7 @@
 defmodule FinancialSystem.AccountState do
+  @moduledoc """
+  This module is responsable for keep and managing the accounts state.
+  """
   use GenServer
   alias FinancialSystem.AccountDefinition, as: AccountDefinition
 

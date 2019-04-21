@@ -1,4 +1,9 @@
 defmodule FinancialSystem.FinHelper do
+  @moduledoc """
+  This module is responsable to help other modules with the financial operations, transforming
+  a value in Decimal to show to the user, for example.
+  """
+
   alias FinancialSystem.SplitDefinition, as: SplitDefinition
 
   @type account :: %FinancialSystem.AccountDefinition{
