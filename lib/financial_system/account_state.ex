@@ -2,10 +2,12 @@ defmodule FinancialSystem.AccountState do
   use GenServer
   alias FinancialSystem.AccountDefinition, as: AccountDefinition
 
+  @spec start(any()) :: {:ok, pid()}
   def start(state) do
     GenServer.start(__MODULE__, state)
   end
 
+  @spec init(any()) :: {:ok, any()}
   def init(state) do
     {:ok, state}
   end
