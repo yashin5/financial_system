@@ -11,6 +11,12 @@ defmodule FinancialSystem.Currency do
     end
   end
 
+  @doc """
+    Verify if currency is valid.
+
+  ## Examples
+    currency_is_valid?("BRL")
+  """
   @spec currency_is_valid?(String.t()) :: {:ok, String.t()} | {:error, String.t()}
   def currency_is_valid?(currency) do
     is_valid? = Map.has_key?(currency_rate()["quotes"], "USD#{String.upcase(currency)}")
@@ -27,11 +33,23 @@ defmodule FinancialSystem.Currency do
     end
   end
 
+  @doc """
+    converts the values from USD ​​based on the currency.
+
+  ## Examples
+    convert("USD", "BRL", 10)
+  """
   @spec convert(String.t(), pid(), number()) :: number()
   def convert("USD", currency_to, value) do
     value * currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"]
   end
 
+  @doc """
+    converts the values ​based on the currency.
+
+  ## Examples
+    convert("EUR", "BRL", 10)
+  """
   @spec convert(String.t(), String.t(), number()) :: number()
   def convert(currency_from, currency_to, value) do
     value / currency_rate()["quotes"]["USD#{String.upcase(currency_from)}"] *

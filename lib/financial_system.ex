@@ -5,20 +5,24 @@ defmodule FinancialSystem do
 
   use GenServer
 
-  alias FinancialSystem.AccountDefinition, as: AccountDefinition
+  alias FinancialSystem.Account, as: Account
   alias FinancialSystem.AccountState, as: AccountState
   alias FinancialSystem.Currency, as: Currency
   alias FinancialSystem.FinHelper, as: FinHelper
-  alias FinancialSystem.SplitDefinition, as: SplitDefinition
+  alias FinancialSystem.Split, as: Split
 
-  @type account :: %AccountDefinition{name: String.t(), currency: String.t(), value: number()}
-  @type account_split :: %SplitDefinition{account: account(), percent: number()}
+  @doc """
+    Create user accounts
 
+  ## Examples
+    FinancialSystem.create("Yashin Santos",  "EUR", 220)
+  """
   @spec create(String.t(), String.t(), number()) :: {:ok, pid()} | {:error, String.t()}
   def create(name, currency, value)
       when is_binary(name) and is_binary(currency) and is_number(value) == value > 0 do
-    with {:ok, currency_upcase} <- Currency.currency_is_valid?(currency) do
-      %AccountDefinition{name: name, currency: currency_upcase, value: value}
+    with {:ok, currency_upcase} <- Currency.currency_is_valid?(currency),
+         true <- byte_size(name) > 0 do
+      %Account{name: name, currency: currency_upcase, value: value}
       |> AccountState.start()
     else
       {:error, message} -> message
@@ -33,6 +37,13 @@ defmodule FinancialSystem do
     )
   end
 
+  @doc """
+    Show the value in account.
+
+  ## Examples
+    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
+    FinancialSystem.show(pid)
+  """
   @spec show(pid()) :: Decimal.t()
   def show(pid) when is_pid(pid) do
     GenServer.call(pid, :get_data).value
@@ -42,7 +53,14 @@ defmodule FinancialSystem do
   @spec show(any()) :: String.t()
   def show(_), do: raise(ArgumentError, message: "Please insert a valid PID")
 
-  @spec deposit(pid(), String.t(), number()) :: account() | {:error, String.t()}
+  @doc """
+    Deposit value in account.
+
+  ## Examples
+    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
+    FinancialSystem.deposit(pid, "BRL", 10)
+  """
+  @spec deposit(pid(), String.t(), number()) :: Account.t() | {:error, String.t()}
   def deposit(pid, currency_from, value) when is_pid(pid) and is_number(value) == value > 0 do
     case Currency.currency_is_valid?(currency_from) do
       {:ok, _} ->
@@ -66,7 +84,14 @@ defmodule FinancialSystem do
         message: "The first arg must be a pid and de second arg must be a number"
       )
 
-  @spec withdraw(pid(), number()) :: account() | {:error, String.t()}
+  @doc """
+    Takes out the value of an account.
+
+  ## Examples
+    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
+    FinancialSystem.withdraw(pid, 10)
+  """
+  @spec withdraw(pid(), number()) :: Account.t() | {:error, String.t()}
   def withdraw(pid, value) when is_pid(pid) and is_number(value) == value > 0 do
     with true <- FinHelper.funds?(pid, value) do
       GenServer.cast(pid, {:withdraw, value})
@@ -83,7 +108,15 @@ defmodule FinancialSystem do
         message: "The first arg must be a pid and de second arg must be a number"
       )
 
-  @spec transfer(number(), pid(), pid()) :: account() | {:error, String.t()}
+  @doc """
+   Transfer of values ​​between accounts.
+
+  ## Examples
+    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
+    {_, pid2} = FinancialSystem.create("Antonio Marcos", "BRL", 100)
+    FinancialSystem.withdraw(15, pid, pid2)
+  """
+  @spec transfer(number(), pid(), pid()) :: Account.t() | {:error, String.t()}
   def transfer(value, pid_from, pid_to)
       when is_pid(pid_from) and is_pid(pid_to) and is_number(value) == value > 0 do
     with true <- FinHelper.funds?(pid_from, value) do
@@ -110,7 +143,17 @@ defmodule FinancialSystem do
         message: "The second and third args must be a pid and de first arg must be a number"
       )
 
-  @spec split(pid(), account_split(), number()) :: [account()]
+  @doc """
+   Transfer of values ​​between multiple accounts.
+
+  ## Examples
+    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
+    {_, pid2} = FinancialSystem.create("Antonio Marcos", "BRL", 100)
+    {_, pid3} = FinancialSystem.create("Mateus Mathias", "BRL", 100)
+    split_list = [%FinancialSystem.SplitDefinition{account: pid2, percent: 80}, %FinancialSystem.SplitDefinition{account: pid3, percent: 20}]
+    FinancialSystem.split(pid, split_list, 100)
+  """
+  @spec split(pid(), Split.t(), number()) :: [Account.t()]
   def split(pid_from, split_list, value)
       when is_pid(pid_from) and is_list(split_list) and is_number(value) == value > 0 do
     with true <- FinHelper.funds?(pid_from, value),
@@ -118,7 +161,7 @@ defmodule FinancialSystem do
          false <- FinHelper.split_list_have_account_from?(pid_from, split_list) do
       split_list
       |> FinHelper.unite_equal_account_split()
-      |> Enum.map(fn %SplitDefinition{account: pid_to, percent: percent} ->
+      |> Enum.map(fn %Split{account: pid_to, percent: percent} ->
         (percent / 100 * value)
         |> transfer(pid_from, pid_to)
       end)
