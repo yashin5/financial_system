@@ -64,7 +64,7 @@ defmodule FinancialSystem do
 
   @spec withdraw(pid(), number()) :: account() | {:error, String.t()}
   def withdraw(pid, value) when is_pid(pid) and is_number(value) == value > 0 do
-    with true <- funds?(pid, value) do
+    with true <- FinHelper.funds?(pid, value) do
       GenServer.cast(pid, {:withdraw, value})
       GenServer.call(pid, :get_data)
     else
@@ -82,7 +82,7 @@ defmodule FinancialSystem do
   @spec transfer(number(), pid(), pid()) :: account() | {:error, String.t()}
   def transfer(value, pid_from, pid_to)
       when is_pid(pid_from) and is_pid(pid_to) and is_number(value) == value > 0 do
-    with true <- funds?(pid_from, value) do
+    with true <- FinHelper.funds?(pid_from, value) do
       GenServer.cast(pid_from, {:withdraw, value})
 
       converted_value =
@@ -109,11 +109,11 @@ defmodule FinancialSystem do
   @spec split(pid(), account_split(), number()) :: [account()]
   def split(pid_from, split_list, value)
       when is_pid(pid_from) and is_list(split_list) and is_number(value) == value > 0 do
-    with true <- funds?(pid_from, value),
-         true <- percent_ok?(split_list),
-         false <- split_list_have_account_from?(pid_from, split_list) do
+    with true <- FinHelper.funds?(pid_from, value),
+         true <- FinHelper.percent_ok?(split_list),
+         false <- FinHelper.split_list_have_account_from?(pid_from, split_list) do
       split_list
-      |> unite_equal_account_split()
+      |> FinHelper.unite_equal_account_split()
       |> Enum.map(fn %SplitDefinition{account: pid_to, percent: percent} ->
         (percent / 100 * value)
         |> transfer(pid_from, pid_to)
@@ -130,53 +130,4 @@ defmodule FinancialSystem do
         message:
           "The first arg must be a pid, the second must be a list with %SplitDefinition{} and the third must be a value."
       )
-
-  @spec funds?(pid(), number()) :: true
-  def funds?(pid, value) do
-    case GenServer.call(pid, :get_data).value >= value do
-      true -> true
-      false -> {:error, raise(ArgumentError, message: "Does not have the necessary funds")}
-    end
-  end
-
-  @spec split_list_have_account_from?(pid(), list(account_split())) :: false | {:error, String.t()}
-  def split_list_have_account_from?(account_from, split_list)
-      when is_pid(account_from) and is_list(split_list) do
-    have_or_not =
-      split_list
-      |> Enum.map(fn %SplitDefinition{account: account_to} -> account_from == account_to end)
-      |> Enum.member?(true)
-
-    case have_or_not do
-      false ->
-        false
-
-      true ->
-        {:error,
-         raise(ArgumentError, message: "You can not send to the same account as you are sending")}
-    end
-  end
-
-  @spec percent_ok?(list(account_split())) :: boolean() | {:error, String.t()}
-  def percent_ok?(split_list) do
-    total_percent =
-      split_list
-      |> Enum.reduce(0, fn %SplitDefinition{percent: percent}, acc ->
-        acc + percent
-      end)
-
-    case total_percent == 100 do
-      true -> true
-      false -> {:error, raise(ArgumentError, message: "The total percent must be 100.")}
-    end
-  end
-
-  @spec unite_equal_account_split(list(account_split())) :: list(account_split())
-  def unite_equal_account_split(split_list) do
-    split_list
-    |> Enum.reduce(%{}, fn %FinancialSystem.SplitDefinition{account: account} = sp, acc ->
-      Map.update(acc, account, sp, fn acc -> %{acc | percent: acc.percent + sp.percent} end)
-    end)
-    |> Enum.map(fn {_, resp} -> resp end)
-  end
 end

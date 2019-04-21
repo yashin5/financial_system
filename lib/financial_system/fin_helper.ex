@@ -1,5 +1,14 @@
 defmodule FinancialSystem.FinHelper do
+  alias FinancialSystem.SplitDefinition, as: SplitDefinition
 
+  @type account :: %FinancialSystem.AccountDefinition{
+          name: String.t(),
+          currency: String.t(),
+          value: number()
+        }
+  @type account_split :: %FinancialSystem.SplitDefinition{account: account(), percent: number()}
+
+  @spec to_decimal(number(), String.t()) :: Decimal.t()
   def to_decimal(value, currency) when is_number(value) do
     case is_integer(value) do
       true -> (value / 1) |> Decimal.from_float() |> convert_round_to_iso(currency)
@@ -7,164 +16,214 @@ defmodule FinancialSystem.FinHelper do
     end
   end
 
+  @spec funds?(pid(), number()) :: true
+  def funds?(pid, value) do
+    case GenServer.call(pid, :get_data).value >= value do
+      true -> true
+      false -> {:error, raise(ArgumentError, message: "Does not have the necessary funds")}
+    end
+  end
+
+  @spec split_list_have_account_from?(pid(), list(account_split())) ::
+          false | {:error, String.t()}
+  def split_list_have_account_from?(account_from, split_list)
+      when is_pid(account_from) and is_list(split_list) do
+    have_or_not =
+      split_list
+      |> Enum.map(fn %SplitDefinition{account: account_to} -> account_from == account_to end)
+      |> Enum.member?(true)
+
+    case have_or_not do
+      false ->
+        false
+
+      true ->
+        {:error,
+         raise(ArgumentError, message: "You can not send to the same account as you are sending")}
+    end
+  end
+
+  @spec percent_ok?(list(account_split())) :: boolean() | {:error, String.t()}
+  def percent_ok?(split_list) do
+    total_percent =
+      split_list
+      |> Enum.reduce(0, fn %SplitDefinition{percent: percent}, acc ->
+        acc + percent
+      end)
+
+    case total_percent == 100 do
+      true -> true
+      false -> {:error, raise(ArgumentError, message: "The total percent must be 100.")}
+    end
+  end
+
+  @spec unite_equal_account_split(list(account_split())) :: list(account_split())
+  def unite_equal_account_split(split_list) do
+    split_list
+    |> Enum.reduce(%{}, fn %FinancialSystem.SplitDefinition{account: account} = sp, acc ->
+      Map.update(acc, account, sp, fn acc -> %{acc | percent: acc.percent + sp.percent} end)
+    end)
+    |> Enum.map(fn {_, resp} -> resp end)
+  end
+
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDBHD") do
+  defp convert_round_to_iso(value, "USDBHD") do
     value
     |> Decimal.round(3)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDBIF") do
+  defp convert_round_to_iso(value, "USDBIF") do
     value
     |> Decimal.round(0)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDCLF") do
+  defp convert_round_to_iso(value, "USDCLF") do
     value
     |> Decimal.round(4)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDCLP") do
+  defp convert_round_to_iso(value, "USDCLP") do
     value
     |> Decimal.round(0)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDDJF") do
+  defp convert_round_to_iso(value, "USDDJF") do
     value
     |> Decimal.round(0)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDGNF") do
+  defp convert_round_to_iso(value, "USDGNF") do
     value
     |> Decimal.round(0)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDIQD") do
+  defp convert_round_to_iso(value, "USDIQD") do
     value
     |> Decimal.round(3)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDISK") do
+  defp convert_round_to_iso(value, "USDISK") do
     value
     |> Decimal.round(0)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDJOD") do
+  defp convert_round_to_iso(value, "USDJOD") do
     value
     |> Decimal.round(3)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDJPY") do
+  defp convert_round_to_iso(value, "USDJPY") do
     value
     |> Decimal.round(0)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDKMF") do
+  defp convert_round_to_iso(value, "USDKMF") do
     value
     |> Decimal.round(0)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDKRW") do
+  defp convert_round_to_iso(value, "USDKRW") do
     value
     |> Decimal.round(0)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDKWD") do
+  defp convert_round_to_iso(value, "USDKWD") do
     value
     |> Decimal.round(3)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDLYD") do
+  defp convert_round_to_iso(value, "USDLYD") do
     value
     |> Decimal.round(3)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDOMR") do
+  defp convert_round_to_iso(value, "USDOMR") do
     value
     |> Decimal.round(3)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDPYG") do
+  defp convert_round_to_iso(value, "USDPYG") do
     value
     |> Decimal.round(0)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDRWF") do
+  defp convert_round_to_iso(value, "USDRWF") do
     value
     |> Decimal.round(0)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDTND") do
+  defp convert_round_to_iso(value, "USDTND") do
     value
     |> Decimal.round(3)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDUGX") do
+  defp convert_round_to_iso(value, "USDUGX") do
     value
     |> Decimal.round(0)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDUYI") do
+  defp convert_round_to_iso(value, "USDUYI") do
     value
     |> Decimal.round(0)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDUYW") do
+  defp convert_round_to_iso(value, "USDUYW") do
     value
     |> Decimal.round(4)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDVND") do
+  defp convert_round_to_iso(value, "USDVND") do
     value
     |> Decimal.round(0)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDVUV") do
+  defp convert_round_to_iso(value, "USDVUV") do
     value
     |> Decimal.round(0)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDXAF") do
+  defp convert_round_to_iso(value, "USDXAF") do
     value
     |> Decimal.round(0)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDXOF") do
+  defp convert_round_to_iso(value, "USDXOF") do
     value
     |> Decimal.round(0)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, "USDXPF") do
+  defp convert_round_to_iso(value, "USDXPF") do
     value
     |> Decimal.round(0)
   end
 
   @spec convert_round_to_iso(number(), String.t()) :: Decimal.t()
-  def convert_round_to_iso(value, _) do
+  defp convert_round_to_iso(value, _) do
     value
     |> Decimal.round(2)
   end

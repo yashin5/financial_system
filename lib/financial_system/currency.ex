@@ -14,6 +14,7 @@ defmodule FinancialSystem.Currency do
     case is_valid? do
       true ->
         {:ok, String.upcase(currency)}
+
       false ->
         {:error,
          raise(ArgumentError,
