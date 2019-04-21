@@ -5,6 +5,7 @@ defmodule FinancialSystem.AccountState do
   def start(state) do
     GenServer.start(__MODULE__, state)
   end
+
   def init(state) do
     {:ok, state}
   end
