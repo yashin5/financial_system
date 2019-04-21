@@ -33,7 +33,7 @@ defmodule FinancialSystem do
   def create(name, currency, value) do
     raise(ArgumentError,
       message:
-        "Name -> #{name} <- and Currency -> #{currency} <- must be a string and Value -> #{value} <- must be a number greater than 0."
+        "First and second args must be a string and third arg must be a number greater than 0."
     )
   end
 
@@ -118,7 +118,8 @@ defmodule FinancialSystem do
   """
   @spec transfer(number(), pid(), pid()) :: Account.t() | {:error, String.t()}
   def transfer(value, pid_from, pid_to)
-      when is_pid(pid_from) and is_pid(pid_to) and is_number(value) == value > 0 do
+      when is_pid(pid_from) and
+             pid_from != pid_to and is_pid(pid_to) and is_number(value) == value > 0 do
     with true <- FinHelper.funds?(pid_from, value) do
       GenServer.cast(pid_from, {:withdraw, value})
 
@@ -140,7 +141,8 @@ defmodule FinancialSystem do
   def transfer(_, _, _),
     do:
       raise(ArgumentError,
-        message: "The second and third args must be a pid and de first arg must be a number"
+        message:
+          "You cannot repeat the pid! The second and third args must be a pid and de first arg must be a number"
       )
 
   @doc """
