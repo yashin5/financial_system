@@ -7,6 +7,9 @@ defmodule FinancialSystem do
   alias FinancialSystem.FinHelper, as: FinHelper
   alias FinancialSystem.SplitDefinition, as: SplitDefinition
 
+  @type account :: %AccountDefinition{name: String.t(), currency: String.t(), value: number()}
+  @type account_split :: %SplitDefinition{account: account(), percent: number()}
+
   @spec create(String.t(), String.t(), number()) :: {:ok, pid()} | {:error, String.t()}
   def create(name, currency, value)
       when is_binary(name) and is_binary(currency) and is_number(value) == value > 0 do
@@ -35,7 +38,7 @@ defmodule FinancialSystem do
   @spec show(any()) :: String.t()
   def show(_), do: raise(ArgumentError, message: "Please insert a valid PID")
 
-  @spec deposit(pid(), String.t(), number()) :: struct() | {:error, String.t()}
+  @spec deposit(pid(), String.t(), number()) :: account() | {:error, String.t()}
   def deposit(pid, currency_from, value) when is_pid(pid) and is_number(value) == value > 0 do
     case Currency.currency_is_valid?(currency_from) do
       {:ok, _} ->
@@ -59,7 +62,7 @@ defmodule FinancialSystem do
         message: "The first arg must be a pid and de second arg must be a number"
       )
 
-  @spec withdraw(pid(), number()) :: struct() | {:error, String.t()}
+  @spec withdraw(pid(), number()) :: account() | {:error, String.t()}
   def withdraw(pid, value) when is_pid(pid) and is_number(value) == value > 0 do
     with true <- funds?(pid, value) do
       GenServer.cast(pid, {:withdraw, value})
@@ -76,7 +79,7 @@ defmodule FinancialSystem do
         message: "The first arg must be a pid and de second arg must be a number"
       )
 
-  @spec transfer(number(), pid(), pid()) :: struct() | {:error, String.t()}
+  @spec transfer(number(), pid(), pid()) :: account() | {:error, String.t()}
   def transfer(value, pid_from, pid_to)
       when is_pid(pid_from) and is_pid(pid_to) and is_number(value) == value > 0 do
     with true <- funds?(pid_from, value) do
@@ -103,7 +106,7 @@ defmodule FinancialSystem do
         message: "The second and third args must be a pid and de first arg must be a number"
       )
 
-  @spec split(pid(), maybe_improper_list(), any()) :: [any()]
+  @spec split(pid(), account_split(), number()) :: [account()]
   def split(pid_from, split_list, value)
       when is_pid(pid_from) and is_list(split_list) and is_number(value) == value > 0 do
     with true <- funds?(pid_from, value),
@@ -136,7 +139,7 @@ defmodule FinancialSystem do
     end
   end
 
-  @spec split_list_have_account_from?(pid(), list(struct())) :: false | {:error, String.t()}
+  @spec split_list_have_account_from?(pid(), list(account_split())) :: false | {:error, String.t()}
   def split_list_have_account_from?(account_from, split_list)
       when is_pid(account_from) and is_list(split_list) do
     have_or_not =
@@ -154,7 +157,7 @@ defmodule FinancialSystem do
     end
   end
 
-  @spec percent_ok?(list(struct())) :: boolean() | {:error, String.t()}
+  @spec percent_ok?(list(account_split())) :: boolean() | {:error, String.t()}
   def percent_ok?(split_list) do
     total_percent =
       split_list
@@ -168,7 +171,7 @@ defmodule FinancialSystem do
     end
   end
 
-  @spec unite_equal_account_split(list(struct())) :: list(struct)
+  @spec unite_equal_account_split(list(account_split())) :: list(account_split())
   def unite_equal_account_split(split_list) do
     split_list
     |> Enum.reduce(%{}, fn %FinancialSystem.SplitDefinition{account: account} = sp, acc ->
