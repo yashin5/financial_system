@@ -47,42 +47,41 @@ To run this project locally you need to have Elixir installed in your machine. A
 ##### Create user account
 
 ```elixir
-account1 = FinancialSystem.CreateAccount.create_user("Mario Freitas", "marios@email.com", "BRL", 100)
-account2 = FinancialSystem.CreateAccount.create_user("Mario Marcelo", "mm@email.com", "USD", 100)
-account3 = FinancialSystem.CreateAccount.create_user("Maria Julia", "mjulia@email.com", "EUR", 100)
-account4 = FinancialSystem.CreateAccount.create_user("Fernando Francisco", "ff@email.com", "CZK", 100)
-account5 = FinancialSystem.CreateAccount.create_user("Antonio Marques", "antonio@email.com", "BRL", 100)
+{_, pid} = FinancialSystem.create("Mario Freitas", "BRL", 100)
+{_, pid2} = FinancialSystem.create("Mario Marcelo", "USD", 100)
+{_, pid3} = FinancialSystem.create("Maria Julia", "EUR", 100)
+{_, pid4} = FinancialSystem.create("Fernando Francisco", "CZK", 100)
+{_, pid5} = FinancialSystem.create("Antonio Marques", "BRL", 100)
 ```
 ##### Show value in account
 
 ```elixir
-FinancialSystem.get_value_in_account(account1)
+FinancialSystem.show(pid)
 ```
 
 ##### Deposit into account
 
 ```elixir
-FinancialSystem.deposit(account1, "USD", 10)
+FinancialSystem.deposit(pid, "USD", 1)
 ```
 
 ##### Transfer between accounts
 
 ```elixir
-FinancialSystem.transfer(account1, account2, 20)
+FinancialSystem.transfer(pid, pid2, 10)
 ```
 
 ##### Split transfer
 
 ```elixir
 list_to = [
-  %FinancialSystem.SplitList{account: account2, percent: 10},
-  %FinancialSystem.SplitList{account: account2, percent: 10},
-  %FinancialSystem.SplitList{account: account3, percent: 30},
-  %FinancialSystem.SplitList{account: account4, percent: 40},
-  %FinancialSystem.SplitList{account: account5, percent: 10},
+  %FinancialSystem.Split{account: pid2, percent: 20},
+  %FinancialSystem.Split{account: pid3, percent: 10},
+  %FinancialSystem.Split{account: pid4, percent: 30},
+  %FinancialSystem.Split{account: pid5, percent: 40}
 ]
 
-FinancialSystem.split(account1, list_to, 100)
+FinancialSystem.split(pid, list_to, 100)
 ```
 
 ## Reference
