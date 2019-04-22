@@ -17,20 +17,18 @@ defmodule FinancialSystem do
   ## Examples
     FinancialSystem.create("Yashin Santos",  "EUR", 220)
   """
-  @spec create(String.t(), String.t(), number()) :: {:ok, pid()} | {:error, String.t()}
+  @spec create(String.t() | any(), String.t() | any(), number() | any()) ::
+          {:ok, pid()} | {:error, no_return()} | no_return()
   def create(name, currency, value)
       when is_binary(name) and is_binary(currency) and is_number(value) == value > 0 do
-    with {:ok, currency_upcase} <- Currency.currency_is_valid?(currency),
+    with {:ok, currency_upcase} <- Currency.currency_is_valid(currency),
          true <- byte_size(name) > 0 do
       %Account{name: name, currency: currency_upcase, value: value}
       |> AccountState.start()
-    else
-      {:error, message} -> message
     end
   end
 
-  @spec create(any(), any(), any()) :: String.t()
-  def create(name, currency, value) do
+  def create(_, _, _) do
     raise(ArgumentError,
       message:
         "First and second args must be a string and third arg must be a number greater than 0."
@@ -44,13 +42,12 @@ defmodule FinancialSystem do
     {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
     FinancialSystem.show(pid)
   """
-  @spec show(pid()) :: Decimal.t()
+  @spec show(pid() | any()) :: Decimal.t() | no_return()
   def show(pid) when is_pid(pid) do
     GenServer.call(pid, :get_data).value
-    |> FinHelper.to_decimal("USD#{GenServer.call(pid, :get_data).currency}")
+    |> FinHelper.to_decimal(GenServer.call(pid, :get_data).currency)
   end
 
-  @spec show(any()) :: String.t()
   def show(_), do: raise(ArgumentError, message: "Please insert a valid PID")
 
   @doc """
@@ -60,9 +57,10 @@ defmodule FinancialSystem do
     {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
     FinancialSystem.deposit(pid, "BRL", 10)
   """
-  @spec deposit(pid(), String.t(), number()) :: Account.t() | {:error, String.t()}
+  @spec deposit(pid() | any(), String.t() | any(), number() | any()) ::
+          Account.t() | no_return()
   def deposit(pid, currency_from, value) when is_pid(pid) and is_number(value) == value > 0 do
-    case Currency.currency_is_valid?(currency_from) do
+    case Currency.currency_is_valid(currency_from) do
       {:ok, _} ->
         GenServer.cast(
           pid,
@@ -77,8 +75,7 @@ defmodule FinancialSystem do
     end
   end
 
-  @spec deposit(any(), any()) :: String.t()
-  def deposit(_, _),
+  def deposit(_, _, _),
     do:
       raise(ArgumentError,
         message: "The first arg must be a pid and de second arg must be a number"
@@ -91,17 +88,15 @@ defmodule FinancialSystem do
     {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
     FinancialSystem.withdraw(pid, 10)
   """
-  @spec withdraw(pid(), number()) :: Account.t() | {:error, String.t()}
+  @spec withdraw(pid() | any(), number() | any()) ::
+          Account.t() | {:error, no_return()} | no_return()
   def withdraw(pid, value) when is_pid(pid) and is_number(value) == value > 0 do
-    with true <- FinHelper.funds?(pid, value) do
+    with true <- FinHelper.funds(pid, value) do
       GenServer.cast(pid, {:withdraw, value})
       GenServer.call(pid, :get_data)
-    else
-      {:error, message} -> message
     end
   end
 
-  @spec withdraw(any(), any()) :: binary()
   def withdraw(_, _),
     do:
       raise(ArgumentError,
@@ -116,28 +111,18 @@ defmodule FinancialSystem do
     {_, pid2} = FinancialSystem.create("Antonio Marcos", "BRL", 100)
     FinancialSystem.withdraw(15, pid, pid2)
   """
-  @spec transfer(number(), pid(), pid()) :: Account.t() | {:error, String.t()}
+  @spec transfer(number() | any(), pid() | any(), pid() | any()) ::
+          Account.t() | {:error, no_return()} | no_return()
   def transfer(value, pid_from, pid_to)
       when is_pid(pid_from) and
              pid_from != pid_to and is_pid(pid_to) and is_number(value) == value > 0 do
-    with true <- FinHelper.funds?(pid_from, value) do
-      GenServer.cast(pid_from, {:withdraw, value})
+    with true <- FinHelper.funds(pid_from, value) do
+      withdraw(pid_from, value)
 
-      converted_value =
-        Currency.convert(
-          GenServer.call(pid_from, :get_data).currency,
-          GenServer.call(pid_to, :get_data).currency,
-          value
-        )
-
-      GenServer.cast(pid_to, {:deposit, converted_value})
-      GenServer.call(pid_to, :get_data)
-    else
-      {:error, message} -> message
+      deposit(pid_to, GenServer.call(pid_from, :get_data).currency, value)
     end
   end
 
-  @spec transfer(any(), any(), any()) :: String.t()
   def transfer(_, _, _),
     do:
       raise(ArgumentError,
@@ -155,24 +140,22 @@ defmodule FinancialSystem do
     split_list = [%FinancialSystem.SplitDefinition{account: pid2, percent: 80}, %FinancialSystem.SplitDefinition{account: pid3, percent: 20}]
     FinancialSystem.split(pid, split_list, 100)
   """
-  @spec split(pid(), Split.t(), number()) :: [Account.t()]
+  @spec split(pid() | any(), Split.t() | any(), number() | any()) ::
+          [Account.t()] | {:error, no_return()} | no_return()
   def split(pid_from, split_list, value)
       when is_pid(pid_from) and is_list(split_list) and is_number(value) == value > 0 do
-    with true <- FinHelper.funds?(pid_from, value),
+    with true <- FinHelper.funds(pid_from, value),
          true <- FinHelper.percent_ok?(split_list),
-         false <- FinHelper.split_list_have_account_from?(pid_from, split_list) do
+         false <- FinHelper.split_list_have_account_from(pid_from, split_list) do
       split_list
       |> FinHelper.unite_equal_account_split()
       |> Enum.map(fn %Split{account: pid_to, percent: percent} ->
         (percent / 100 * value)
         |> transfer(pid_from, pid_to)
       end)
-    else
-      {:error, message} -> message
     end
   end
 
-  @spec split(any(), any()) :: String.t()
   def split(_, _),
     do:
       raise(ArgumentError,

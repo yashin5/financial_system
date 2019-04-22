@@ -5,6 +5,7 @@ defmodule FinancialSystem.FinHelper do
   """
 
   alias FinancialSystem.Split, as: Split
+  alias FinancialSystem.Currency, as: Currency
 
   @doc """
     Convert a value to decimal and round it based on currency.
@@ -13,10 +14,12 @@ defmodule FinancialSystem.FinHelper do
     FinancialSystem.FinHelpers.to_decimal(10.502323, "CLF")
   """
   @spec to_decimal(number(), String.t()) :: Decimal.t()
-  def to_decimal(value, currency) when is_number(value) do
-    case is_integer(value) do
-      true -> (value / 1) |> Decimal.from_float() |> convert_round_to_iso(currency)
-      false -> Decimal.from_float(value) |> convert_round_to_iso(currency)
+  def to_decimal(value, currency) when is_number(value) and is_binary(currency) do
+    with {:ok, _} <- Currency.currency_is_valid(currency) do
+      case is_integer(value) do
+        true -> (value / 1) |> Decimal.from_float() |> convert_round_to_iso("USD#{currency}")
+        false -> Decimal.from_float(value) |> convert_round_to_iso("USD#{currency}")
+      end
     end
   end
 
@@ -25,10 +28,10 @@ defmodule FinancialSystem.FinHelper do
 
   ## Examples
       {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
-      FinancialSystem.FinHelpers.funds?(pid, 220)
+      FinancialSystem.FinHelpers.funds(pid, 220)
   """
-  @spec funds?(pid(), number()) :: true
-  def funds?(pid, value) do
+  @spec funds(pid(), number()) :: boolean() | {:error, no_return()}
+  def funds(pid, value) when is_pid(pid) and is_number(value) do
     case GenServer.call(pid, :get_data).value >= value do
       true -> true
       false -> {:error, raise(ArgumentError, message: "Does not have the necessary funds")}
@@ -45,9 +48,9 @@ defmodule FinancialSystem.FinHelper do
     split_list = [%FinancialSystem.SplitDefinition{account: pid2, percent: 80}, %FinancialSystem.SplitDefinition{account: pid3, percent: 20}]
     FinancialSystem.FinHelpers.split_list_have_account_from(pid, split_list)
   """
-  @spec split_list_have_account_from?(pid(), list(Split.t())) ::
-          false | {:error, String.t()}
-  def split_list_have_account_from?(account_from, split_list)
+  @spec split_list_have_account_from(pid(), list(Split.t())) ::
+          boolean() | {:error, no_return()}
+  def split_list_have_account_from(account_from, split_list)
       when is_pid(account_from) and is_list(split_list) do
     have_or_not =
       split_list
@@ -74,8 +77,8 @@ defmodule FinancialSystem.FinHelper do
     split_list = [%FinancialSystem.SplitDefinition{account: pid2, percent: 80}, %FinancialSystem.SplitDefinition{account: pid3, percent: 20}]
     FinancialSystem.FinHelpers.split_list_have_account_from(split_list)
   """
-  @spec percent_ok?(list(Split.t())) :: boolean() | {:error, String.t()}
-  def percent_ok?(split_list) do
+  @spec percent_ok?(list(Split.t())) :: boolean() | {:error, no_return()}
+  def percent_ok?(split_list) when is_list(split_list) do
     total_percent =
       split_list
       |> Enum.reduce(0, fn %Split{percent: percent}, acc ->
@@ -99,7 +102,7 @@ defmodule FinancialSystem.FinHelper do
     FinancialSystem.FinHelpers.unite_equal_account_split(split_list)
   """
   @spec unite_equal_account_split(list(Split.t())) :: list(Split.t())
-  def unite_equal_account_split(split_list) do
+  def unite_equal_account_split(split_list) when is_list(split_list) do
     split_list
     |> Enum.reduce(%{}, fn %Split{account: account} = sp, acc ->
       Map.update(acc, account, sp, fn acc -> %{acc | percent: acc.percent + sp.percent} end)

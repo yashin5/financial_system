@@ -3,8 +3,10 @@
                              excoveralls,ex_doc]},
               {description,"financial_system"},
               {modules,['Elixir.FinancialSystem',
-                        'Elixir.FinancialSystem.AccountDefinition',
+                        'Elixir.FinancialSystem.Account',
                         'Elixir.FinancialSystem.AccountState',
-                        'Elixir.FinancialSystem.SplitDefinition']},
+                        'Elixir.FinancialSystem.Currency',
+                        'Elixir.FinancialSystem.FinHelper',
+                        'Elixir.FinancialSystem.Split']},
               {registered,[]},
               {vsn,"0.1.0"}]}.

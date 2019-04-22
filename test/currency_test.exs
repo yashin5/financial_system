@@ -3,8 +3,8 @@ defmodule CurrencyTest do
   doctest FinancialSystem.Currency
 
   test "User should be able to verify if the currency exist." do
-    assert FinancialSystem.Currency.currency_is_valid?("brl")
-    assert {:ok, "BRL"} = FinancialSystem.Currency.currency_is_valid?("brl")
+    assert FinancialSystem.Currency.currency_is_valid("brl")
+    assert {:ok, "BRL"} = FinancialSystem.Currency.currency_is_valid("brl")
   end
 
   test "User should be able to convert the values based on currency." do

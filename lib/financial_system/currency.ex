@@ -15,10 +15,10 @@ defmodule FinancialSystem.Currency do
     Verify if currency is valid.
 
   ## Examples
-    currency_is_valid?("BRL")
+    currency_is_valid("BRL")
   """
-  @spec currency_is_valid?(String.t()) :: {:ok, String.t()} | {:error, String.t()}
-  def currency_is_valid?(currency) do
+  @spec currency_is_valid(String.t()) :: {:ok, String.t()} | {:error, no_return()}
+  def currency_is_valid(currency) do
     is_valid? = Map.has_key?(currency_rate()["quotes"], "USD#{String.upcase(currency)}")
 
     case is_valid? do
@@ -40,7 +40,7 @@ defmodule FinancialSystem.Currency do
     convert("USD", "BRL", 10)
   """
   @spec convert(String.t(), pid(), number()) :: number()
-  def convert("USD", currency_to, value) do
+  def convert("USD", currency_to, value) when is_binary(currency_to) and is_number(value) do
     value * currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"]
   end
 
@@ -51,7 +51,8 @@ defmodule FinancialSystem.Currency do
     convert("EUR", "BRL", 10)
   """
   @spec convert(String.t(), String.t(), number()) :: number()
-  def convert(currency_from, currency_to, value) do
+  def convert(currency_from, currency_to, value)
+      when is_binary(currency_from) and is_binary(currency_to) and is_number(value) do
     value / currency_rate()["quotes"]["USD#{String.upcase(currency_from)}"] *
       currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"]
   end

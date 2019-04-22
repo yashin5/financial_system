@@ -20,10 +20,10 @@ defmodule FinHelperTest do
 
   test "User should be able to verify if the account have de funds necessary for the transaction" do
     {:ok, pid} = FinancialSystem.create("Yashin Santos", "EUR", 10.0)
-    assert FinancialSystem.FinHelper.funds?(pid, 10)
+    assert FinancialSystem.FinHelper.funds(pid, 10)
 
     {:ok, pid} = FinancialSystem.create("Yashin Santos", "EUR", 10)
-    assert FinancialSystem.FinHelper.funds?(pid, 10.0)
+    assert FinancialSystem.FinHelper.funds(pid, 10.0)
   end
 
   test "User should be able to verify if in split list have the same account is sending the value" do
@@ -36,7 +36,7 @@ defmodule FinHelperTest do
       %FinancialSystem.Split{account: pid3, percent: 20}
     ]
 
-    assert FinancialSystem.FinHelper.split_list_have_account_from?(pid, split_list) == false
+    assert FinancialSystem.FinHelper.split_list_have_account_from(pid, split_list) == false
   end
 
   test "User should be able to verify if in split list the total percent is 100" do
