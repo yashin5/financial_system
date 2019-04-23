@@ -5,12 +5,11 @@ defmodule FinancialSystem.AccountState do
   use GenServer
   alias FinancialSystem.Account, as: Account
 
-  @spec start(any()) :: {:ok, pid()}
+
   def start(state) do
     GenServer.start(__MODULE__, state)
   end
 
-  @spec init(any()) :: {:ok, any()}
   def init(state) do
     {:ok, state}
   end
@@ -39,5 +38,22 @@ defmodule FinancialSystem.AccountState do
   """
   def handle_cast({:withdraw, value}, account) do
     {:noreply, %Account{account | value: account.value - value}}
+  end
+
+  @spec show(pid()) :: Account.t() | no_return()
+  def show(account) when is_pid(account) do
+    GenServer.call(account, :get_data)
+  end
+
+  @spec withdraw(pid(), number()) :: Account.t() | no_return()
+  def withdraw(account, value) when is_pid(account) and is_number(value) do
+    GenServer.cast(account, {:withdraw, value})
+    show(account)
+  end
+
+  @spec deposit(pid(), number()) :: Account.t() | no_return()
+  def deposit(account, value) when is_pid(account) and is_number(value) do
+    GenServer.cast(account, {:deposit, value})
+    show(account)
   end
 end

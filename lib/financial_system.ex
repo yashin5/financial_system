@@ -5,11 +5,9 @@ defmodule FinancialSystem do
 
   use GenServer
 
-  alias FinancialSystem.Account, as: Account
-  alias FinancialSystem.AccountState, as: AccountState
-  alias FinancialSystem.Currency, as: Currency
-  alias FinancialSystem.FinHelper, as: FinHelper
-  alias FinancialSystem.Split, as: Split
+  @behaviour FinancialSystem.FinancialBehaviour
+
+  alias FinancialSystem.{Account, Split, Currency, FinHelper, AccountState}
 
   @doc """
     Create user accounts
@@ -17,8 +15,7 @@ defmodule FinancialSystem do
   ## Examples
     FinancialSystem.create("Yashin Santos",  "EUR", 220)
   """
-  @spec create(String.t() | any(), String.t() | any(), number() | any()) ::
-          {:ok, pid()} | {:error, no_return()} | no_return()
+  @impl true
   def create(name, currency, value)
       when is_binary(name) and is_binary(currency) and is_number(value) == value > 0 do
     with {:ok, currency_upcase} <- Currency.currency_is_valid(currency),
@@ -42,10 +39,10 @@ defmodule FinancialSystem do
     {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
     FinancialSystem.show(pid)
   """
-  @spec show(pid() | any()) :: Decimal.t() | no_return()
+  @impl true
   def show(pid) when is_pid(pid) do
-    GenServer.call(pid, :get_data).value
-    |> FinHelper.to_decimal(GenServer.call(pid, :get_data).currency)
+    AccountState.show(pid).value
+    |> FinHelper.to_decimal(AccountState.show(pid).currency)
   end
 
   def show(_), do: raise(ArgumentError, message: "Please insert a valid PID")
@@ -57,19 +54,11 @@ defmodule FinancialSystem do
     {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
     FinancialSystem.deposit(pid, "BRL", 10)
   """
-  @spec deposit(pid() | any(), String.t() | any(), number() | any()) ::
-          Account.t() | no_return()
+  @impl true
   def deposit(pid, currency_from, value) when is_pid(pid) and is_number(value) == value > 0 do
     case Currency.currency_is_valid(currency_from) do
       {:ok, _} ->
-        GenServer.cast(
-          pid,
-          {:deposit,
-           Currency.convert(currency_from, GenServer.call(pid, :get_data).currency, value)}
-        )
-
-        GenServer.call(pid, :get_data)
-
+        AccountState.deposit(pid, Currency.convert(currency_from, GenServer.call(pid, :get_data).currency, value))
       {:error, message} ->
         message
     end
@@ -88,12 +77,10 @@ defmodule FinancialSystem do
     {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
     FinancialSystem.withdraw(pid, 10)
   """
-  @spec withdraw(pid() | any(), number() | any()) ::
-          Account.t() | {:error, no_return()} | no_return()
+  @impl true
   def withdraw(pid, value) when is_pid(pid) and is_number(value) == value > 0 do
     with true <- FinHelper.funds(pid, value) do
-      GenServer.cast(pid, {:withdraw, value})
-      GenServer.call(pid, :get_data)
+      AccountState.withdraw(pid, value)
     end
   end
 
@@ -111,8 +98,7 @@ defmodule FinancialSystem do
     {_, pid2} = FinancialSystem.create("Antonio Marcos", "BRL", 100)
     FinancialSystem.withdraw(15, pid, pid2)
   """
-  @spec transfer(number() | any(), pid() | any(), pid() | any()) ::
-          Account.t() | {:error, no_return()} | no_return()
+  @impl true
   def transfer(value, pid_from, pid_to)
       when is_pid(pid_from) and
              pid_from != pid_to and is_pid(pid_to) and is_number(value) == value > 0 do
@@ -140,8 +126,7 @@ defmodule FinancialSystem do
     split_list = [%FinancialSystem.SplitDefinition{account: pid2, percent: 80}, %FinancialSystem.SplitDefinition{account: pid3, percent: 20}]
     FinancialSystem.split(pid, split_list, 100)
   """
-  @spec split(pid() | any(), Split.t() | any(), number() | any()) ::
-          [Account.t()] | {:error, no_return()} | no_return()
+  @impl true
   def split(pid_from, split_list, value)
       when is_pid(pid_from) and is_list(split_list) and is_number(value) == value > 0 do
     with true <- FinHelper.funds(pid_from, value),

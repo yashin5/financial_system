@@ -4,8 +4,7 @@ defmodule FinancialSystem.FinHelper do
   a value in Decimal to show to the user, for example.
   """
 
-  alias FinancialSystem.Split, as: Split
-  alias FinancialSystem.Currency, as: Currency
+  alias FinancialSystem.{Currency, Split}
 
   @doc """
     Convert a value to decimal and round it based on currency.
