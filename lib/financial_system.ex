@@ -3,11 +3,9 @@ defmodule FinancialSystem do
   This module is responsable to implement the financial operations.
   """
 
-  use GenServer
-
   @behaviour FinancialSystem.FinancialBehaviour
 
-  alias FinancialSystem.{Account, Split, Currency, FinHelper, AccountState}
+  alias FinancialSystem.{Account, AccountState, Currency, FinHelper, Split}
 
   @doc """
     Create user accounts
@@ -42,7 +40,7 @@ defmodule FinancialSystem do
   @impl true
   def show(pid) when is_pid(pid) do
     AccountState.show(pid).value
-    |> FinHelper.to_decimal(AccountState.show(pid).currency)
+    |> Currency.to_decimal(AccountState.show(pid).currency)
   end
 
   def show(_), do: raise(ArgumentError, message: "Please insert a valid PID")
@@ -58,7 +56,7 @@ defmodule FinancialSystem do
   def deposit(pid, currency_from, value) when is_pid(pid) and is_number(value) == value > 0 do
     case Currency.currency_is_valid(currency_from) do
       {:ok, _} ->
-        AccountState.deposit(pid, Currency.convert(currency_from, GenServer.call(pid, :get_data).currency, value))
+        AccountState.deposit(pid, Currency.convert(currency_from, AccountState.show(pid).currency, value))
       {:error, message} ->
         message
     end
@@ -105,7 +103,7 @@ defmodule FinancialSystem do
     with true <- FinHelper.funds(pid_from, value) do
       withdraw(pid_from, value)
 
-      deposit(pid_to, GenServer.call(pid_from, :get_data).currency, value)
+      deposit(pid_to, AccountState.show(pid_from).currency, value)
     end
   end
 

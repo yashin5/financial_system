@@ -4,10 +4,26 @@ defmodule FinancialSystem.Currency do
   """
 
   @spec currency_rate() :: map()
-  defp currency_rate do
+  def currency_rate do
     case File.read("currency_rate.json") do
       {:ok, body} -> Poison.decode!(body)
       {:error, reason} -> reason
+    end
+  end
+
+    @doc """
+    Convert a value to decimal and round it based on currency.
+
+  ## Examples
+    FinancialSystem.FinHelpers.to_decimal(10.502323, "CLF")
+  """
+  @spec to_decimal(number(), String.t()) :: Decimal.t()
+  def to_decimal(value, currency) when is_number(value) and is_binary(currency) do
+    with {:ok, _} <- currency_is_valid(currency) do
+      case is_integer(value) do
+        true -> (value / 1) |> Decimal.from_float() |> Decimal.round(currency_rate()["decimal"]["USD#{currency}"])
+        false -> Decimal.from_float(value) |> Decimal.round(currency_rate()["decimal"]["USD#{currency}"])
+      end
     end
   end
 
@@ -18,7 +34,7 @@ defmodule FinancialSystem.Currency do
     currency_is_valid("BRL")
   """
   @spec currency_is_valid(String.t()) :: {:ok, String.t()} | {:error, no_return()}
-  def currency_is_valid(currency) do
+  def currency_is_valid(currency)  when is_binary(currency) do
     is_valid? = Map.has_key?(currency_rate()["quotes"], "USD#{String.upcase(currency)}")
 
     case is_valid? do
