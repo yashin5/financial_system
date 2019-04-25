@@ -17,13 +17,17 @@ defmodule FinancialSystem.Currency do
   ## Examples
     FinancialSystem.FinHelpers.to_decimal(10.502323, "CLF")
   """
-  @spec to_decimal(number(), String.t()) :: Decimal.t()
-  def to_decimal(value, currency) when is_number(value) and is_binary(currency) do
+  @spec to_decimal(Decimal.t(), String.t()) :: Decimal.t()
+  def to_decimal(value, currency) when is_binary(currency) do
     with {:ok, _} <- currency_is_valid(currency) do
+      value |> Decimal.round(currency_rate()["decimal"]["USD#{currency}"])
+    end
+  end
+
+  def to_decimal(value) when is_number(value) do
       case is_integer(value) do
-        true -> (value / 1) |> Decimal.from_float() |> Decimal.round(currency_rate()["decimal"]["USD#{currency}"])
-        false -> Decimal.from_float(value) |> Decimal.round(currency_rate()["decimal"]["USD#{currency}"])
-      end
+        true -> (value / 1) |> Decimal.from_float()
+        false -> Decimal.from_float(value)
     end
   end
 
@@ -57,7 +61,9 @@ defmodule FinancialSystem.Currency do
   """
   @spec convert(String.t(), pid(), number()) :: number()
   def convert("USD", currency_to, value) when is_binary(currency_to) and is_number(value) do
-    value * currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"]
+    to_decimal(value)
+    |> Decimal.mult(Decimal.from_float(currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"]) )
+
   end
 
   @doc """
@@ -69,7 +75,9 @@ defmodule FinancialSystem.Currency do
   @spec convert(String.t(), String.t(), number()) :: number()
   def convert(currency_from, currency_to, value)
       when is_binary(currency_from) and is_binary(currency_to) and is_number(value) do
-    value / currency_rate()["quotes"]["USD#{String.upcase(currency_from)}"] *
-      currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"]
+    to_decimal(value)
+    |> Decimal.div(to_decimal(currency_rate()["quotes"]["USD#{String.upcase(currency_from)}"]))
+    |> Decimal.mult(to_decimal(currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"]))
   end
 end
+
