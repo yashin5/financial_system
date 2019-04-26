@@ -26,7 +26,7 @@ defmodule FinancialSystem.AccountState do
     GenServer.cast(pid, {:deposit, 100})
   """
   def handle_cast({:deposit, value}, account) do
-    {:noreply, %Account{account | value: account.value + value}}
+    {:noreply, %Account{account | value: Decimal.add(account.value, value)}}
   end
 
   @doc """
@@ -37,7 +37,7 @@ defmodule FinancialSystem.AccountState do
     GenServer.cast(pid, {:withdraw, 100})
   """
   def handle_cast({:withdraw, value}, account) do
-    {:noreply, %Account{account | value: account.value - value}}
+    {:noreply, %Account{account | value: Decimal.sub(account.value, value)}}
   end
 
   @spec show(pid()) :: Account.t() | no_return()
@@ -46,13 +46,13 @@ defmodule FinancialSystem.AccountState do
   end
 
   @spec withdraw(pid(), number()) :: Account.t() | no_return()
-  def withdraw(account, value) when is_pid(account) and is_number(value) do
+  def withdraw(account, value) when is_pid(account) do
     GenServer.cast(account, {:withdraw, value})
     show(account)
   end
 
   @spec deposit(pid(), number()) :: Account.t() | no_return()
-  def deposit(account, value) when is_pid(account) and is_number(value) do
+  def deposit(account, value) when is_pid(account) do
     GenServer.cast(account, {:deposit, value})
     show(account)
   end

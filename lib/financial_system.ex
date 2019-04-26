@@ -18,7 +18,7 @@ defmodule FinancialSystem do
       when is_binary(name) and is_binary(currency) and is_number(value) == value > 0 do
     with {:ok, currency_upcase} <- Currency.currency_is_valid(currency),
          true <- byte_size(name) > 0 do
-      %Account{name: name, currency: currency_upcase, value: value}
+      %Account{name: name, currency: currency_upcase, value: Currency.to_decimal(value)}
       |> AccountState.start()
     end
   end
@@ -78,7 +78,7 @@ defmodule FinancialSystem do
   @impl true
   def withdraw(pid, value) when is_pid(pid) and is_number(value) == value > 0 do
     with true <- FinHelper.funds(pid, value) do
-      AccountState.withdraw(pid, value)
+      AccountState.withdraw(pid, Currency.to_decimal(value))
     end
   end
 

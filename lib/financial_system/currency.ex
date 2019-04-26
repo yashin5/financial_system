@@ -61,7 +61,9 @@ defmodule FinancialSystem.Currency do
   """
   @spec convert(String.t(), pid(), number()) :: number()
   def convert("USD", currency_to, value) when is_binary(currency_to) and is_number(value) do
-    value * currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"]
+    to_decimal(value)
+    |> Decimal.mult(Decimal.from_float(currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"]) )
+
   end
 
   @doc """
