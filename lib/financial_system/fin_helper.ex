@@ -4,7 +4,7 @@ defmodule FinancialSystem.FinHelper do
   a value in Decimal to show to the user, for example.
   """
 
-  alias FinancialSystem.{Currency, Split}
+  alias FinancialSystem.Split
 
   @doc """
     Verify if the account have funds for the operation.
@@ -14,11 +14,10 @@ defmodule FinancialSystem.FinHelper do
       FinancialSystem.FinHelpers.funds(pid, 220)
   """
   @spec funds(pid(), number()) :: boolean() | {:error, no_return()}
-  def funds(pid, value) when is_pid(pid) do
-    case Decimal.cmp(GenServer.call(pid, :get_data).value, Currency.to_decimal(value)) do
-      :gt -> true
-      :eq -> true
-      :lt -> {:error, raise(ArgumentError, message: "Does not have the necessary funds")}
+  def funds(pid, value) when is_pid(pid) and is_number(value) do
+    case GenServer.call(pid, :get_data).value >= value do
+      true -> true
+      false -> {:error, raise(ArgumentError, message: "Does not have the necessary funds")}
     end
   end
 

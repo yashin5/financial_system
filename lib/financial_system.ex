@@ -15,10 +15,14 @@ defmodule FinancialSystem do
   """
   @impl true
   def create(name, currency, value)
-      when is_binary(name) and is_binary(currency) and is_number(value) == value > 0 do
+      when is_binary(name) and is_binary(currency) and is_number(value) == value >= 0 do
     with {:ok, currency_upcase} <- Currency.currency_is_valid(currency),
          true <- byte_size(name) > 0 do
-      %Account{name: name, currency: currency_upcase, value: Currency.to_decimal(value)}
+      %Account{
+        name: name,
+        currency: currency_upcase,
+        value: Currency.to_integer_do(:store, value, currency_upcase)
+      }
       |> AccountState.start()
     end
   end
@@ -39,8 +43,11 @@ defmodule FinancialSystem do
   """
   @impl true
   def show(pid) when is_pid(pid) do
-    AccountState.show(pid).value
-    |> Currency.to_decimal(AccountState.show(pid).currency)
+    Currency.to_integer_do(
+      :show,
+      AccountState.show(pid).value,
+      AccountState.show(pid).currency
+    )
   end
 
   def show(_), do: raise(ArgumentError, message: "Please insert a valid PID")
@@ -56,7 +63,11 @@ defmodule FinancialSystem do
   def deposit(pid, currency_from, value) when is_pid(pid) and is_number(value) == value > 0 do
     case Currency.currency_is_valid(currency_from) do
       {:ok, _} ->
-        AccountState.deposit(pid, Currency.convert(currency_from, AccountState.show(pid).currency, value))
+        AccountState.deposit(
+          pid,
+          Currency.convert(currency_from, AccountState.show(pid).currency, value)
+        )
+
       {:error, message} ->
         message
     end
@@ -78,7 +89,7 @@ defmodule FinancialSystem do
   @impl true
   def withdraw(pid, value) when is_pid(pid) and is_number(value) == value > 0 do
     with true <- FinHelper.funds(pid, value) do
-      AccountState.withdraw(pid, Currency.to_decimal(value))
+      AccountState.withdraw(pid, value)
     end
   end
 

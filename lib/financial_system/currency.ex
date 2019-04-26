@@ -11,19 +11,12 @@ defmodule FinancialSystem.Currency do
     end
   end
 
-    @doc """
+  @doc """
     Convert a value to decimal and round it based on currency.
 
   ## Examples
     FinancialSystem.FinHelpers.to_decimal(10.502323, "CLF")
   """
-  @spec to_decimal(Decimal.t(), String.t()) :: Decimal.t()
-  def to_decimal(value, currency)  when is_binary(currency) do
-    with {:ok, _} <- currency_is_valid(currency) do
-      to_decimal(value) |> Decimal.round(currency_rate()["decimal"]["USD#{currency}"])
-    end
-  end
-
   def to_decimal(value) when is_number(value) do
     case is_integer(value) do
       true -> Decimal.new(value)
@@ -38,7 +31,7 @@ defmodule FinancialSystem.Currency do
     currency_is_valid("BRL")
   """
   @spec currency_is_valid(String.t()) :: {:ok, String.t()} | {:error, no_return()}
-  def currency_is_valid(currency)  when is_binary(currency) do
+  def currency_is_valid(currency) when is_binary(currency) do
     is_valid? = Map.has_key?(currency_rate()["quotes"], "USD#{String.upcase(currency)}")
 
     case is_valid? do
@@ -62,8 +55,10 @@ defmodule FinancialSystem.Currency do
   @spec convert(String.t(), pid(), number()) :: number()
   def convert("USD", currency_to, value) when is_binary(currency_to) and is_number(value) do
     to_decimal(value)
-    |> Decimal.mult(Decimal.from_float(currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"]) )
-
+    |> Decimal.mult(
+      Decimal.from_float(currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"])
+    )
+    |> to_integer_do(currency_rate()["decimal"]["USD#{String.upcase(currency_to)}"])
   end
 
   @doc """
@@ -78,7 +73,42 @@ defmodule FinancialSystem.Currency do
     value
     |> to_decimal()
     |> Decimal.div(to_decimal(currency_rate()["quotes"]["USD#{String.upcase(currency_from)}"]))
-    |> Decimal.mult(to_decimal( currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"]))
+    |> Decimal.mult(to_decimal(currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"]))
+    |> to_integer_do(currency_rate()["decimal"]["USD#{String.upcase(currency_to)}"])
+  end
+
+  def to_integer_do(:store, value, currency) do
+    to_integer(value, currency_rate()["decimal"]["USD#{String.upcase(currency)}"], :store)
+  end
+
+  def to_integer_do(:show, value, currency) do
+    to_integer(value, currency_rate()["decimal"]["USD#{String.upcase(currency)}"], :show)
+  end
+
+  def to_integer_do(value, currency) do
+    to_integer(value, currency, :convert)
+  end
+
+  defp to_integer(value, precision, :store) when precision in 0..8 do
+    value
+    |> to_decimal()
+    |> to_integer(precision, :convert)
+  end
+
+  defp to_integer(value, precision, :show) when precision in 0..8 do
+    value
+    |> to_decimal()
+    |> Decimal.div(Kernel.trunc(:math.pow(10, precision)))
+    |> Decimal.round(precision, :floor)
+  end
+
+  defp to_integer(value, 0, :show), do: value
+
+  defp to_integer(value, precision, :convert) when precision in 0..8 do
+    value
+    |> Decimal.mult(Kernel.trunc(:math.pow(10, precision)))
+    |> Decimal.round(0, :floor)
+    |> Decimal.to_integer()
+    |> Kernel.trunc()
   end
 end
-
