@@ -17,13 +17,17 @@ defmodule FinancialSystem.Currency do
   ## Examples
     FinancialSystem.FinHelpers.to_decimal(10.502323, "CLF")
   """
-  @spec to_decimal(number(), String.t()) :: Decimal.t()
-  def to_decimal(value, currency) when is_number(value) and is_binary(currency) do
+  @spec to_decimal(Decimal.t(), String.t()) :: Decimal.t()
+  def to_decimal(value, currency)  when is_binary(currency) do
     with {:ok, _} <- currency_is_valid(currency) do
-      case is_integer(value) do
-        true -> (value / 1) |> Decimal.from_float() |> Decimal.round(currency_rate()["decimal"]["USD#{currency}"])
-        false -> Decimal.from_float(value) |> Decimal.round(currency_rate()["decimal"]["USD#{currency}"])
-      end
+      to_decimal(value) |> Decimal.round(currency_rate()["decimal"]["USD#{currency}"])
+    end
+  end
+
+  def to_decimal(value) when is_number(value) do
+    case is_integer(value) do
+      true -> Decimal.new(value)
+      false -> Decimal.from_float(value)
     end
   end
 
@@ -73,3 +77,4 @@ defmodule FinancialSystem.Currency do
       currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"]
   end
 end
+
