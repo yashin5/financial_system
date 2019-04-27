@@ -15,7 +15,7 @@ defmodule FinancialSystem.Currency do
     Convert a value to decimal and round it based on currency.
 
   ## Examples
-    FinancialSystem.Currency.to_decimal(10.502323, "CLF")
+    FinancialSystem.Currency.to_decimal(10.502323)
   """
   @spec to_decimal(number) :: Decimal.t()
   def to_decimal(value) when is_number(value) do
@@ -71,7 +71,7 @@ defmodule FinancialSystem.Currency do
 
   @doc """
     converts the values ​based on the currency and transform them in
-    integers..
+    integers.
 
   ## Examples
     FinancialSystem.Currency.convert("EUR", "BRL", 10)
@@ -109,8 +109,8 @@ defmodule FinancialSystem.Currency do
 
   def amount_do(_, _, _), do: raise(ArgumentError, message: "The first arg must be :store or :show, second arg must be a number and third must be a valid currency")
 
-  defp amount_do(value, currency)  do
-    to_integer(value, currency, :convert)
+  defp amount_do(value, precision)  do
+    to_integer(value, precision, :convert)
   end
 
   defp to_integer(value, precision, :store) when precision in 0..8 do

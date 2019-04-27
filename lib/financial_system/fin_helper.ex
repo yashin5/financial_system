@@ -60,9 +60,9 @@ defmodule FinancialSystem.FinHelper do
     {_, pid2} = FinancialSystem.create("Antonio Marcos", "BRL", 100)
     {_, pid3} = FinancialSystem.create("Mateus Mathias", "BRL", 100)
     split_list = [%FinancialSystem.SplitDefinition{account: pid2, percent: 80}, %FinancialSystem.SplitDefinition{account: pid3, percent: 20}]
-    FinancialSystem.FinHelpers.split_list_have_account_from(split_list)
+    FinancialSystem.FinHelpers.percent_ok(split_list)
   """
-  @spec percent_ok(list(Split.t())) :: boolean() | {:error, no_return()}
+  @spec percent_ok(list(Split.t())) :: boolean() | {:error, no_return()} | no_return()
   def percent_ok(split_list) when is_list(split_list) do
     total_percent =
       split_list
@@ -76,8 +76,10 @@ defmodule FinancialSystem.FinHelper do
     end
   end
 
+  def percent_ok(_), do: raise(ArgumentError, message: "Check if the split list is valid.")
+
   @doc """
-    Verify if the split list have a duplicated account.
+    Unite the duplicated accounts in split_list.
 
   ## Examples
     {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
@@ -94,4 +96,6 @@ defmodule FinancialSystem.FinHelper do
     end)
     |> Enum.map(fn {_, resp} -> resp end)
   end
+
+  def unite_equal_account_split(_), do: raise(ArgumentError, message: "Check if the split list is valid.")
 end

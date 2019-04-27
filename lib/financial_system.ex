@@ -102,7 +102,7 @@ defmodule FinancialSystem do
   ## Examples
     {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
     {_, pid2} = FinancialSystem.create("Antonio Marcos", "BRL", 100)
-    FinancialSystem.withdraw(15, pid, pid2)
+    FinancialSystem.transfer(15, pid, pid2)
   """
   @impl true
   def transfer(value, pid_from, pid_to)
