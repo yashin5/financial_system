@@ -93,7 +93,8 @@ defmodule FinancialSystem.Currency do
     FinancialSystem.Currency.amount_do(:store, 10, "BRL")
   """
   @spec amount_do(atom(), number(), String.t()) :: integer() | no_return()
-  def amount_do(:store = operation, value, currency) when is_atom(operation) and is_number(value) and is_binary(currency) do
+  def amount_do(:store = operation, value, currency)
+      when is_atom(operation) and is_number(value) and is_binary(currency) do
     to_integer(value, currency_rate()["decimal"]["USD#{String.upcase(currency)}"], :store)
   end
 
@@ -103,13 +104,19 @@ defmodule FinancialSystem.Currency do
   ## Examples
     FinancialSystem.Currency.amount_do(:store, 10, "BRL")
   """
-  def amount_do(:show = operation, value, currency) when is_atom(operation) and is_number(value) and is_binary(currency) do
+  def amount_do(:show = operation, value, currency)
+      when is_atom(operation) and is_number(value) and is_binary(currency) do
     to_decimal(value, currency_rate()["decimal"]["USD#{String.upcase(currency)}"], :show)
   end
 
-  def amount_do(_, _, _), do: raise(ArgumentError, message: "The first arg must be :store or :show, second arg must be a number and third must be a valid currency")
+  def amount_do(_, _, _),
+    do:
+      raise(ArgumentError,
+        message:
+          "The first arg must be :store or :show, second arg must be a number and third must be a valid currency"
+      )
 
-  defp amount_do(value, precision)  do
+  defp amount_do(value, precision) do
     to_integer(value, precision, :convert)
   end
 

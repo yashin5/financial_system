@@ -62,11 +62,10 @@ defmodule FinancialSystem do
   @impl true
   def deposit(pid, currency_from, value) when is_pid(pid) and is_number(value) == value > 0 do
     with {:ok, _} <- Currency.currency_is_valid(currency_from) do
-        AccountState.deposit(
-          pid,
-          Currency.convert(currency_from,
-          AccountState.show(pid).currency, value)
-        )
+      AccountState.deposit(
+        pid,
+        Currency.convert(currency_from, AccountState.show(pid).currency, value)
+      )
     end
   end
 
@@ -136,7 +135,7 @@ defmodule FinancialSystem do
   def split(pid_from, split_list, value)
       when is_pid(pid_from) and is_list(split_list) and is_number(value) == value > 0 do
     with {:ok, _} <- FinHelper.funds(pid_from, value),
-         {:ok, _} <- FinHelper.percent_ok?(split_list),
+         {:ok, _} <- FinHelper.percent_ok(split_list),
          {:ok, _} <- FinHelper.split_list_have_account_from(pid_from, split_list) do
       split_list
       |> FinHelper.unite_equal_account_split()

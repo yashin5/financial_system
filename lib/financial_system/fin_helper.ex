@@ -39,7 +39,7 @@ defmodule FinancialSystem.FinHelper do
       when is_pid(account_from) and is_list(split_list) do
     have_or_not =
       split_list
-      |> Enum.map(fn %Split{account: account_to} -> account_from == account_to end)
+      |> Enum.map(&have_or_not(&1, account_from))
       |> Enum.member?(true)
 
     case have_or_not do
@@ -50,6 +50,10 @@ defmodule FinancialSystem.FinHelper do
         {:error,
          raise(ArgumentError, message: "You can not send to the same account as you are sending")}
     end
+  end
+
+  defp have_or_not(%Split{account: account_to}, account_from) do
+    account_from == account_to
   end
 
   @doc """
@@ -97,5 +101,6 @@ defmodule FinancialSystem.FinHelper do
     |> Enum.map(fn {_, resp} -> resp end)
   end
 
-  def unite_equal_account_split(_), do: raise(ArgumentError, message: "Check if the split list is valid.")
+  def unite_equal_account_split(_),
+    do: raise(ArgumentError, message: "Check if the split list is valid.")
 end

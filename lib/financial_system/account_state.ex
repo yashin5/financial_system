@@ -17,15 +17,24 @@ defmodule FinancialSystem.AccountState do
     {:reply, state, state}
   end
 
+  def handle_cast({:deposit, value}, account) do
+    {:noreply, %Account{account | value: account.value + value}}
+  end
+
+  def handle_cast({:withdraw, value}, account) do
+    {:noreply, %Account{account | value: account.value - value}}
+  end
+
   @doc """
-    Sum value in deposit operations.
+    Show the state.
 
   ## Examples
     {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
-    GenServer.cast(pid, {:deposit, 100})
+    FinancialSystem.AccountState.show(pid)
   """
-  def handle_cast({:deposit, value}, account) do
-    {:noreply, %Account{account | value: account.value + value}}
+  @spec show(pid()) :: Account.t() | no_return()
+  def show(account) when is_pid(account) do
+    GenServer.call(account, :get_data)
   end
 
   @doc """
@@ -33,23 +42,21 @@ defmodule FinancialSystem.AccountState do
 
   ## Examples
     {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
-    GenServer.cast(pid, {:withdraw, 100})
+    FinancialSystem.AccountState.withdraw(pid, 100)
   """
-  def handle_cast({:withdraw, value}, account) do
-    {:noreply, %Account{account | value: account.value - value}}
-  end
-
-  @spec show(pid()) :: Account.t() | no_return()
-  def show(account) when is_pid(account) do
-    GenServer.call(account, :get_data)
-  end
-
   @spec withdraw(pid(), number()) :: Account.t() | no_return()
   def withdraw(account, value) when is_pid(account) and is_number(value) do
     GenServer.cast(account, {:withdraw, value})
     show(account)
   end
 
+  @doc """
+    Sum value in deposit operations.
+
+  ## Examples
+    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
+    deposit(pid, 100)
+  """
   @spec deposit(pid(), number()) :: Account.t() | no_return()
   def deposit(account, value) when is_pid(account) and is_number(value) do
     GenServer.cast(account, {:deposit, value})
