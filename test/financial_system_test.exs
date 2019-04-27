@@ -2,73 +2,241 @@ defmodule FinancialSystemTest do
   use ExUnit.Case
   doctest FinancialSystem
 
-  test "User should be able to create a account" do
-    assert {:ok, pid} = FinancialSystem.create("Yashin Santos", "BRL", 10)
-    assert GenServer.call(pid, :get_data)
+  describe "create/3" do
+    setup do
+      account = %FinancialSystem.Account{name: "Oliver Tsubasa", currency: "BRL", value: 100}
+      account2 = %FinancialSystem.Account{name: "Yashin Santos", currency: "BRL", value: 10}
+      account3 = %FinancialSystem.Account{name: "Inu Yasha", currency: "BRL", value: 0}
 
-    assert {:ok, pid2} = FinancialSystem.create("Roberta Santos", "EUR", 20)
-    assert GenServer.call(pid2, :get_data)
+      {:ok, [account: account, account2: account2, account3: account3]}
+    end
 
-    assert {:ok, pid3} = FinancialSystem.create("Oliver Tsubasa", "USD", 30)
-    assert GenServer.call(pid3, :get_data)
+    test "User should be able to create a account with float value", %{account2: struct} do
+      {_, pid2} = FinancialSystem.create("Yashin Santos", "BRL", 0.10)
+      assert GenServer.call(pid2, :get_data) == struct
+    end
+
+    test "User should be able to create a account with integer value", %{account: struct} do
+      {_, pid2} = FinancialSystem.create("Oliver Tsubasa", "BRL", 1)
+      assert GenServer.call(pid2, :get_data) == struct
+    end
+
+    test "User should be able to create a account with low case currency", %{account: struct} do
+      {_, pid2} = FinancialSystem.create("Oliver Tsubasa", "brl", 1)
+      assert GenServer.call(pid2, :get_data) == struct
+    end
+
+    test "User should be able to create a account with amount 0", %{account3: struct} do
+      {_, pid2} = FinancialSystem.create("Inu Yasha", "brl", 0)
+      assert GenServer.call(pid2, :get_data) == struct
+    end
+
+    test "User dont should be able to create a account with a name is not a string" do
+      assert_raise ArgumentError, "First and second args must be a string and third arg must be a number greater than 0.", fn ->
+        FinancialSystem.create(1, "brll", 0)
+      end
+    end
+
+    test "User dont should be able to create a account with a value less than 0" do
+      assert_raise ArgumentError, "First and second args must be a string and third arg must be a number greater than 0.", fn ->
+        FinancialSystem.create("Oliver Tsubasa", "brl", -1)
+      end
+    end
+
+    test "User dont should be able to create a account with a value in string format" do
+      assert_raise ArgumentError, "First and second args must be a string and third arg must be a number greater than 0.", fn ->
+        FinancialSystem.create("Oliver Tsubasa", "brll", "0")
+      end
+    end
+
+    test "User dont should be able to create a account with a invalid currency" do
+      assert_raise ArgumentError, "The currency is not valid. Please, check it and try again.", fn ->
+        FinancialSystem.create("Oliver Tsubasa", "brll", 0)
+      end
+    end
   end
 
-  test "User should be able to show the value in account" do
-    {:ok, pid} = FinancialSystem.create("Yashin Santos", "BRL", 10)
+  describe "show/1" do
+    setup do
+      {_, pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
 
-    assert FinancialSystem.show(pid)
-    assert FinancialSystem.show(pid) == Decimal.from_float(10.0) |> Decimal.round(2)
+      {:ok, [pid: pid]}
+    end
+
+    test "User should be able to see the value in account", %{pid: pid} do
+      assert FinancialSystem.show(pid) == Decimal.new(1) |> Decimal.round(2)
+    end
+
+    test "User dont should be able to see the value in account if pass a invalid pid" do
+      assert_raise ArgumentError, "Please insert a valid PID", fn ->
+        FinancialSystem.show("pid")
+      end
+    end
   end
 
-  test "User should be able to deposit a value in account" do
-    {:ok, pid} = FinancialSystem.create("Yashin Santos", "BRL", 10)
+  describe "deposit/3" do
+    setup do
+      {_, pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
 
-    assert FinancialSystem.deposit(pid, "USD", 1)
-    assert GenServer.call(pid, :get_data).value == 13.702199
-    assert FinancialSystem.deposit(pid, "EUR", 1.0)
-    assert GenServer.call(pid, :get_data).value == 18.071627157338167
+      on_exit(fn ->
+        nil
+      end)
+
+      {:ok, [pid: pid]}
+    end
+
+    test "User should be able to insert a integer value in a account", %{pid: pid} do
+      assert FinancialSystem.deposit(pid, "brl", 1).value == 200
+    end
+
+    test "User should be able to insert a float value in a account", %{pid: pid} do
+      assert FinancialSystem.deposit(pid, "brl", 1.0).value == 200
+    end
+
+    test "User not should be able to insert a string value in a account", %{pid: pid} do
+      assert_raise ArgumentError, "The first arg must be a pid and de second arg must be a number", fn ->
+        FinancialSystem.deposit(pid, "brl", "1")
+      end
+    end
+
+    test "User not should be able to make the deposit inserting a invalid pid" do
+      assert_raise ArgumentError, "The first arg must be a pid and de second arg must be a number", fn ->
+        FinancialSystem.deposit("pid", "brl", 1)
+      end
+    end
+
+    test "User not should be able to make the deposit inserting a invalid currency", %{pid: pid} do
+      assert_raise ArgumentError, "The currency is not valid. Please, check it and try again.", fn ->
+        FinancialSystem.deposit(pid, "brrl", 1)
+      end
+    end
+
+    test "User not should be able to make the deposit inserting a value equal or less than 0", %{pid: pid} do
+      assert_raise ArgumentError, "The first arg must be a pid and de second arg must be a number", fn ->
+        FinancialSystem.deposit(pid, "brl", -1)
+      end
+    end
   end
 
-  test "User should be able to withdraw a value of a account" do
-    {:ok, pid} = FinancialSystem.create("Yashin Santos", "BRL", 10)
+  describe "withdraw/2" do
+    setup do
+      {_, pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
 
-    assert FinancialSystem.withdraw(pid, 1)
-    assert GenServer.call(pid, :get_data).value == 9
-    assert FinancialSystem.withdraw(pid, 1.5)
-    assert GenServer.call(pid, :get_data).value == 7.5
+      on_exit(fn ->
+        nil
+      end)
+
+      {:ok, [pid: pid]}
+    end
+
+    test "User should be able to take a value of an account", %{pid: pid} do
+      assert FinancialSystem.withdraw(pid, 1).value == 0
+    end
+
+    test "User not should be able to make the withdraw inserting a invalid pid" do
+      assert_raise ArgumentError, "The first arg must be a pid and de second arg must be a number", fn ->
+        FinancialSystem.withdraw("pid", 1)
+      end
+    end
+
+    test "User not should be able to make the withdraw inserting a value equal or less than 0", %{pid: pid} do
+      assert_raise ArgumentError, "The first arg must be a pid and de second arg must be a number", fn ->
+        FinancialSystem.withdraw(pid, -1)
+      end
+    end
+
+    test "User not should be able to make the withdraw inserting a string value", %{pid: pid} do
+      assert_raise ArgumentError, "The first arg must be a pid and de second arg must be a number", fn ->
+        FinancialSystem.withdraw(pid, "1")
+      end
+    end
   end
 
-  test "User should be able to  transfer value between  accounts" do
-    {:ok, pid} = FinancialSystem.create("Yashin Santos", "BRL", 10)
-    {:ok, pid2} = FinancialSystem.create("Oliver Tsubasa", "USD", 30)
+  describe "transfer/3" do
+    setup do
+      {_, pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
+      {_, pid2} = FinancialSystem.create("Oliver Tsubasa", "BRL", 2)
 
-    assert FinancialSystem.transfer(10, pid2, pid)
-    assert GenServer.call(pid2, :get_data).value == 20
-    assert GenServer.call(pid, :get_data).value == 47.021989999999995
+      on_exit(fn ->
+        nil
+      end)
 
-    assert FinancialSystem.transfer(5, pid2, pid)
-    assert GenServer.call(pid2, :get_data).value == 15
-    assert GenServer.call(pid, :get_data).value == 65.532985
+      {:ok, [pid: pid, pid2: pid2]}
+    end
+
+    test "User should be able to transfer value between accounts", %{pid: pid_from, pid2: pid_to} do
+      FinancialSystem.transfer(1, pid_from, pid_to)
+      assert FinancialSystem.show(pid_from) == Decimal.new(0) |> Decimal.round(2)
+      assert FinancialSystem.show(pid_to) == Decimal.new(3) |> Decimal.round(2)
+    end
+
+
+    test "User not should be able to make the transfer inserting a invalid pid_from", %{pid2: pid_to} do
+      assert_raise ArgumentError, "The second and third args must be a pid and de first arg must be a number", fn ->
+        FinancialSystem.transfer(1, "pid_from", pid_to)
+      end
+    end
+
+    test "User not should be able to make the transfer inserting a invalid pid_to", %{pid: pid_from} do
+      assert_raise ArgumentError, "The second and third args must be a pid and de first arg must be a number", fn ->
+        FinancialSystem.transfer(1, pid_from, "pid_to")
+      end
+    end
+
+    test "User not should be able to make the transfer inserting a value equal or less than 0", %{pid: pid_from, pid2: pid_to} do
+      assert_raise ArgumentError, "The second and third args must be a pid and de first arg must be a number", fn ->
+        FinancialSystem.transfer(-1, pid_from, pid_to)
+      end
+    end
   end
 
-  test "User should be able to transfer a value between  multiple accounts" do
-    {:ok, pid} = FinancialSystem.create("Yashin Santos", "BRL", 20)
-    {:ok, pid2} = FinancialSystem.create("Oliver Tsubasa", "USD", 30)
-    {:ok, pid3} = FinancialSystem.create("Roberta Santos", "EUR", 20)
+  describe "split/3" do
+    setup do
+      {_, pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
+      {_, pid2} = FinancialSystem.create("Oliver Tsubasa", "BRL", 2)
+      {_, pid3} = FinancialSystem.create("Inu Yasha", "BRL", 5)
 
-    split_list = [
-      %FinancialSystem.Split{account: pid2, percent: 80},
-      %FinancialSystem.Split{account: pid3, percent: 20}
-    ]
+      list_to = [
+        %FinancialSystem.Split{account: pid, percent: 20},
+        %FinancialSystem.Split{account: pid3, percent: 80},
+      ]
 
-    assert FinancialSystem.split(pid, split_list, 10)
-    assert GenServer.call(pid, :get_data).value == 10
-    assert GenServer.call(pid2, :get_data).value == 32.160877899864374
-    assert GenServer.call(pid3, :get_data).value == 20.45772580026087
+      on_exit(fn ->
+        nil
+      end)
 
-    assert FinancialSystem.split(pid, split_list, 1)
-    assert GenServer.call(pid, :get_data).value == 9
-    assert GenServer.call(pid2, :get_data).value == 32.37696568985081
-    assert GenServer.call(pid3, :get_data).value == 20.50349838028696
+      {:ok, [pid: pid, pid2: pid2, pid3: pid3, list: list_to]}
+    end
+
+    test "User should be able to transfer a value between multiple accounts", %{pid: pid, list: split_list, pid3: pid3, pid2: pid2} do
+    FinancialSystem.split(pid2, split_list, 1)
+    assert FinancialSystem.show(pid2) == Decimal.new(1) |> Decimal.round(2)
+    assert FinancialSystem.show(pid3) == Decimal.from_float(5.80) |> Decimal.round(2)
+    assert FinancialSystem.show(pid) == Decimal.from_float(1.20) |> Decimal.round(2)
+    end
+
+    test "User not should be able to make the transfer to the same account are sending", %{pid: pid_from, list: split_list} do
+      assert_raise ArgumentError, "You can not send to the same account as you are sending", fn ->
+        FinancialSystem.split(pid_from,  split_list, 1)
+      end
+    end
+
+    test "User not should be able to make the transfer value less than 0", %{pid: pid_from, list: split_list} do
+      assert_raise ArgumentError, "The first arg must be a pid, the second must be a list with %SplitDefinition{} and the third must be a value.", fn ->
+        FinancialSystem.split(pid_from,  split_list, -1)
+      end
+    end
+
+    test "User not should be able to make the transfer value 0 or less than 0", %{pid: pid_from, list: split_list} do
+      assert_raise ArgumentError, "The first arg must be a pid, the second must be a list with %SplitDefinition{} and the third must be a value.", fn ->
+        FinancialSystem.split(pid_from,  split_list, -1)
+      end
+    end
+
+    test "User not should be able to make the transfer inserting a invalid pid", %{list: split_list} do
+      assert_raise ArgumentError, "The first arg must be a pid, the second must be a list with %SplitDefinition{} and the third must be a value.", fn ->
+        FinancialSystem.split("pid_from",  split_list, 1)
+      end
+    end
   end
 end
