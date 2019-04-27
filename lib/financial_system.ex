@@ -3,7 +3,7 @@ defmodule FinancialSystem do
   This module is responsable to implement the financial operations.
   """
 
-  @behaviour FinancialSystem.FinancialBehaviour
+  @behaviour FinancialSystem.Financial
 
   alias FinancialSystem.{Account, AccountState, Currency, FinHelper, Split}
 
@@ -85,7 +85,7 @@ defmodule FinancialSystem do
   @impl true
   def withdraw(pid, value) when is_pid(pid) and is_number(value) == value > 0 do
     with {:ok, _} <- FinHelper.funds(pid, value) do
-      AccountState.withdraw(pid, value)
+      AccountState.withdraw(pid, Currency.amount_do(:store, value, AccountState.show(pid).currency ))
     end
   end
 
@@ -107,7 +107,8 @@ defmodule FinancialSystem do
   def transfer(value, pid_from, pid_to)
       when is_pid(pid_from) and
              pid_from != pid_to and is_pid(pid_to) and is_number(value) == value > 0 do
-    with {:ok, _} <- FinHelper.funds(pid_from, value) do
+    with {:ok, _} <- FinHelper.funds(pid_from, value),
+         {:ok, _} <- FinHelper.transfer_have_account_from(pid_from, pid_to) do
       withdraw(pid_from, value)
 
       deposit(pid_to, AccountState.show(pid_from).currency, value)
@@ -118,7 +119,7 @@ defmodule FinancialSystem do
     do:
       raise(ArgumentError,
         message:
-          "You cannot repeat the pid! The second and third args must be a pid and de first arg must be a number"
+          "The second and third args must be a pid and de first arg must be a number"
       )
 
   @doc """
@@ -136,7 +137,7 @@ defmodule FinancialSystem do
       when is_pid(pid_from) and is_list(split_list) and is_number(value) == value > 0 do
     with {:ok, _} <- FinHelper.funds(pid_from, value),
          {:ok, _} <- FinHelper.percent_ok(split_list),
-         {:ok, _} <- FinHelper.split_list_have_account_from(pid_from, split_list) do
+         {:ok, _} <- FinHelper.transfer_have_account_from(pid_from, split_list) do
       split_list
       |> FinHelper.unite_equal_account_split()
       |> Enum.map(fn %Split{account: pid_to, percent: percent} ->
@@ -148,7 +149,7 @@ defmodule FinancialSystem do
     end
   end
 
-  def split(_, _),
+  def split(_, _, _),
     do:
       raise(ArgumentError,
         message:
