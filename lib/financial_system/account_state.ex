@@ -55,7 +55,7 @@ defmodule FinancialSystem.AccountState do
 
   ## Examples
     {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
-    deposit(pid, 100)
+    FinancialSystem.AccountState.deposit(pid, 100)
   """
   @spec deposit(pid(), number()) :: Account.t() | no_return()
   def deposit(account, value) when is_pid(account) and is_number(value) do
