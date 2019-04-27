@@ -1,4 +1,4 @@
-defmodule FinancialSystem.FinancialBehaviour do
+defmodule FinancialSystem.Financial do
   @moduledoc false
   alias FinancialSystem.{Account, Split}
 
