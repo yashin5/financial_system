@@ -1,7 +1,6 @@
 defmodule FinancialSystem.FinHelper do
   @moduledoc """
-  This module is responsable to help other modules with the financial operations, transforming
-  a value in Decimal to show to the user, for example.
+  This module is responsable to help other modules with the financial operations.
   """
 
   alias FinancialSystem.Split
@@ -31,11 +30,11 @@ defmodule FinancialSystem.FinHelper do
     {_, pid2} = FinancialSystem.create("Antonio Marcos", "BRL", 100)
     {_, pid3} = FinancialSystem.create("Mateus Mathias", "BRL", 100)
     split_list = [%FinancialSystem.SplitDefinition{account: pid2, percent: 80}, %FinancialSystem.SplitDefinition{account: pid3, percent: 20}]
-    FinancialSystem.FinHelpers.split_list_have_account_from(pid, split_list)
+    FinancialSystem.FinHelpers.transfer_have_account_from(pid, split_list)
   """
-  @spec split_list_have_account_from(pid(), list(Split.t())) ::
+  @spec transfer_have_account_from(pid(), list(Split.t() | String.t())) ::
           boolean() | {:error, no_return()}
-  def split_list_have_account_from(account_from, split_list)
+  def transfer_have_account_from(account_from, split_list)
       when is_pid(account_from) and is_list(split_list) do
     have_or_not =
       split_list
@@ -49,6 +48,13 @@ defmodule FinancialSystem.FinHelper do
       true ->
         {:error,
          raise(ArgumentError, message: "You can not send to the same account as you are sending")}
+    end
+  end
+
+  def transfer_have_account_from(account_from, account_to) do
+    case account_from != account_to do
+      true -> {:ok, true}
+      false -> {:error, raise(ArgumentError, message: "You can not send to the same account as you are sending")}
     end
   end
 
