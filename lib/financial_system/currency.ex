@@ -4,7 +4,7 @@ defmodule FinancialSystem.Currency do
   """
 
   @spec currency_rate() :: map()
-  def currency_rate do
+  defp currency_rate do
     case File.read("currency_rate.json") do
       {:ok, body} -> Poison.decode!(body)
       {:error, reason} -> reason
@@ -15,8 +15,9 @@ defmodule FinancialSystem.Currency do
     Convert a value to decimal and round it based on currency.
 
   ## Examples
-    FinancialSystem.FinHelpers.to_decimal(10.502323, "CLF")
+    FinancialSystem.Currency.to_decimal(10.502323, "CLF")
   """
+  @spec to_decimal(number) :: Decimal.t()
   def to_decimal(value) when is_number(value) do
     case is_integer(value) do
       true -> Decimal.new(value)
@@ -24,11 +25,18 @@ defmodule FinancialSystem.Currency do
     end
   end
 
+  defp to_decimal(value, precision, :show) when precision in 0..8 do
+    value
+    |> to_decimal()
+    |> Decimal.div(Kernel.trunc(:math.pow(10, precision)))
+    |> Decimal.round(precision, :floor)
+  end
+
   @doc """
     Verify if currency is valid.
 
   ## Examples
-    currency_is_valid("BRL")
+    FinancialSystem.Currency.currency_is_valid("BRL")
   """
   @spec currency_is_valid(String.t()) :: {:ok, String.t()} | {:error, no_return()}
   def currency_is_valid(currency) when is_binary(currency) do
@@ -50,7 +58,7 @@ defmodule FinancialSystem.Currency do
     converts the values from USD ​​based on the currency.
 
   ## Examples
-    convert("USD", "BRL", 10)
+    FinancialSystem.Currency.convert("USD", "BRL", 10)
   """
   @spec convert(String.t(), pid(), number()) :: number()
   def convert("USD", currency_to, value) when is_binary(currency_to) and is_number(value) do
@@ -58,34 +66,50 @@ defmodule FinancialSystem.Currency do
     |> Decimal.mult(
       Decimal.from_float(currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"])
     )
-    |> to_integer_do(currency_rate()["decimal"]["USD#{String.upcase(currency_to)}"])
+    |> amount_do(currency_rate()["decimal"]["USD#{String.upcase(currency_to)}"])
   end
 
   @doc """
-    converts the values ​based on the currency.
+    converts the values ​based on the currency and transform them in
+    integers..
 
   ## Examples
-    convert("EUR", "BRL", 10)
+    FinancialSystem.Currency.convert("EUR", "BRL", 10)
   """
-  @spec convert(String.t(), String.t(), number()) :: number()
+  @spec convert(String.t(), String.t(), number()) :: integer()
   def convert(currency_from, currency_to, value)
       when is_binary(currency_from) and is_binary(currency_to) and is_number(value) do
     value
     |> to_decimal()
     |> Decimal.div(to_decimal(currency_rate()["quotes"]["USD#{String.upcase(currency_from)}"]))
     |> Decimal.mult(to_decimal(currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"]))
-    |> to_integer_do(currency_rate()["decimal"]["USD#{String.upcase(currency_to)}"])
+    |> amount_do(currency_rate()["decimal"]["USD#{String.upcase(currency_to)}"])
   end
 
-  def to_integer_do(:store, value, currency) do
+  @doc """
+    converts the value to integer ​based on the currency to storage.
+
+  ## Examples
+    FinancialSystem.Currency.amount_do(:store, 10, "BRL")
+  """
+  @spec amount_do(atom(), number(), String.t()) :: integer() | no_return()
+  def amount_do(:store = operation, value, currency) when is_atom(operation) and is_number(value) and is_binary(currency) do
     to_integer(value, currency_rate()["decimal"]["USD#{String.upcase(currency)}"], :store)
   end
 
-  def to_integer_do(:show, value, currency) do
-    to_integer(value, currency_rate()["decimal"]["USD#{String.upcase(currency)}"], :show)
+  @doc """
+    converts the value to decimal based in currency to show to the user.
+
+  ## Examples
+    FinancialSystem.Currency.amount_do(:store, 10, "BRL")
+  """
+  def amount_do(:show = operation, value, currency) when is_atom(operation) and is_number(value) and is_binary(currency) do
+    to_decimal(value, currency_rate()["decimal"]["USD#{String.upcase(currency)}"], :show)
   end
 
-  def to_integer_do(value, currency) do
+  def amount_do(_, _, _), do: raise(ArgumentError, message: "The first arg must be :store or :show, second arg must be a number and third must be a valid currency")
+
+  defp amount_do(value, currency)  do
     to_integer(value, currency, :convert)
   end
 
@@ -93,13 +117,6 @@ defmodule FinancialSystem.Currency do
     value
     |> to_decimal()
     |> to_integer(precision, :convert)
-  end
-
-  defp to_integer(value, precision, :show) when precision in 0..8 do
-    value
-    |> to_decimal()
-    |> Decimal.div(Kernel.trunc(:math.pow(10, precision)))
-    |> Decimal.round(precision, :floor)
   end
 
   defp to_integer(value, 0, :show), do: value

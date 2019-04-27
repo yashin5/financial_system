@@ -21,7 +21,7 @@ defmodule FinancialSystem do
       %Account{
         name: name,
         currency: currency_upcase,
-        value: Currency.to_integer_do(:store, value, currency_upcase)
+        value: Currency.amount_do(:store, value, currency_upcase)
       }
       |> AccountState.start()
     end
@@ -43,7 +43,7 @@ defmodule FinancialSystem do
   """
   @impl true
   def show(pid) when is_pid(pid) do
-    Currency.to_integer_do(
+    Currency.amount_do(
       :show,
       AccountState.show(pid).value,
       AccountState.show(pid).currency
@@ -61,15 +61,12 @@ defmodule FinancialSystem do
   """
   @impl true
   def deposit(pid, currency_from, value) when is_pid(pid) and is_number(value) == value > 0 do
-    case Currency.currency_is_valid(currency_from) do
-      {:ok, _} ->
+    with {:ok, _} <- Currency.currency_is_valid(currency_from) do
         AccountState.deposit(
           pid,
-          Currency.convert(currency_from, AccountState.show(pid).currency, value)
+          Currency.convert(currency_from,
+          AccountState.show(pid).currency, value)
         )
-
-      {:error, message} ->
-        message
     end
   end
 
@@ -144,7 +141,9 @@ defmodule FinancialSystem do
       split_list
       |> FinHelper.unite_equal_account_split()
       |> Enum.map(fn %Split{account: pid_to, percent: percent} ->
-        (percent / 100 * value)
+        percent
+        |> Kernel./(100)
+        |> Kernel.*(value)
         |> transfer(pid_from, pid_to)
       end)
     end
