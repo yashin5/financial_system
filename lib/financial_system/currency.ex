@@ -86,6 +86,12 @@ defmodule FinancialSystem.Currency do
     |> amount_do(currency_rate()["decimal"]["USD#{String.upcase(currency_to)}"])
   end
 
+  def convert(_, _, _),
+    do:
+      raise(ArgumentError,
+        message: "Check the parameters what are passed to the function."
+      )
+
   @doc """
     converts the value to integer ​based on the currency to storage.
 
