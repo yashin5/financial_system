@@ -85,7 +85,7 @@ defmodule FinancialSystem do
   """
   @impl true
   def withdraw(pid, value) when is_pid(pid) and is_number(value) == value > 0 do
-    with true <- FinHelper.funds(pid, value) do
+    with {:ok, _} <- FinHelper.funds(pid, value) do
       AccountState.withdraw(pid, value)
     end
   end
@@ -108,7 +108,7 @@ defmodule FinancialSystem do
   def transfer(value, pid_from, pid_to)
       when is_pid(pid_from) and
              pid_from != pid_to and is_pid(pid_to) and is_number(value) == value > 0 do
-    with true <- FinHelper.funds(pid_from, value) do
+    with {:ok, _} <- FinHelper.funds(pid_from, value) do
       withdraw(pid_from, value)
 
       deposit(pid_to, AccountState.show(pid_from).currency, value)
@@ -135,9 +135,9 @@ defmodule FinancialSystem do
   @impl true
   def split(pid_from, split_list, value)
       when is_pid(pid_from) and is_list(split_list) and is_number(value) == value > 0 do
-    with true <- FinHelper.funds(pid_from, value),
-         true <- FinHelper.percent_ok?(split_list),
-         false <- FinHelper.split_list_have_account_from(pid_from, split_list) do
+    with {:ok, _} <- FinHelper.funds(pid_from, value),
+         {:ok, _} <- FinHelper.percent_ok?(split_list),
+         {:ok, _} <- FinHelper.split_list_have_account_from(pid_from, split_list) do
       split_list
       |> FinHelper.unite_equal_account_split()
       |> Enum.map(fn %Split{account: pid_to, percent: percent} ->

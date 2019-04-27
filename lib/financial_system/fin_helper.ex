@@ -13,13 +13,15 @@ defmodule FinancialSystem.FinHelper do
       {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
       FinancialSystem.FinHelpers.funds(pid, 220)
   """
-  @spec funds(pid(), number()) :: boolean() | {:error, no_return()}
+  @spec funds(pid(), number()) :: boolean() | {:error, no_return()} | no_return()
   def funds(pid, value) when is_pid(pid) and is_number(value) do
     case GenServer.call(pid, :get_data).value >= value do
-      true -> true
+      true -> {:ok, true}
       false -> {:error, raise(ArgumentError, message: "Does not have the necessary funds")}
     end
   end
+
+  def funds(_, _), do: raise(ArgumentError, message: "Check the pid and de value.")
 
   @doc """
     Verify if the list of split have a account from inside him.
@@ -42,7 +44,7 @@ defmodule FinancialSystem.FinHelper do
 
     case have_or_not do
       false ->
-        false
+        {:ok, true}
 
       true ->
         {:error,
@@ -60,8 +62,8 @@ defmodule FinancialSystem.FinHelper do
     split_list = [%FinancialSystem.SplitDefinition{account: pid2, percent: 80}, %FinancialSystem.SplitDefinition{account: pid3, percent: 20}]
     FinancialSystem.FinHelpers.split_list_have_account_from(split_list)
   """
-  @spec percent_ok?(list(Split.t())) :: boolean() | {:error, no_return()}
-  def percent_ok?(split_list) when is_list(split_list) do
+  @spec percent_ok(list(Split.t())) :: boolean() | {:error, no_return()}
+  def percent_ok(split_list) when is_list(split_list) do
     total_percent =
       split_list
       |> Enum.reduce(0, fn %Split{percent: percent}, acc ->
@@ -69,7 +71,7 @@ defmodule FinancialSystem.FinHelper do
       end)
 
     case total_percent == 100 do
-      true -> true
+      true -> {:ok, true}
       false -> {:error, raise(ArgumentError, message: "The total percent must be 100.")}
     end
   end
