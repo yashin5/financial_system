@@ -51,14 +51,23 @@ defmodule FinancialSystem.FinHelper do
     end
   end
 
-  def transfer_have_account_from(account_from, account_to) when is_pid(account_from) and is_pid(account_to) do
+  def transfer_have_account_from(account_from, account_to)
+      when is_pid(account_from) and is_pid(account_to) do
     case account_from != account_to do
-      true -> {:ok, true}
-      false -> {:error, raise(ArgumentError, message: "You can not send to the same account as you are sending")}
+      true ->
+        {:ok, true}
+
+      false ->
+        {:error,
+         raise(ArgumentError, message: "You can not send to the same account as you are sending")}
     end
   end
 
-  def transfer_have_account_from(_, _), do: raise(ArgumentError, message: "First arg must be a pid and second arg must be a pid or a Split struct")
+  def transfer_have_account_from(_, _),
+    do:
+      raise(ArgumentError,
+        message: "First arg must be a pid and second arg must be a pid or a Split struct"
+      )
 
   defp have_or_not(%Split{account: account_to}, account_from) do
     account_from == account_to
