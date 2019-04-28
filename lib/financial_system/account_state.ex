@@ -45,7 +45,7 @@ defmodule FinancialSystem.AccountState do
     FinancialSystem.AccountState.withdraw(pid, 100)
   """
   @spec withdraw(pid(), number()) :: Account.t() | no_return()
-  def withdraw(account, value) when is_pid(account) and is_number(value) do
+  def withdraw(account, value) when is_pid(account) and is_number(value) and value > 0 do
     GenServer.cast(account, {:withdraw, value})
     show(account)
   end
@@ -58,7 +58,7 @@ defmodule FinancialSystem.AccountState do
     FinancialSystem.AccountState.deposit(pid, 100)
   """
   @spec deposit(pid(), number()) :: Account.t() | no_return()
-  def deposit(account, value) when is_pid(account) and is_number(value) do
+  def deposit(account, value) when is_pid(account) and is_number(value) and value > 0 do
     GenServer.cast(account, {:deposit, value})
     show(account)
   end
