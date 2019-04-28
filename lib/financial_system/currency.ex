@@ -25,6 +25,12 @@ defmodule FinancialSystem.Currency do
     end
   end
 
+  def to_decimal(_),
+    do:
+      raise(ArgumentError,
+        message: "Arg must be a integer or float."
+      )
+
   defp to_decimal(value, precision, :show) when precision in 0..8 do
     value
     |> to_decimal()
@@ -61,12 +67,13 @@ defmodule FinancialSystem.Currency do
     FinancialSystem.Currency.convert("USD", "BRL", 10)
   """
   @spec convert(String.t(), pid(), number()) :: number()
-  def convert("USD", currency_to, value) when is_binary(currency_to) and is_number(value) do
-    to_decimal(value)
-    |> Decimal.mult(
-      Decimal.from_float(currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"])
-    )
-    |> amount_do(currency_rate()["decimal"]["USD#{String.upcase(currency_to)}"])
+  def convert("USD", currency_to, value)
+      when is_binary(currency_to) and value > 0 and is_number(value) do
+    with {:ok, currency_to_upcase} <- currency_is_valid(currency_to) do
+      to_decimal(value)
+      |> Decimal.mult(Decimal.from_float(currency_rate()["quotes"]["USD#{currency_to_upcase}"]))
+      |> amount_do(currency_rate()["decimal"]["USD#{currency_to_upcase}"])
+    end
   end
 
   @doc """
@@ -78,12 +85,15 @@ defmodule FinancialSystem.Currency do
   """
   @spec convert(String.t(), String.t(), number()) :: integer()
   def convert(currency_from, currency_to, value)
-      when is_binary(currency_from) and is_binary(currency_to) and is_number(value) do
-    value
-    |> to_decimal()
-    |> Decimal.div(to_decimal(currency_rate()["quotes"]["USD#{String.upcase(currency_from)}"]))
-    |> Decimal.mult(to_decimal(currency_rate()["quotes"]["USD#{String.upcase(currency_to)}"]))
-    |> amount_do(currency_rate()["decimal"]["USD#{String.upcase(currency_to)}"])
+      when is_binary(currency_from) and value > 0 and is_binary(currency_to) and is_number(value) do
+    with {:ok, currency_from_upcase} <- currency_is_valid(currency_from),
+         {:ok, currency_to_upcase} <- currency_is_valid(currency_to) do
+      value
+      |> to_decimal()
+      |> Decimal.div(to_decimal(currency_rate()["quotes"]["USD#{currency_from_upcase}"]))
+      |> Decimal.mult(to_decimal(currency_rate()["quotes"]["USD#{currency_to_upcase}"]))
+      |> amount_do(currency_rate()["decimal"]["USD#{currency_to_upcase}"])
+    end
   end
 
   def convert(_, _, _),
@@ -100,8 +110,10 @@ defmodule FinancialSystem.Currency do
   """
   @spec amount_do(atom(), number(), String.t()) :: integer() | no_return()
   def amount_do(:store = operation, value, currency)
-      when is_atom(operation) and is_number(value) and is_binary(currency) do
-    to_integer(value, currency_rate()["decimal"]["USD#{String.upcase(currency)}"], :store)
+      when is_atom(operation) and is_number(value) and value >= 0 and is_binary(currency) do
+    with {:ok, currency_upcase} <- currency_is_valid(currency) do
+      to_integer(value, currency_rate()["decimal"]["USD#{currency_upcase}"], :store)
+    end
   end
 
   @doc """
@@ -111,8 +123,10 @@ defmodule FinancialSystem.Currency do
     FinancialSystem.Currency.amount_do(:store, 10, "BRL")
   """
   def amount_do(:show = operation, value, currency)
-      when is_atom(operation) and is_number(value) and is_binary(currency) do
-    to_decimal(value, currency_rate()["decimal"]["USD#{String.upcase(currency)}"], :show)
+      when is_atom(operation) and is_number(value) and value >= 0 and is_binary(currency) do
+    with {:ok, currency_upcase} <- currency_is_valid(currency) do
+      to_decimal(value, currency_rate()["decimal"]["USD#{currency_upcase}"], :show)
+    end
   end
 
   def amount_do(_, _, _),
