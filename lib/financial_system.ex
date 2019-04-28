@@ -85,7 +85,10 @@ defmodule FinancialSystem do
   @impl true
   def withdraw(pid, value) when is_pid(pid) and is_number(value) == value > 0 do
     with {:ok, _} <- FinHelper.funds(pid, value) do
-      AccountState.withdraw(pid, Currency.amount_do(:store, value, AccountState.show(pid).currency ))
+      AccountState.withdraw(
+        pid,
+        Currency.amount_do(:store, value, AccountState.show(pid).currency)
+      )
     end
   end
 
@@ -118,8 +121,7 @@ defmodule FinancialSystem do
   def transfer(_, _, _),
     do:
       raise(ArgumentError,
-        message:
-          "The second and third args must be a pid and de first arg must be a number"
+        message: "The second and third args must be a pid and de first arg must be a number"
       )
 
   @doc """
