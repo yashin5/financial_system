@@ -129,20 +129,14 @@ defmodule FinHelperTest do
   end
 
   describe "unite_equal_account_split/1" do
-    setup do
+    test "User should be able to verify if have a duplicated account in split list and unity it." do
       {_, pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
-      {_, pid2} = FinancialSystem.create("Inu Yasha", "BRL", 5)
 
-      list_to = [
+      split_list = [
         %FinancialSystem.Split{account: pid, percent: 20},
         %FinancialSystem.Split{account: pid, percent: 80}
       ]
 
-      {:ok, [account: pid, account2: pid2, list: list_to]}
-    end
-
-    test "User should be able to verify if have a duplicated account in split list and unity it.",
-         %{list: split_list} do
       assert [%FinancialSystem.Split{account: pid, percent: 100}] =
                FinancialSystem.FinHelper.unite_equal_account_split(split_list)
     end
