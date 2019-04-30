@@ -70,7 +70,8 @@ defmodule FinancialSystem.Currency do
   def convert("USD", currency_to, value)
       when is_binary(currency_to) and value > 0 and is_number(value) do
     with {:ok, currency_to_upcase} <- currency_is_valid(currency_to) do
-      to_decimal(value)
+      value
+      |> to_decimal()
       |> Decimal.mult(Decimal.from_float(currency_rate()["quotes"]["USD#{currency_to_upcase}"]))
       |> amount_do(currency_rate()["decimal"]["USD#{currency_to_upcase}"])
     end

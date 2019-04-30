@@ -147,6 +147,7 @@ defmodule FinHelperTest do
     test "User should be able to verify if have a duplicated account in split list and unity it.",
          %{account_pid: pid, list: split_list} do
       assert [%FinancialSystem.Split{account: pid, percent: 100}] ==
+
                FinancialSystem.FinHelper.unite_equal_account_split(split_list)
     end
 

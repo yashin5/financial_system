@@ -7,7 +7,7 @@
                         'Elixir.FinancialSystem.AccountState',
                         'Elixir.FinancialSystem.Currency',
                         'Elixir.FinancialSystem.FinHelper',
-                        'Elixir.FinancialSystem.FinancialBehaviour',
+                        'Elixir.FinancialSystem.Financial',
                         'Elixir.FinancialSystem.Split']},
               {registered,[]},
               {vsn,"0.1.0"}]}.
