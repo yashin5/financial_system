@@ -6,6 +6,7 @@
                         'Elixir.FinancialSystem.Account',
                         'Elixir.FinancialSystem.AccountState',
                         'Elixir.FinancialSystem.Currency',
+                        'Elixir.FinancialSystem.Currency.CurrencyBrowser',
                         'Elixir.FinancialSystem.FinHelper',
                         'Elixir.FinancialSystem.Financial',
                         'Elixir.FinancialSystem.Split']},

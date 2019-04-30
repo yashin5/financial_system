@@ -6,6 +6,7 @@ defmodule FinancialSystem do
   @behaviour FinancialSystem.Financial
 
   alias FinancialSystem.{Account, AccountState, Currency, FinHelper, Split}
+  alias FinancialSystem.Currency.CurrencyBrowser
 
   @doc """
     Create user accounts
@@ -16,7 +17,7 @@ defmodule FinancialSystem do
   @impl true
   def create(name, currency, value)
       when is_binary(name) and is_binary(currency) and is_number(value) == value >= 0 do
-    with {:ok, currency_upcase} <- Currency.currency_is_valid(currency),
+    with {:ok, currency_upcase} <- CurrencyBrowser.currency_is_valid(currency),
          true <- byte_size(name) > 0 do
       %Account{
         name: name,
@@ -61,7 +62,7 @@ defmodule FinancialSystem do
   """
   @impl true
   def deposit(pid, currency_from, value) when is_pid(pid) and is_number(value) == value > 0 do
-    with {:ok, _} <- Currency.currency_is_valid(currency_from) do
+    with {:ok, _} <- CurrencyBrowser.currency_is_valid(currency_from) do
       AccountState.deposit(
         pid,
         Currency.convert(currency_from, AccountState.show(pid).currency, value)

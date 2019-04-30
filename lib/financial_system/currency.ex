@@ -3,13 +3,7 @@ defmodule FinancialSystem.Currency do
   This module is responsable for make conversion of the values in financial operations.
   """
 
-  @spec currency_rate() :: map()
-  defp currency_rate do
-    case File.read("currency_rate.json") do
-      {:ok, body} -> Poison.decode!(body)
-      {:error, reason} -> reason
-    end
-  end
+  alias FinancialSystem.Currency.CurrencyBrowser
 
   @doc """
     Convert a value to decimal and round it based on currency.
@@ -39,28 +33,6 @@ defmodule FinancialSystem.Currency do
   end
 
   @doc """
-    Verify if currency is valid.
-
-  ## Examples
-    FinancialSystem.Currency.currency_is_valid("BRL")
-  """
-  @spec currency_is_valid(String.t()) :: {:ok, String.t()} | {:error, no_return()}
-  def currency_is_valid(currency) when is_binary(currency) do
-    is_valid? = Map.has_key?(currency_rate()["quotes"], "USD#{String.upcase(currency)}")
-
-    case is_valid? do
-      true ->
-        {:ok, String.upcase(currency)}
-
-      false ->
-        {:error,
-         raise(ArgumentError,
-           message: "The currency is not valid. Please, check it and try again."
-         )}
-    end
-  end
-
-  @doc """
     converts the values from USD ​​based on the currency.
 
   ## Examples
@@ -69,11 +41,13 @@ defmodule FinancialSystem.Currency do
   @spec convert(String.t(), pid(), number()) :: number()
   def convert("USD", currency_to, value)
       when is_binary(currency_to) and value > 0 and is_number(value) do
-    with {:ok, currency_to_upcase} <- currency_is_valid(currency_to) do
+    with {:ok, currency_to_upcase} <- CurrencyBrowser.currency_is_valid(currency_to) do
       value
       |> to_decimal()
-      |> Decimal.mult(Decimal.from_float(currency_rate()["quotes"]["USD#{currency_to_upcase}"]))
-      |> amount_do(currency_rate()["decimal"]["USD#{currency_to_upcase}"])
+      |> Decimal.mult(
+        Decimal.from_float(CurrencyBrowser.get_from_currency(:value, currency_to_upcase))
+      )
+      |> amount_do(CurrencyBrowser.get_from_currency(:precision, currency_to_upcase))
     end
   end
 
@@ -87,13 +61,13 @@ defmodule FinancialSystem.Currency do
   @spec convert(String.t(), String.t(), number()) :: integer()
   def convert(currency_from, currency_to, value)
       when is_binary(currency_from) and value > 0 and is_binary(currency_to) and is_number(value) do
-    with {:ok, currency_from_upcase} <- currency_is_valid(currency_from),
-         {:ok, currency_to_upcase} <- currency_is_valid(currency_to) do
+    with {:ok, currency_from_upcase} <- CurrencyBrowser.currency_is_valid(currency_from),
+         {:ok, currency_to_upcase} <- CurrencyBrowser.currency_is_valid(currency_to) do
       value
       |> to_decimal()
-      |> Decimal.div(to_decimal(currency_rate()["quotes"]["USD#{currency_from_upcase}"]))
-      |> Decimal.mult(to_decimal(currency_rate()["quotes"]["USD#{currency_to_upcase}"]))
-      |> amount_do(currency_rate()["decimal"]["USD#{currency_to_upcase}"])
+      |> Decimal.div(to_decimal(CurrencyBrowser.get_from_currency(:value, currency_from_upcase)))
+      |> Decimal.mult(to_decimal(CurrencyBrowser.get_from_currency(:value, currency_to_upcase)))
+      |> amount_do(CurrencyBrowser.get_from_currency(:precision, currency_to_upcase))
     end
   end
 
@@ -112,8 +86,8 @@ defmodule FinancialSystem.Currency do
   @spec amount_do(atom(), number(), String.t()) :: integer() | no_return()
   def amount_do(:store = operation, value, currency)
       when is_atom(operation) and is_number(value) and value >= 0 and is_binary(currency) do
-    with {:ok, currency_upcase} <- currency_is_valid(currency) do
-      to_integer(value, currency_rate()["decimal"]["USD#{currency_upcase}"], :store)
+    with {:ok, currency_upcase} <- CurrencyBrowser.currency_is_valid(currency) do
+      to_integer(value, CurrencyBrowser.get_from_currency(:precision, currency_upcase), :store)
     end
   end
 
@@ -125,8 +99,8 @@ defmodule FinancialSystem.Currency do
   """
   def amount_do(:show = operation, value, currency)
       when is_atom(operation) and is_number(value) and value >= 0 and is_binary(currency) do
-    with {:ok, currency_upcase} <- currency_is_valid(currency) do
-      to_decimal(value, currency_rate()["decimal"]["USD#{currency_upcase}"], :show)
+    with {:ok, currency_upcase} <- CurrencyBrowser.currency_is_valid(currency) do
+      to_decimal(value, CurrencyBrowser.get_from_currency(:precision, currency_upcase), :show)
     end
   end
 
