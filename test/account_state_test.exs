@@ -3,40 +3,36 @@ defmodule AccountStateTest do
   doctest FinancialSystem.AccountState
 
   describe "handle_call/1" do
-    setup do
-      {_, pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
-      struct = %FinancialSystem.Account{name: "Yashin Santo", currency: "BRL", value: 100}
+    test "User should be able to show a actual state" do
+      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
 
-      on_exit(fn ->
-        nil
-      end)
+      account_struct = %FinancialSystem.Account{
+        name: "Yashin Santos",
+        currency: "BRL",
+        value: 100
+      }
 
-      {:ok, [account: pid, struct: struct]}
-    end
-
-    test "User should be able to show a actual state", %{account: pid} do
-      assert struct = GenServer.call(pid, :get_data)
+      assert GenServer.call(account_pid, :get_data) == account_struct
     end
   end
 
   describe "handle_cast/2" do
     setup do
       {_, pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
-      struct = %FinancialSystem.Account{name: "Yashin Santo", currency: "BRL", value: 100}
 
       on_exit(fn ->
         nil
       end)
 
-      {:ok, [account: pid, struct: struct]}
+      {:ok, [account_pid: pid]}
     end
 
-    test "User should be able to add a integer value to an account", %{account: pid} do
+    test "User should be able to add a integer value to an account", %{account_pid: pid} do
       GenServer.cast(pid, {:deposit, 1})
       assert GenServer.call(pid, :get_data).value == 101
     end
 
-    test "User should be able to subtract a value to an account", %{account: pid} do
+    test "User should be able to subtract a value to an account", %{account_pid: pid} do
       GenServer.cast(pid, {:withdraw, 1})
       assert GenServer.call(pid, :get_data).value == 99
     end
@@ -44,28 +40,33 @@ defmodule AccountStateTest do
 
   describe "show/1" do
     test "User should be able to see the account state" do
-      {_, pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
-      struct = %FinancialSystem.Account{name: "Yashin Santos", currency: "BRL", value: 100}
+      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
 
-      assert FinancialSystem.AccountState.show(pid) == struct
+      account_struct = %FinancialSystem.Account{
+        name: "Yashin Santos",
+        currency: "BRL",
+        value: 100
+      }
+
+      assert FinancialSystem.AccountState.show(account_pid) == account_struct
     end
   end
 
   describe "withdraw/2" do
     test "User should be able to subtract a value from account" do
-      {_, pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
+      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
 
-      FinancialSystem.AccountState.withdraw(pid, 1)
-      assert FinancialSystem.AccountState.show(pid).value == 99
+      FinancialSystem.AccountState.withdraw(account_pid, 1)
+      assert FinancialSystem.AccountState.show(account_pid).value == 99
     end
   end
 
   describe "deposit/2" do
     test "User should be able to subtract a value from account" do
-      {_, pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
+      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
 
-      FinancialSystem.AccountState.deposit(pid, 1)
-      assert FinancialSystem.AccountState.show(pid).value == 101
+      FinancialSystem.AccountState.deposit(account_pid, 1)
+      assert FinancialSystem.AccountState.show(account_pid).value == 101
     end
   end
 end

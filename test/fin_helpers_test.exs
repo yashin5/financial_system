@@ -4,22 +4,22 @@ defmodule FinHelperTest do
 
   describe "funds/2" do
     setup do
-      {_, pid} = FinancialSystem.create("Roberta Santos", "EUR", 20.0)
+      {_, account_pid} = FinancialSystem.create("Roberta Santos", "EUR", 20.0)
 
-      {:ok, [account: pid]}
+      {:ok, [account_pid: account_pid]}
     end
 
     test "User should be able to verify if the account have de funds necessary for the transaction inserting a integer value",
-         %{account: pid} do
+         %{account_pid: pid} do
       assert {:ok, true} = FinancialSystem.FinHelper.funds(pid, 10)
     end
 
     test "User should be able to verify if the account have de funds necessary for the transaction inserting a float value",
-         %{account: pid} do
+         %{account_pid: pid} do
       assert {:ok, true} = FinancialSystem.FinHelper.funds(pid, 20.0)
     end
 
-    test "User not should be able to verify when inserting a string in value", %{account: pid} do
+    test "User not should be able to verify when inserting a string in value", %{account_pid: pid} do
       assert_raise ArgumentError, "Check the pid and de value.", fn ->
         FinancialSystem.FinHelper.funds(pid, "10")
       end
@@ -34,37 +34,43 @@ defmodule FinHelperTest do
 
   describe "transfer_have_account_from/2" do
     setup do
-      {_, pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
-      {_, pid2} = FinancialSystem.create("Oliver Tsubasa", "BRL", 2)
-      {_, pid3} = FinancialSystem.create("Inu Yasha", "BRL", 5)
+      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
+      {_, account_pid2} = FinancialSystem.create("Oliver Tsubasa", "BRL", 2)
+      {_, account_pid3} = FinancialSystem.create("Inu Yasha", "BRL", 5)
 
       list_to = [
-        %FinancialSystem.Split{account: pid, percent: 20},
-        %FinancialSystem.Split{account: pid3, percent: 80}
+        %FinancialSystem.Split{account: account_pid, percent: 20},
+        %FinancialSystem.Split{account: account_pid3, percent: 80}
       ]
 
-      {:ok, [account: pid, account2: pid2, account3: pid3, list: list_to]}
+      {:ok,
+       [
+         account_pid: account_pid,
+         account2_pid: account_pid2,
+         account3_pid: account_pid3,
+         list: list_to
+       ]}
     end
 
     test "User should be able to verify if in split list not have the same account is sending the value",
-         %{account2: pid, list: split_list} do
+         %{account2_pid: pid, list: split_list} do
       assert {:ok, true} = FinancialSystem.FinHelper.transfer_have_account_from(pid, split_list)
     end
 
     test "User should be able to verify if in transfer not have the same account is sending the value",
-         %{account2: pid2, account: pid} do
+         %{account2_pid: pid2, account_pid: pid} do
       assert {:ok, true} = FinancialSystem.FinHelper.transfer_have_account_from(pid, pid2)
     end
 
     test "User should be able to verify if in transfer have the same account is sending the value",
-         %{account: pid} do
+         %{account_pid: pid} do
       assert_raise ArgumentError, "You can not send to the same account as you are sending", fn ->
         FinancialSystem.FinHelper.transfer_have_account_from(pid, pid)
       end
     end
 
     test "User should be able to verify if in split list have the same account is sending the value",
-         %{account: pid, list: split_list} do
+         %{account_pid: pid, list: split_list} do
       assert_raise ArgumentError, "You can not send to the same account as you are sending", fn ->
         FinancialSystem.FinHelper.transfer_have_account_from(pid, split_list)
       end
@@ -78,7 +84,7 @@ defmodule FinHelperTest do
                    end
     end
 
-    test "User not should be able to verify if insert a invalid pid_to", %{account: pid} do
+    test "User not should be able to verify if insert a invalid pid_to", %{account_pid: pid} do
       assert_raise ArgumentError,
                    "First arg must be a pid and second arg must be a pid or a Split struct",
                    fn ->
@@ -89,22 +95,20 @@ defmodule FinHelperTest do
 
   describe "percent_ok/1" do
     setup do
-      {_, pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
-      {_, pid2} = FinancialSystem.create("Oliver Tsubasa", "BRL", 2)
-      {_, pid3} = FinancialSystem.create("Inu Yasha", "BRL", 5)
+      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
+      {_, account_pid3} = FinancialSystem.create("Inu Yasha", "BRL", 5)
 
       list_to = [
-        %FinancialSystem.Split{account: pid, percent: 20},
-        %FinancialSystem.Split{account: pid3, percent: 80}
+        %FinancialSystem.Split{account: account_pid, percent: 20},
+        %FinancialSystem.Split{account: account_pid3, percent: 80}
       ]
 
       list_to_false = [
-        %FinancialSystem.Split{account: pid, percent: 30},
-        %FinancialSystem.Split{account: pid3, percent: 80}
+        %FinancialSystem.Split{account: account_pid, percent: 30},
+        %FinancialSystem.Split{account: account_pid3, percent: 80}
       ]
 
-      {:ok,
-       [account: pid, account2: pid2, account3: pid3, list: list_to, list_false: list_to_false]}
+      {:ok, [list: list_to, list_false: list_to_false]}
     end
 
     test "User should be able to verify if in split list the total percent is 100", %{
@@ -130,20 +134,19 @@ defmodule FinHelperTest do
 
   describe "unite_equal_account_split/1" do
     setup do
-      {_, pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
-      {_, pid2} = FinancialSystem.create("Inu Yasha", "BRL", 5)
+      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
 
       list_to = [
-        %FinancialSystem.Split{account: pid, percent: 20},
-        %FinancialSystem.Split{account: pid, percent: 80}
+        %FinancialSystem.Split{account: account_pid, percent: 20},
+        %FinancialSystem.Split{account: account_pid, percent: 80}
       ]
 
-      {:ok, [account: pid, account2: pid2, list: list_to]}
+      {:ok, [account_pid: account_pid, list: list_to]}
     end
 
     test "User should be able to verify if have a duplicated account in split list and unity it.",
-         %{list: split_list} do
-      assert [%FinancialSystem.Split{account: pid, percent: 100}] =
+         %{account_pid: pid, list: split_list} do
+      assert [%FinancialSystem.Split{account: pid, percent: 100}] ==
                FinancialSystem.FinHelper.unite_equal_account_split(split_list)
     end
 

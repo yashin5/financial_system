@@ -38,11 +38,11 @@ defmodule CurrencyTest do
 
   describe "convert/3" do
     test "User should be able to convert the integer value based in currency" do
-      assert 370 = FinancialSystem.Currency.convert("USD", "BRL", 1)
+      assert FinancialSystem.Currency.convert("USD", "BRL", 1) == 370
     end
 
     test "User should be able to convert the float value based in currency" do
-      assert 370 = FinancialSystem.Currency.convert("USD", "BRL", 1.0)
+      assert FinancialSystem.Currency.convert("USD", "BRL", 1.0) == 370
     end
 
     test "User not should be able to convert the value if insert a string" do
@@ -70,11 +70,11 @@ defmodule CurrencyTest do
 
   describe "amount_do/3" do
     test "User should be able to transform a integer value in integer to store the value in state" do
-      assert 100 = FinancialSystem.Currency.amount_do(:store, 1, "USD")
+      assert FinancialSystem.Currency.amount_do(:store, 1, "USD") == 100
     end
 
     test "User should be able to transform a float value in integer to store the value in state" do
-      assert 100_000_000 = FinancialSystem.Currency.amount_do(:store, 1.0, "BTC")
+      assert FinancialSystem.Currency.amount_do(:store, 1.0, "BTC") == 100_000_000
     end
 
     test "User should be able to transform a integer value in decimal to show the value to user" do
