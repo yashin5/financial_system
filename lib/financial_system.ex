@@ -32,7 +32,7 @@ defmodule FinancialSystem do
   def create(_, _, _) do
     raise(ArgumentError,
       message:
-        "First and second args must be a string and third arg must be a number greater than 0."
+        "First and second args must be a string and third arg must be a number in type string greater than 0."
     )
   end
 
@@ -41,6 +41,7 @@ defmodule FinancialSystem do
 
   ## Examples
     {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+
     FinancialSystem.show(pid)
   """
   @impl true
@@ -52,13 +53,14 @@ defmodule FinancialSystem do
     )
   end
 
-  def show(_), do: raise(ArgumentError, message: "Please insert a valid PID")
+  def show(_), do: raise(ArgumentError, message: "Please insert a valid PID.")
 
   @doc """
     Deposit value in account.
 
   ## Examples
     {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+
     FinancialSystem.deposit(pid, "BRL", "10")
   """
   @impl true
@@ -73,7 +75,7 @@ defmodule FinancialSystem do
   def deposit(_, _, _),
     do:
       raise(ArgumentError,
-        message: "The first arg must be a pid and de second arg must be a number"
+        message: "The first arg must be a pid and de second arg must be a number in type string."
       )
 
   @doc """
@@ -81,6 +83,7 @@ defmodule FinancialSystem do
 
   ## Examples
     {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+
     FinancialSystem.withdraw(pid, "10")
   """
   @impl true
@@ -98,7 +101,7 @@ defmodule FinancialSystem do
   def withdraw(_, _),
     do:
       raise(ArgumentError,
-        message: "The first arg must be a pid and de second arg must be a number string value"
+        message: "The first arg must be a pid and de second arg must be a number in type string."
       )
 
   @doc """
@@ -107,6 +110,7 @@ defmodule FinancialSystem do
   ## Examples
     {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", "220")
     {_, pid2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
+
     FinancialSystem.transfer("15", pid, pid2)
   """
   @impl true
@@ -122,7 +126,8 @@ defmodule FinancialSystem do
   def transfer(_, _, _),
     do:
       raise(ArgumentError,
-        message: "The second and third args must be a pid and de first arg must be a number"
+        message:
+          "The first arg must be a number in type string and the second and third args must be a pid."
       )
 
   @doc """
@@ -133,11 +138,12 @@ defmodule FinancialSystem do
     {_, pid2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
     {_, pid3} = FinancialSystem.create("Mateus Mathias", "BRL", "100")
     split_list = [%FinancialSystem.Split{account: pid2, percent: 80}, %FinancialSystem.Split{account: pid3, percent: 20}]
+
     FinancialSystem.split(pid, split_list, "100")
   """
   @impl true
   def split(pid_from, split_list, value)
-      when is_pid(pid_from) and is_list(split_list) and is_binary(value)  do
+      when is_pid(pid_from) and is_list(split_list) and is_binary(value) do
     with {:ok, _} <- FinHelper.percent_ok(split_list),
          {:ok, _} <- FinHelper.transfer_have_account_from(pid_from, split_list) do
       split_list
@@ -157,6 +163,6 @@ defmodule FinancialSystem do
     do:
       raise(ArgumentError,
         message:
-          "The first arg must be a pid, the second must be a list with %SplitDefinition{} and the third must be a value."
+          "The first arg must be a pid, the second must be a list with %Split{} and the third must be a number in type string."
       )
 end

@@ -6,7 +6,7 @@ defmodule FinancialSystem.Account do
   @typedoc """
     Abstract account struct type.
   """
-  @type t :: %__MODULE__{name: String.t(), currency: String.t(), value: number()}
+  @type t :: %__MODULE__{name: String.t(), currency: String.t(), value: String.t()}
 
   @enforce_keys [:name, :currency, :value]
 

@@ -30,6 +30,7 @@ defmodule FinancialSystem.AccountState do
 
   ## Examples
     {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
+
     FinancialSystem.AccountState.show(pid)
   """
   @spec show(pid()) :: Account.t() | no_return()
@@ -41,7 +42,8 @@ defmodule FinancialSystem.AccountState do
     Subtracts value in deposit operations.
 
   ## Examples
-    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
+    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+
     FinancialSystem.AccountState.withdraw(pid, 100)
   """
   @spec withdraw(pid(), number()) :: Account.t() | no_return()
@@ -54,7 +56,8 @@ defmodule FinancialSystem.AccountState do
     Sum value in deposit operations.
 
   ## Examples
-    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
+    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+
     FinancialSystem.AccountState.deposit(pid, 100)
   """
   @spec deposit(pid(), number()) :: Account.t() | no_return()
