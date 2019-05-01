@@ -12,7 +12,7 @@ defmodule FinancialSystem.FinHelper do
       {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
       FinancialSystem.FinHelpers.funds(pid, 220)
   """
-  @spec funds(pid(), number()) :: boolean() | {:error, no_return()} | no_return()
+  @spec funds(pid(), number()) :: {:ok, boolean()} | {:error, no_return()} | no_return()
   def funds(pid, value) when is_pid(pid) and is_number(value) do
     case GenServer.call(pid, :get_data).value >= value do
       true -> {:ok, true}
@@ -33,7 +33,7 @@ defmodule FinancialSystem.FinHelper do
     FinancialSystem.FinHelpers.transfer_have_account_from(pid, split_list)
   """
   @spec transfer_have_account_from(pid(), list(Split.t() | String.t())) ::
-          boolean() | {:error, no_return()}
+          {:ok, boolean()} | {:error, no_return()}
   def transfer_have_account_from(account_from, split_list)
       when is_pid(account_from) and is_list(split_list) do
     have_or_not =
@@ -109,7 +109,7 @@ defmodule FinancialSystem.FinHelper do
     split_list = [%FinancialSystem.SplitDefinition{account: pid2, percent: 80}, %FinancialSystem.SplitDefinition{account: pid3, percent: 20}]
     FinancialSystem.FinHelpers.unite_equal_account_split(split_list)
   """
-  @spec unite_equal_account_split(list(Split.t())) :: list(Split.t())
+  @spec unite_equal_account_split(list(Split.t())) :: list(Split.t()) | no_return()
   def unite_equal_account_split(split_list) when is_list(split_list) do
     split_list
     |> Enum.reduce(%{}, fn %Split{account: account} = sp, acc ->
