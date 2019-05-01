@@ -9,7 +9,8 @@ defmodule FinancialSystem.FinHelper do
     Verify if the account have funds for the operation.
 
   ## Examples
-      {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
+      {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+
       FinancialSystem.FinHelpers.funds(pid, 220)
   """
   @spec funds(pid(), number()) :: {:ok, boolean()} | {:error, no_return()} | no_return()
@@ -26,10 +27,11 @@ defmodule FinancialSystem.FinHelper do
     Verify if the list of split have a account from inside him.
 
   ## Examples
-    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
-    {_, pid2} = FinancialSystem.create("Antonio Marcos", "BRL", 100)
-    {_, pid3} = FinancialSystem.create("Mateus Mathias", "BRL", 100)
+    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+    {_, pid2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
+    {_, pid3} = FinancialSystem.create("Mateus Mathias", "BRL", "100")
     split_list = [%FinancialSystem.SplitDefinition{account: pid2, percent: 80}, %FinancialSystem.SplitDefinition{account: pid3, percent: 20}]
+
     FinancialSystem.FinHelpers.transfer_have_account_from(pid, split_list)
   """
   @spec transfer_have_account_from(pid(), list(Split.t() | String.t())) ::
@@ -51,6 +53,15 @@ defmodule FinancialSystem.FinHelper do
     end
   end
 
+  @doc """
+    Verify if the list of split have a account from inside him.
+
+  ## Examples
+    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+    {_, pid2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
+
+    FinancialSystem.FinHelpers.transfer_have_account_from(pid, pid2)
+  """
   def transfer_have_account_from(account_from, account_to)
       when is_pid(account_from) and is_pid(account_to) do
     case account_from != account_to do
@@ -77,10 +88,11 @@ defmodule FinancialSystem.FinHelper do
     Verify if the total percent is 100.
 
   ## Examples
-    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
-    {_, pid2} = FinancialSystem.create("Antonio Marcos", "BRL", 100)
-    {_, pid3} = FinancialSystem.create("Mateus Mathias", "BRL", 100)
+    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+    {_, pid2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
+    {_, pid3} = FinancialSystem.create("Mateus Mathias", "BRL", "100")
     split_list = [%FinancialSystem.SplitDefinition{account: pid2, percent: 80}, %FinancialSystem.SplitDefinition{account: pid3, percent: 20}]
+
     FinancialSystem.FinHelpers.percent_ok(split_list)
   """
   @spec percent_ok(list(Split.t())) :: boolean() | {:error, no_return()} | no_return()
@@ -103,10 +115,11 @@ defmodule FinancialSystem.FinHelper do
     Unite the duplicated accounts in split_list.
 
   ## Examples
-    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
-    {_, pid2} = FinancialSystem.create("Antonio Marcos", "BRL", 100)
-    {_, pid3} = FinancialSystem.create("Mateus Mathias", "BRL", 100)
+    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+    {_, pid2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
+    {_, pid3} = FinancialSystem.create("Mateus Mathias", "BRL", "100")
     split_list = [%FinancialSystem.SplitDefinition{account: pid2, percent: 80}, %FinancialSystem.SplitDefinition{account: pid3, percent: 20}]
+
     FinancialSystem.FinHelpers.unite_equal_account_split(split_list)
   """
   @spec unite_equal_account_split(list(Split.t())) :: list(Split.t()) | no_return()
