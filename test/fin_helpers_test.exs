@@ -4,7 +4,7 @@ defmodule FinHelperTest do
 
   describe "funds/2" do
     setup do
-      {_, account_pid} = FinancialSystem.create("Roberta Santos", "EUR", 20.0)
+      {_, account_pid} = FinancialSystem.create("Roberta Santos", "EUR", "20.0")
 
       {:ok, [account_pid: account_pid]}
     end
@@ -34,9 +34,9 @@ defmodule FinHelperTest do
 
   describe "transfer_have_account_from/2" do
     setup do
-      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
-      {_, account_pid2} = FinancialSystem.create("Oliver Tsubasa", "BRL", 2)
-      {_, account_pid3} = FinancialSystem.create("Inu Yasha", "BRL", 5)
+      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", "1")
+      {_, account_pid2} = FinancialSystem.create("Oliver Tsubasa", "BRL", "2")
+      {_, account_pid3} = FinancialSystem.create("Inu Yasha", "BRL", "5")
 
       list_to = [
         %FinancialSystem.Split{account: account_pid, percent: 20},
@@ -95,8 +95,8 @@ defmodule FinHelperTest do
 
   describe "percent_ok/1" do
     setup do
-      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
-      {_, account_pid3} = FinancialSystem.create("Inu Yasha", "BRL", 5)
+      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", "1")
+      {_, account_pid3} = FinancialSystem.create("Inu Yasha", "BRL", "5")
 
       list_to = [
         %FinancialSystem.Split{account: account_pid, percent: 20},
@@ -134,7 +134,7 @@ defmodule FinHelperTest do
 
   describe "unite_equal_account_split/1" do
     setup do
-      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
+      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
       list_to = [
         %FinancialSystem.Split{account: account_pid, percent: 20},

@@ -4,7 +4,7 @@ defmodule AccountStateTest do
 
   describe "handle_call/1" do
     test "User should be able to show a actual state" do
-      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
+      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
       account_struct = %FinancialSystem.Account{
         name: "Yashin Santos",
@@ -18,7 +18,7 @@ defmodule AccountStateTest do
 
   describe "handle_cast/2" do
     setup do
-      {_, pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
+      {_, pid} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
       on_exit(fn ->
         nil
@@ -40,7 +40,7 @@ defmodule AccountStateTest do
 
   describe "show/1" do
     test "User should be able to see the account state" do
-      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
+      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
       account_struct = %FinancialSystem.Account{
         name: "Yashin Santos",
@@ -54,7 +54,7 @@ defmodule AccountStateTest do
 
   describe "withdraw/2" do
     test "User should be able to subtract a value from account" do
-      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
+      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
       FinancialSystem.AccountState.withdraw(account_pid, 1)
       assert FinancialSystem.AccountState.show(account_pid).value == 99
@@ -63,7 +63,7 @@ defmodule AccountStateTest do
 
   describe "deposit/2" do
     test "User should be able to subtract a value from account" do
-      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", 1)
+      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
       FinancialSystem.AccountState.deposit(account_pid, 1)
       assert FinancialSystem.AccountState.show(account_pid).value == 101
