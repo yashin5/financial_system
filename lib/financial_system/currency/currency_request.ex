@@ -1,4 +1,4 @@
-defmodule FinancialSystem.Currency.CurrencyBrowser do
+defmodule FinancialSystem.Currency.CurrencyRequest do
   defp load_from_config do
     case File.read(get_currency_path()) do
       {:ok, body} -> Poison.decode!(body)
@@ -10,7 +10,7 @@ defmodule FinancialSystem.Currency.CurrencyBrowser do
     Verify if currency is valid.
 
   ## Examples
-    FinancialSystem.Currency.CurrencyBrowser.currency_is_valid("BRL")
+    FinancialSystem.Currency.CurrencyRequest.currency_is_valid("BRL")
   """
   @spec currency_is_valid(String.t()) :: {:ok, String.t()} | {:error, no_return()}
   def currency_is_valid(currency_code) do
