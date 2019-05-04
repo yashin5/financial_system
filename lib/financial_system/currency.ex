@@ -27,11 +27,12 @@ defmodule FinancialSystem.Currency do
   ## Examples
     FinancialSystem.Currency.to_decimal(10.502323)
   """
-  def to_decimal(value) when is_number(value) do
-    case is_integer(value) do
-      true -> Decimal.new(value)
-      false -> Decimal.from_float(value)
-    end
+  def to_decimal(value) when is_integer(value) do
+    Decimal.new(value)
+  end
+
+  def to_decimal(value) when is_float(value) do
+    Decimal.from_float(value)
   end
 
   def to_decimal(_),
@@ -46,12 +47,16 @@ defmodule FinancialSystem.Currency do
   end
 
   defp is_greater_or_equal_than_0(decimal) do
-    case Decimal.cmp(decimal, Decimal.new(0)) do
-      :gt -> {:ok, decimal}
-      :eq -> {:ok, decimal}
-      :lt -> {:error, raise(ArgumentError, message: "The value must be greater or equal to 0.")}
-    end
+    Decimal.cmp(decimal, Decimal.new(0))
+    |> do_is_greater_or_equal_than_0(decimal)
   end
+
+  defp do_is_greater_or_equal_than_0(response, decimal) when response in [:gt, :eq] do
+    {:ok, decimal}
+  end
+
+  defp do_is_greater_or_equal_than_0(:lt, _),
+    do: {:error, raise(ArgumentError, message: "The value must be greater or equal to 0.")}
 
   @doc """
     converts the values from USD ​​based on the currency.

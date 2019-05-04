@@ -20,16 +20,16 @@ defmodule FinancialSystem.Currency.CurrencyRequest do
   def currency_is_valid(currency) when byte_size(currency) > 0 and is_binary(currency) do
     is_valid? = Map.has_key?(load_from_config()["quotes"], "USD#{String.upcase(currency)}")
 
-    case is_valid? do
-      true ->
-        {:ok, String.upcase(currency)}
+    do_currency_is_valid(is_valid?, currency)
+  end
 
-      false ->
-        {:error,
-         raise(ArgumentError,
-           message: "The currency is not valid. Please, check it and try again."
-         )}
-    end
+  defp do_currency_is_valid(true, currency), do: {:ok, String.upcase(currency)}
+
+  defp do_currency_is_valid(false, _) do
+    {:error,
+     raise(ArgumentError,
+       message: "The currency is not valid. Please, check it and try again."
+     )}
   end
 
   @doc """
