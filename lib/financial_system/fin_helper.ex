@@ -37,8 +37,7 @@ defmodule FinancialSystem.FinHelper do
 
     FinancialSystem.FinHelpers.transfer_have_account_from(pid, split_list)
   """
-  @spec transfer_have_account_from(pid(), list(Split.t() | String.t())) ::
-          {:ok, boolean()} | {:error, no_return()}
+  @spec transfer_have_account_from(pid() | any(), list(Split.t()) | pid() | any()) :: {:ok, boolean()} | {:error, no_return()} | no_return()
   def transfer_have_account_from(account_from, split_list)
       when is_pid(account_from) and is_list(split_list) do
     split_list
@@ -90,7 +89,7 @@ defmodule FinancialSystem.FinHelper do
 
     FinancialSystem.FinHelpers.percent_ok(split_list)
   """
-  @spec percent_ok(list(Split.t())) :: boolean() | {:error, no_return()} | no_return()
+  @spec percent_ok(list(Split.t()) | any()) :: boolean() | {:error, no_return()} | no_return()
   def percent_ok(split_list) when is_list(split_list) do
     split_list
     |> Enum.reduce(0, fn %Split{percent: percent}, acc -> acc + percent end)

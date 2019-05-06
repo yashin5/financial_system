@@ -4,11 +4,13 @@ defmodule FinancialSystem.Currency.CurrencyRequest do
   """
 
   defp load_from_config do
-    case File.read(get_currency_path()) do
-      {:ok, body} -> Poison.decode!(body)
-      {:error, reason} -> reason
-    end
+    File.read(get_currency_path())
+    |> do_load_from_config()
   end
+
+  defp do_load_from_config({:ok, body}), do: Poison.decode!(body)
+
+  defp do_load_from_config({:error, reason}), do: reason
 
   @doc """
     Verify if currency is valid.
@@ -18,9 +20,8 @@ defmodule FinancialSystem.Currency.CurrencyRequest do
   """
   @spec currency_is_valid(String.t()) :: {:ok, String.t()} | {:error, no_return()}
   def currency_is_valid(currency) when byte_size(currency) > 0 and is_binary(currency) do
-    is_valid? = Map.has_key?(load_from_config()["quotes"], "USD#{String.upcase(currency)}")
-
-    do_currency_is_valid(is_valid?, currency)
+    Map.has_key?(load_from_config()["quotes"], "USD#{String.upcase(currency)}")
+    |> do_currency_is_valid(currency)
   end
 
   defp do_currency_is_valid(true, currency), do: {:ok, String.upcase(currency)}

@@ -32,7 +32,8 @@ defmodule FinancialSystem.MixProject do
       {:poison, "~> 3.1"},
       {:decimal, "~> 1.0"},
       {:ex_doc, "~> 0.12"},
-      {:excoveralls, "~> 0.10", only: :test}
+      {:excoveralls, "~> 0.10", only: :test},
+      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false}
     ]
   end
 end

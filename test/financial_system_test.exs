@@ -362,16 +362,6 @@ defmodule FinancialSystemTest do
                    end
     end
 
-    test "User not should be able to make the transfer value equal to 0", %{
-      account2_pid: pid_from,
-      list: split_list
-    } do
-      assert_raise FunctionClauseError,
-                   fn ->
-                     FinancialSystem.split(pid_from, split_list, "0")
-                   end
-    end
-
     test "User not should be able to make the transfer inserting a invalid pid", %{
       list: split_list
     } do
