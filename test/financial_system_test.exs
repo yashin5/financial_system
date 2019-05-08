@@ -30,6 +30,7 @@ defmodule FinancialSystemTest do
       account_struct2: account_struct
     } do
       {_, pid2} = FinancialSystem.create("Yashin Santos", "BRL", "0.10")
+
       assert GenServer.call(pid2, :get_data) == account_struct
     end
 
@@ -37,6 +38,7 @@ defmodule FinancialSystemTest do
       account_struct: account_struct
     } do
       {_, pid2} = FinancialSystem.create("Oliver Tsubasa", "brl", "1")
+
       assert GenServer.call(pid2, :get_data) == account_struct
     end
 
@@ -56,11 +58,9 @@ defmodule FinancialSystemTest do
     end
 
     test "User dont should be able to create a account with a value less than 0" do
-      assert_raise ArgumentError,
-                   "The value must be greater or equal to 0.",
-                   fn ->
-                     FinancialSystem.create("Oliver Tsubasa", "brl", "-1")
-                   end
+    {:error, message} =   FinancialSystem.create("Oliver Tsubasa", "brl", "-1")
+
+    assert ^message = "The value must be greater or equal to 0."
     end
 
     test "User dont should be able to create a account with a value in integer format" do
@@ -166,11 +166,9 @@ defmodule FinancialSystemTest do
     test "User not should be able to make the deposit inserting a value equal or less than 0", %{
       account_pid: pid
     } do
-      assert_raise ArgumentError,
-                   "The value must be greater or equal to 0.",
-                   fn ->
-                     FinancialSystem.deposit(pid, "brl", "-1")
-                   end
+      {:error, message} = FinancialSystem.deposit(pid, "brl", "-1")
+
+      assert ^message = "The value must be greater or equal to 0."
     end
   end
 
@@ -187,45 +185,42 @@ defmodule FinancialSystemTest do
 
     test "User should be able to take a value of an account inserting a value number in string type",
          %{account_pid: pid} do
-      assert FinancialSystem.withdraw(pid, "1").value == 0
+      {:ok, account} = FinancialSystem.withdraw(pid, "1")
+
+      assert account.value == 0
     end
 
     test "User not should be able to make the withdraw inserting a invalid pid" do
-      assert_raise ArgumentError,
-                   "The first arg must be a pid and de second arg must be a number in type string.",
-                   fn ->
-                     FinancialSystem.withdraw("pid", "1")
-                   end
+      {:error, message} = FinancialSystem.withdraw("pid", "1")
+
+      assert ^message =
+               "The first arg must be a pid and de second arg must be a number in type string."
     end
 
     test "User not should be able to make the withdraw inserting a value equal or less than 0", %{
       account_pid: pid
     } do
-      assert_raise ArgumentError,
-                   "The value must be greater or equal to 0.",
-                   fn ->
-                     FinancialSystem.withdraw(pid, "-1")
-                   end
+      {:error, message} = FinancialSystem.withdraw(pid, "-1")
+
+      assert ^message = "The value must be greater or equal to 0."
     end
 
     test "User not should be able to make the withdraw inserting a integer value", %{
       account_pid: pid
     } do
-      assert_raise ArgumentError,
-                   "The first arg must be a pid and de second arg must be a number in type string.",
-                   fn ->
-                     FinancialSystem.withdraw(pid, 1)
-                   end
+      {:error, message} = FinancialSystem.withdraw(pid, 1)
+
+      assert ^message =
+               "The first arg must be a pid and de second arg must be a number in type string."
     end
 
     test "User not should be able to make the withdraw inserting a float value", %{
       account_pid: pid
     } do
-      assert_raise ArgumentError,
-                   "The first arg must be a pid and de second arg must be a number in type string.",
-                   fn ->
-                     FinancialSystem.withdraw(pid, 1.0)
-                   end
+      {:error, message} = FinancialSystem.withdraw(pid, 1.0)
+
+      assert ^message =
+               "The first arg must be a pid and de second arg must be a number in type string."
     end
   end
 
@@ -297,11 +292,9 @@ defmodule FinancialSystemTest do
       account_pid: pid_from,
       account2_pid: pid_to
     } do
-      assert_raise ArgumentError,
-                   "The value must be greater or equal to 0.",
-                   fn ->
-                     FinancialSystem.transfer("-1", pid_from, pid_to)
-                   end
+      {:error, message} = FinancialSystem.transfer("-1", pid_from, pid_to)
+
+      assert ^message = "The value must be greater or equal to 0."
     end
   end
 
@@ -349,17 +342,6 @@ defmodule FinancialSystemTest do
       assert_raise ArgumentError, "You can not send to the same account as you are sending", fn ->
         FinancialSystem.split(pid_from, split_list, "1")
       end
-    end
-
-    test "User not should be able to make the transfer value less than 0", %{
-      account2_pid: pid_from,
-      list: split_list
-    } do
-      assert_raise ArgumentError,
-                   "The value must be greater or equal to 0.",
-                   fn ->
-                     FinancialSystem.split(pid_from, split_list, "-1")
-                   end
     end
 
     test "User not should be able to make the transfer inserting a invalid pid", %{

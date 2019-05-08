@@ -56,7 +56,7 @@ defmodule FinancialSystem.Currency do
   end
 
   defp do_is_greater_or_equal_than_0(:lt, _),
-    do: {:error, raise(ArgumentError, message: "The value must be greater or equal to 0.")}
+    do: {:error, "The value must be greater or equal to 0."}
 
   @doc """
     converts the values from USD ​​based on the currency.

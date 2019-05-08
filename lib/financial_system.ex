@@ -91,18 +91,16 @@ defmodule FinancialSystem do
     with {:ok, value_in_integer} <-
            Currency.amount_do(:store, value, AccountState.show(pid).currency),
          {:ok, _} <- FinHelper.funds(pid, value_in_integer) do
-      AccountState.withdraw(
-        pid,
-        value_in_integer
-      )
+      {:ok,
+       AccountState.withdraw(
+         pid,
+         value_in_integer
+       )}
     end
   end
 
   def withdraw(_, _),
-    do:
-      raise(ArgumentError,
-        message: "The first arg must be a pid and de second arg must be a number in type string."
-      )
+    do: {:error, "The first arg must be a pid and de second arg must be a number in type string."}
 
   @doc """
    Transfer of values ​​between accounts.

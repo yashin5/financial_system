@@ -20,15 +20,15 @@ defmodule FinHelperTest do
     end
 
     test "User not should be able to verify when inserting a string in value", %{account_pid: pid} do
-      assert_raise ArgumentError, "Check the pid and de value.", fn ->
-        FinancialSystem.FinHelper.funds(pid, "10")
-      end
+      {:error, message} = FinancialSystem.FinHelper.funds(pid, "10")
+
+      assert ^message = "Check the pid and de value."
     end
 
     test "User not should be able to verify when inserting a invalid pid" do
-      assert_raise ArgumentError, "Check the pid and de value.", fn ->
-        FinancialSystem.FinHelper.funds("pid", 10)
-      end
+      {:error, message} = FinancialSystem.FinHelper.funds("pid", 10)
+
+      assert ^message = "Check the pid and de value."
     end
   end
 

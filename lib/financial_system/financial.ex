@@ -9,7 +9,8 @@ defmodule FinancialSystem.Financial do
               Account.t() | no_return()
   @callback withdraw(pid() | any(), String.t() | any()) ::
               Account.t() | {:error, no_return()} | no_return()
-  @callback transfer(String.t() | any(), pid() | any(), pid() | any()) :: Account.t() | no_return()
+  @callback transfer(String.t() | any(), pid() | any(), pid() | any()) ::
+              Account.t() | no_return()
   @callback split(pid() | any(), Split.t() | any(), String.t() | any()) ::
               [Account.t()] | {:error, no_return()} | no_return()
 end

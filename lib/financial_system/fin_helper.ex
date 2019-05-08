@@ -15,16 +15,16 @@ defmodule FinancialSystem.FinHelper do
   """
   @spec funds(pid(), number()) :: {:ok, boolean()} | {:error, no_return()} | no_return()
   def funds(pid, value) when is_pid(pid) and is_number(value) do
-    (GenServer.call(pid, :get_data).value >= value)
-    |> do_funds()
+     (GenServer.call(pid, :get_data).value >= value)
+     |> do_funds()
   end
 
-  def funds(_, _), do: raise(ArgumentError, message: "Check the pid and de value.")
+  def funds(_, _), do: {:error, "Check the pid and de value."}
 
   defp do_funds(true), do: {:ok, true}
 
   defp do_funds(false),
-    do: {:error, raise(ArgumentError, message: "Does not have the necessary funds")}
+    do: {:error, "Does not have the necessary funds"}
 
   @doc """
     Verify if the list of split have a account from inside him.
@@ -37,7 +37,8 @@ defmodule FinancialSystem.FinHelper do
 
     FinancialSystem.FinHelpers.transfer_have_account_from(pid, split_list)
   """
-  @spec transfer_have_account_from(pid() | any(), list(Split.t()) | pid() | any()) :: {:ok, boolean()} | {:error, no_return()} | no_return()
+  @spec transfer_have_account_from(pid() | any(), list(Split.t()) | pid() | any()) ::
+          {:ok, boolean()} | {:error, no_return()} | no_return()
   def transfer_have_account_from(account_from, split_list)
       when is_pid(account_from) and is_list(split_list) do
     split_list
