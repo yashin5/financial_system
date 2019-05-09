@@ -27,10 +27,7 @@ defmodule FinancialSystem.Currency.CurrencyRequest do
   defp do_currency_is_valid(true, currency), do: {:ok, String.upcase(currency)}
 
   defp do_currency_is_valid(false, _) do
-    {:error,
-     raise(ArgumentError,
-       message: "The currency is not valid. Please, check it and try again."
-     )}
+    {:error, "The currency is not valid. Please, check it and try again."}
   end
 
   @doc """

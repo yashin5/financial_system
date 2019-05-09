@@ -38,19 +38,13 @@ defmodule CurrencyTest do
     end
 
     test "User not should be able to convert the value with a invalid currency in first parameter" do
-      assert_raise ArgumentError,
-                   "The currency is not valid. Please, check it and try again.",
-                   fn ->
-                     FinancialSystem.Currency.convert("BRLL", "BRL", "1")
-                   end
+      {:error, message} = FinancialSystem.Currency.convert("BRLL", "BRL", "1")
+      assert ^message = "The currency is not valid. Please, check it and try again."
     end
 
     test "User not should be able to convert the value with a invalid currency in second parameter" do
-      assert_raise ArgumentError,
-                   "The currency is not valid. Please, check it and try again.",
-                   fn ->
-                     FinancialSystem.Currency.convert("USD", "BRRL", "1")
-                   end
+      {:error, message} = FinancialSystem.Currency.convert("USD", "BRRL", "1")
+      assert ^message = "The currency is not valid. Please, check it and try again."
     end
   end
 
@@ -84,11 +78,9 @@ defmodule CurrencyTest do
     end
 
     test "User not should be able to transform a value inserting a invalid currency" do
-      assert_raise ArgumentError,
-                   "The currency is not valid. Please, check it and try again.",
-                   fn ->
-                     FinancialSystem.Currency.amount_do(:store, "1.0", "BTCC")
-                   end
+      {:error, message} = FinancialSystem.Currency.amount_do(:store, "1.0", "BTCC")
+
+      assert ^message = "The currency is not valid. Please, check it and try again."
     end
 
     test "User should be able to transform a integer value in decimal to show the value to user" do
@@ -116,11 +108,9 @@ defmodule CurrencyTest do
     end
 
     test "User not should be able to transform a value with a invalid currency" do
-      assert_raise ArgumentError,
-                   "The currency is not valid. Please, check it and try again.",
-                   fn ->
-                     FinancialSystem.Currency.amount_do(:show, 1, "BBTC")
-                   end
+      {:error, message} = FinancialSystem.Currency.amount_do(:show, 1, "BBTC")
+
+      assert ^message = "The currency is not valid. Please, check it and try again."
     end
   end
 end

@@ -15,8 +15,8 @@ defmodule FinancialSystem.FinHelper do
   """
   @spec funds(pid(), number()) :: {:ok, boolean()} | {:error, no_return()} | no_return()
   def funds(pid, value) when is_pid(pid) and is_number(value) do
-     (GenServer.call(pid, :get_data).value >= value)
-     |> do_funds()
+    (GenServer.call(pid, :get_data).value >= value)
+    |> do_funds()
   end
 
   def funds(_, _), do: {:error, "Check the pid and de value."}

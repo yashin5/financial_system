@@ -30,10 +30,8 @@ defmodule FinancialSystem do
   end
 
   def create(_, _, _) do
-    raise(ArgumentError,
-      message:
-        "First and second args must be a string and third arg must be a number in type string greater than 0."
-    )
+    {:error,
+     "First and second args must be a string and third arg must be a number in type string greater than 0."}
   end
 
   @doc """
@@ -73,10 +71,7 @@ defmodule FinancialSystem do
   end
 
   def deposit(_, _, _),
-    do:
-      raise(ArgumentError,
-        message: "The first arg must be a pid and de second arg must be a number in type string."
-      )
+    do: {:error, "The first arg must be a pid and de second arg must be a number in type string."}
 
   @doc """
     Takes out the value of an account.
@@ -123,10 +118,8 @@ defmodule FinancialSystem do
 
   def transfer(_, _, _),
     do:
-      raise(ArgumentError,
-        message:
-          "The first arg must be a number in type string and the second and third args must be a pid."
-      )
+      {:error,
+       "The first arg must be a number in type string and the second and third args must be a pid."}
 
   @doc """
    Transfer of values ​​between multiple accounts.
@@ -143,7 +136,10 @@ defmodule FinancialSystem do
   def split(pid_from, split_list, value)
       when is_pid(pid_from) and is_list(split_list) and is_binary(value) do
     with {:ok, _} <- FinHelper.percent_ok(split_list),
-         {:ok, _} <- FinHelper.transfer_have_account_from(pid_from, split_list) do
+         {:ok, _} <- FinHelper.transfer_have_account_from(pid_from, split_list),
+         {:ok, value_in_integer} <-
+           Currency.amount_do(:store, value, AccountState.show(pid_from).currency),
+         {:ok, _} <- FinHelper.funds(pid_from, value_in_integer) do
       split_list
       |> FinHelper.unite_equal_account_split()
       |> Enum.map(fn %Split{account: pid_to, percent: percent} ->
@@ -159,8 +155,6 @@ defmodule FinancialSystem do
 
   def split(_, _, _),
     do:
-      raise(ArgumentError,
-        message:
-          "The first arg must be a pid, the second must be a list with %Split{} and the third must be a number in type string."
-      )
+      {:error,
+       "The first arg must be a pid, the second must be a list with %Split{} and the third must be a number in type string."}
 end

@@ -8,11 +8,8 @@ defmodule CurrencyRequestTest do
     end
 
     test "User should be able to verify if the currency is not valid" do
-      assert_raise ArgumentError,
-                   "The currency is not valid. Please, check it and try again.",
-                   fn ->
-                     FinancialSystem.Currency.CurrencyRequest.currency_is_valid("brll")
-                   end
+      {:error, message} = FinancialSystem.Currency.CurrencyRequest.currency_is_valid("brll")
+      assert ^message = "The currency is not valid. Please, check it and try again."
     end
   end
 
@@ -22,14 +19,10 @@ defmodule CurrencyRequestTest do
     end
 
     test "User not should be able to get a decimal places with a invalid currency" do
-      assert_raise ArgumentError,
-                   "The currency is not valid. Please, check it and try again.",
-                   fn ->
-                     FinancialSystem.Currency.CurrencyRequest.get_from_currency(
-                       :precision,
-                       "BRLL"
-                     )
-                   end
+      {:error, message} =
+        FinancialSystem.Currency.CurrencyRequest.get_from_currency(:precision, "BRLL")
+
+      assert ^message = "The currency is not valid. Please, check it and try again."
     end
 
     test "User should be able to get a current value of a currency" do
@@ -37,11 +30,10 @@ defmodule CurrencyRequestTest do
     end
 
     test "User not should be able to get a current value of a currency with a invalid currency" do
-      assert_raise ArgumentError,
-                   "The currency is not valid. Please, check it and try again.",
-                   fn ->
-                     FinancialSystem.Currency.CurrencyRequest.get_from_currency(:value, "BRLL")
-                   end
+      {:error, message} =
+        FinancialSystem.Currency.CurrencyRequest.get_from_currency(:value, "BRLL")
+
+      assert ^message = "The currency is not valid. Please, check it and try again."
     end
   end
 end

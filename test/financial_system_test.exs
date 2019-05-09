@@ -50,49 +50,43 @@ defmodule FinancialSystemTest do
     end
 
     test "User dont should be able to create a account with a name is not a string" do
-      assert_raise ArgumentError,
-                   "First and second args must be a string and third arg must be a number in type string greater than 0.",
-                   fn ->
-                     FinancialSystem.create(1, "brll", "0")
-                   end
+      {:error, message} = FinancialSystem.create(1, "brll", "0")
+
+      assert ^message =
+               "First and second args must be a string and third arg must be a number in type string greater than 0."
     end
 
     test "User dont should be able to create a account with a value less than 0" do
-    {:error, message} =   FinancialSystem.create("Oliver Tsubasa", "brl", "-1")
+      {:error, message} = FinancialSystem.create("Oliver Tsubasa", "brl", "-1")
 
-    assert ^message = "The value must be greater or equal to 0."
+      assert ^message = "The value must be greater or equal to 0."
     end
 
     test "User dont should be able to create a account with a value in integer format" do
-      assert_raise ArgumentError,
-                   "First and second args must be a string and third arg must be a number in type string greater than 0.",
-                   fn ->
-                     FinancialSystem.create("Oliver Tsubasa", "brll", 10)
-                   end
+      {:error, message} = FinancialSystem.create("Oliver Tsubasa", "brl", 10)
+
+      assert ^message =
+               "First and second args must be a string and third arg must be a number in type string greater than 0."
     end
 
     test "User dont should be able to create a account without a name" do
-      assert_raise ArgumentError,
-                   "First and second args must be a string and third arg must be a number in type string greater than 0.",
-                   fn ->
-                     FinancialSystem.create("", "BRL", 10)
-                   end
+      {:error, message} = FinancialSystem.create("", "BRL", 10)
+
+      assert ^message =
+               "First and second args must be a string and third arg must be a number in type string greater than 0."
     end
 
     test "User dont should be able to create a account with a value in float format" do
-      assert_raise ArgumentError,
-                   "First and second args must be a string and third arg must be a number in type string greater than 0.",
-                   fn ->
-                     FinancialSystem.create("Oliver Tsubasa", "brll", 10.0)
-                   end
+      {:error, message} = FinancialSystem.create("Oliver Tsubasa", "brl", 10.0)
+
+      assert ^message =
+               "First and second args must be a string and third arg must be a number in type string greater than 0."
     end
 
     test "User dont should be able to create a account with a invalid currency" do
-      assert_raise ArgumentError,
-                   "The currency is not valid. Please, check it and try again.",
-                   fn ->
-                     FinancialSystem.create("Oliver Tsubasa", "brll", "0")
-                   end
+      {:error, message} = FinancialSystem.create("Oliver Tsubasa", "brll", "0")
+
+      assert ^message = "The currency is not valid. Please, check it and try again."
     end
   end
 
@@ -130,37 +124,32 @@ defmodule FinancialSystemTest do
     end
 
     test "User not should be able to insert a integer value in a account", %{account_pid: pid} do
-      assert_raise ArgumentError,
-                   "The first arg must be a pid and de second arg must be a number in type string.",
-                   fn ->
-                     FinancialSystem.deposit(pid, "brl", 1)
-                   end
+      {:error, message} = FinancialSystem.deposit(pid, "brl", 1)
+
+      assert ^message =
+               "The first arg must be a pid and de second arg must be a number in type string."
     end
 
     test "User not should be able to insert a float value in a account", %{account_pid: pid} do
-      assert_raise ArgumentError,
-                   "The first arg must be a pid and de second arg must be a number in type string.",
-                   fn ->
-                     FinancialSystem.deposit(pid, "brl", 1.0)
-                   end
+      {:error, message} = FinancialSystem.deposit(pid, "brl", 1.0)
+
+      assert ^message =
+               "The first arg must be a pid and de second arg must be a number in type string."
     end
 
     test "User not should be able to make the deposit inserting a invalid pid" do
-      assert_raise ArgumentError,
-                   "The first arg must be a pid and de second arg must be a number in type string.",
-                   fn ->
-                     FinancialSystem.deposit("pid", "brl", "1")
-                   end
+      {:error, message} = FinancialSystem.deposit("pid", "brl", "1")
+
+      assert ^message =
+               "The first arg must be a pid and de second arg must be a number in type string."
     end
 
     test "User not should be able to make the deposit inserting a invalid currency", %{
       account_pid: pid
     } do
-      assert_raise ArgumentError,
-                   "The currency is not valid. Please, check it and try again.",
-                   fn ->
-                     FinancialSystem.deposit(pid, "brrl", "1")
-                   end
+      {:error, message} = FinancialSystem.deposit(pid, "brrl", "1")
+
+      assert ^message = "The currency is not valid. Please, check it and try again."
     end
 
     test "User not should be able to make the deposit inserting a value equal or less than 0", %{
@@ -249,43 +238,39 @@ defmodule FinancialSystemTest do
     test "User not should be able to make the transfer inserting a invalid pid_from", %{
       account2_pid: pid_to
     } do
-      assert_raise ArgumentError,
-                   "The first arg must be a number in type string and the second and third args must be a pid.",
-                   fn ->
-                     FinancialSystem.transfer("1", "pid_from", pid_to)
-                   end
+      {:error, message} = FinancialSystem.transfer("1", "pid_from", pid_to)
+
+      assert ^message =
+               "The first arg must be a number in type string and the second and third args must be a pid."
     end
 
     test "User not should be able to make the transfer inserting a invalid pid_to", %{
       account_pid: pid_from
     } do
-      assert_raise ArgumentError,
-                   "The first arg must be a number in type string and the second and third args must be a pid.",
-                   fn ->
-                     FinancialSystem.transfer("1", pid_from, "pid_to")
-                   end
+      {:error, message} = FinancialSystem.transfer("1", pid_from, "pid_to")
+
+      assert ^message =
+               "The first arg must be a number in type string and the second and third args must be a pid."
     end
 
     test "User not should be able to make the transfer inserting a number in integer type", %{
       account_pid: pid_from,
       account2_pid: pid_to
     } do
-      assert_raise ArgumentError,
-                   "The first arg must be a number in type string and the second and third args must be a pid.",
-                   fn ->
-                     FinancialSystem.transfer(1, pid_from, pid_to)
-                   end
+      {:error, message} = FinancialSystem.transfer(1, pid_from, pid_to)
+
+      assert ^message =
+               "The first arg must be a number in type string and the second and third args must be a pid."
     end
 
     test "User not should be able to make the transfer inserting a number in float type", %{
       account_pid: pid_from,
       account2_pid: pid_to
     } do
-      assert_raise ArgumentError,
-                   "The first arg must be a number in type string and the second and third args must be a pid.",
-                   fn ->
-                     FinancialSystem.transfer(1.0, pid_from, pid_to)
-                   end
+      {:error, message} = FinancialSystem.transfer(1.0, pid_from, pid_to)
+
+      assert ^message =
+               "The first arg must be a number in type string and the second and third args must be a pid."
     end
 
     test "User not should be able to make the transfer inserting a value equal or less than 0", %{
@@ -344,36 +329,42 @@ defmodule FinancialSystemTest do
       end
     end
 
+    test "User not should be able to make the transfer value less than 0", %{
+      account2_pid: pid_from,
+      list: split_list
+    } do
+      {:error, message} = FinancialSystem.split(pid_from, split_list, "-1")
+
+      assert ^message = "The value must be greater or equal to 0."
+    end
+
     test "User not should be able to make the transfer inserting a invalid pid", %{
       list: split_list
     } do
-      assert_raise ArgumentError,
-                   "The first arg must be a pid, the second must be a list with %Split{} and the third must be a number in type string.",
-                   fn ->
-                     FinancialSystem.split("pid_from", split_list, "1")
-                   end
+      {:error, message} = FinancialSystem.split("pid_from", split_list, "1")
+
+      assert ^message =
+               "The first arg must be a pid, the second must be a list with %Split{} and the third must be a number in type string."
     end
 
     test "User not should be able to make the transfer inserting a number in integer type", %{
       account_pid: pid_from,
       list: split_list
     } do
-      assert_raise ArgumentError,
-                   "The first arg must be a pid, the second must be a list with %Split{} and the third must be a number in type string.",
-                   fn ->
-                     FinancialSystem.split(pid_from, split_list, 1)
-                   end
+      {:error, message} = FinancialSystem.split(pid_from, split_list, 1)
+
+      assert ^message =
+               "The first arg must be a pid, the second must be a list with %Split{} and the third must be a number in type string."
     end
 
     test "User not should be able to make the transfer inserting a number in float type", %{
       account_pid: pid_from,
       list: split_list
     } do
-      assert_raise ArgumentError,
-                   "The first arg must be a pid, the second must be a list with %Split{} and the third must be a number in type string.",
-                   fn ->
-                     FinancialSystem.split(pid_from, split_list, 1.0)
-                   end
+      {:error, message} = FinancialSystem.split(pid_from, split_list, 1.0)
+
+      assert ^message =
+               "The first arg must be a pid, the second must be a list with %Split{} and the third must be a number in type string."
     end
   end
 end
