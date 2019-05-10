@@ -66,7 +66,7 @@ defmodule FinancialSystem do
     with {:ok, _} <- CurrencyRequest.currency_is_valid(currency_from),
          {:ok, value_in_integer} <-
            Currency.convert(currency_from, AccountState.show(pid).currency, value) do
-      AccountState.deposit(pid, value_in_integer)
+      {:ok, AccountState.deposit(pid, value_in_integer)}
     end
   end
 
@@ -143,8 +143,9 @@ defmodule FinancialSystem do
       split_list
       |> FinHelper.unite_equal_account_split()
       |> Enum.map(fn %Split{account: pid_to, percent: percent} ->
-        percent
-        |> Currency.to_decimal()
+        {:ok, percent_in_decimal} = Currency.to_decimal(percent)
+
+        percent_in_decimal
         |> Decimal.div(100)
         |> Decimal.mult(Decimal.new(value))
         |> Decimal.to_string()

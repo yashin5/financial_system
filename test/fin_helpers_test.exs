@@ -64,32 +64,28 @@ defmodule FinHelperTest do
 
     test "User should be able to verify if in transfer have the same account is sending the value",
          %{account_pid: pid} do
-      assert_raise ArgumentError, "You can not send to the same account as you are sending", fn ->
-        FinancialSystem.FinHelper.transfer_have_account_from(pid, pid)
-      end
+      {:error, message} = FinancialSystem.FinHelper.transfer_have_account_from(pid, pid)
+
+      assert ^message = "You can not send to the same account as you are sending"
     end
 
     test "User should be able to verify if in split list have the same account is sending the value",
          %{account_pid: pid, list: split_list} do
-      assert_raise ArgumentError, "You can not send to the same account as you are sending", fn ->
-        FinancialSystem.FinHelper.transfer_have_account_from(pid, split_list)
-      end
+      {:error, message} = FinancialSystem.FinHelper.transfer_have_account_from(pid, split_list)
+
+      assert ^message = "You can not send to the same account as you are sending"
     end
 
     test "User not should be able to verify if insert a invalid pid", %{list: split_list} do
-      assert_raise ArgumentError,
-                   "First arg must be a pid and second arg must be a pid or a Split struct",
-                   fn ->
-                     FinancialSystem.FinHelper.transfer_have_account_from("pid", split_list)
-                   end
+      {:error, message} = FinancialSystem.FinHelper.transfer_have_account_from("pid", split_list)
+
+      assert ^message = "First arg must be a pid and second arg must be a pid or a Split struct"
     end
 
     test "User not should be able to verify if insert a invalid pid_to", %{account_pid: pid} do
-      assert_raise ArgumentError,
-                   "First arg must be a pid and second arg must be a pid or a Split struct",
-                   fn ->
-                     FinancialSystem.FinHelper.transfer_have_account_from(pid, "split_list")
-                   end
+      {:error, message} = FinancialSystem.FinHelper.transfer_have_account_from(pid, "split_list")
+
+      assert ^message = "First arg must be a pid and second arg must be a pid or a Split struct"
     end
   end
 
@@ -120,15 +116,15 @@ defmodule FinHelperTest do
     test "User not should be able to do a split if the total percent is less than 100", %{
       list_false: split_list
     } do
-      assert_raise ArgumentError, "The total percent must be 100.", fn ->
-        FinancialSystem.FinHelper.percent_ok(split_list)
-      end
+      {:error, message} = FinancialSystem.FinHelper.percent_ok(split_list)
+
+      assert ^message = "The total percent must be 100."
     end
 
     test "User not should be able to verify if insert a invalid list" do
-      assert_raise ArgumentError, "Check if the split list is valid.", fn ->
-        FinancialSystem.FinHelper.percent_ok("split_list")
-      end
+      {:error, message} = FinancialSystem.FinHelper.percent_ok("split_list")
+
+      assert ^message = "Check if the split list is valid."
     end
   end
 
@@ -151,9 +147,9 @@ defmodule FinHelperTest do
     end
 
     test "User not should be able to verify if inserting a invalid pid" do
-      assert_raise ArgumentError, "Check if the split list is valid.", fn ->
-        FinancialSystem.FinHelper.unite_equal_account_split("split_list")
-      end
+      {:error, message} = FinancialSystem.FinHelper.unite_equal_account_split("split_list")
+
+      assert ^message = "Check if the split list is valid."
     end
   end
 end

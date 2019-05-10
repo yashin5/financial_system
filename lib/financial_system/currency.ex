@@ -17,7 +17,7 @@ defmodule FinancialSystem.Currency do
     try do
       {:ok, Decimal.new(value)}
     rescue
-      Decimal.Error -> {:error, raise(ArgumentError, message: "The value must be a string.")}
+      Decimal.Error -> {:error, "The value must be a string."}
     end
   end
 
@@ -28,22 +28,23 @@ defmodule FinancialSystem.Currency do
     FinancialSystem.Currency.to_decimal(10.502323)
   """
   def to_decimal(value) when is_integer(value) do
-    Decimal.new(value)
+    {:ok, Decimal.new(value)}
   end
 
   def to_decimal(value) when is_float(value) do
-    Decimal.from_float(value)
+    {:ok, Decimal.from_float(value)}
   end
 
   def to_decimal(_),
-    do: raise(ArgumentError, message: "The arg must be a integer, float or number string.")
+    do: {:error, "The arg must be a integer, float or number string."}
 
   defp to_decimal(value, precision, :show) when precision in 0..8 do
-    value
-    |> to_decimal()
-    |> Decimal.div(Kernel.trunc(:math.pow(10, precision)))
-    |> Decimal.round(precision, :floor)
-    |> Decimal.to_string()
+    with {:ok, value_in_decimal} <- to_decimal(value) do
+      value_in_decimal
+      |> Decimal.div(Kernel.trunc(:math.pow(10, precision)))
+      |> Decimal.round(precision, :floor)
+      |> Decimal.to_string()
+    end
   end
 
   defp is_greater_or_equal_than_0(decimal) do
@@ -69,11 +70,11 @@ defmodule FinancialSystem.Currency do
       when is_binary(currency_to) and is_binary(value) do
     with {:ok, currency_to_upcase} <- CurrencyRequest.currency_is_valid(currency_to),
          {:ok, decimal_not_evaluated} <- to_decimal(value),
+         {:ok, currency_to_to_decimal} <-
+           to_decimal(CurrencyRequest.get_from_currency(:value, currency_to_upcase)),
          {:ok, decimal_evaluated} <- is_greater_or_equal_than_0(decimal_not_evaluated) do
       decimal_evaluated
-      |> Decimal.mult(
-        Decimal.from_float(CurrencyRequest.get_from_currency(:value, currency_to_upcase))
-      )
+      |> Decimal.mult(currency_to_to_decimal)
       |> amount_do(CurrencyRequest.get_from_currency(:precision, currency_to_upcase))
     end
   end
@@ -83,27 +84,29 @@ defmodule FinancialSystem.Currency do
     integers.
 
   ## Examples
-    FinancialSystem.Currency.convert("EUR", "BRL", 10)
+    FinancialSystem.Currency.convert("EUR", "BRL", "10")
   """
   def convert(currency_from, currency_to, value)
       when is_binary(currency_from) and value > 0 and is_binary(currency_to) and is_binary(value) do
     with {:ok, currency_from_upcase} <- CurrencyRequest.currency_is_valid(currency_from),
          {:ok, currency_to_upcase} <- CurrencyRequest.currency_is_valid(currency_to),
          {:ok, decimal_not_evaluated} <- to_decimal(value),
+         {:ok, currency_from_to_decimal} <-
+           to_decimal(CurrencyRequest.get_from_currency(:value, currency_from_upcase)),
+         {:ok, currency_to_to_decimal} <-
+           to_decimal(CurrencyRequest.get_from_currency(:value, currency_to_upcase)),
          {:ok, decimal_evaluated} <- is_greater_or_equal_than_0(decimal_not_evaluated) do
       decimal_evaluated
-      |> Decimal.div(to_decimal(CurrencyRequest.get_from_currency(:value, currency_from_upcase)))
-      |> Decimal.mult(to_decimal(CurrencyRequest.get_from_currency(:value, currency_to_upcase)))
+      |> Decimal.div(currency_from_to_decimal)
+      |> Decimal.mult(currency_to_to_decimal)
       |> amount_do(CurrencyRequest.get_from_currency(:precision, currency_to_upcase))
     end
   end
 
   def convert(_, _, _),
     do:
-      raise(ArgumentError,
-        message:
-          "The first and second args must be a valid currencys and third arg must be a number in string type."
-      )
+      {:error,
+       "The first and second args must be a valid currencys and third arg must be a number in string type."}
 
   @doc """
     converts the value to string based in currency to show to the user.
@@ -142,10 +145,8 @@ defmodule FinancialSystem.Currency do
 
   def amount_do(_, _, _),
     do:
-      raise(ArgumentError,
-        message:
-          "The first arg must be :store or :show, second arg must be a number and third must be a valid currency"
-      )
+      {:error,
+       "The first arg must be :store or :show, second arg must be a number and third must be a valid currency"}
 
   defp amount_do(value, precision) do
     {:ok, to_integer(value, precision, :convert)}

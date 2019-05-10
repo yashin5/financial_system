@@ -63,17 +63,12 @@ defmodule FinancialSystem.FinHelper do
   end
 
   def transfer_have_account_from(_, _),
-    do:
-      raise(ArgumentError,
-        message: "First arg must be a pid and second arg must be a pid or a Split struct"
-      )
+    do: {:error, "First arg must be a pid and second arg must be a pid or a Split struct"}
 
   defp do_transfer_have_account_from(false), do: {:ok, true}
 
   defp do_transfer_have_account_from(true),
-    do:
-      {:error,
-       raise(ArgumentError, message: "You can not send to the same account as you are sending")}
+    do: {:error, "You can not send to the same account as you are sending"}
 
   defp have_or_not(%Split{account: account_to}) do
     account_to
@@ -98,12 +93,12 @@ defmodule FinancialSystem.FinHelper do
     |> do_percent_ok()
   end
 
-  def percent_ok(_), do: raise(ArgumentError, message: "Check if the split list is valid.")
+  def percent_ok(_), do: {:error, "Check if the split list is valid."}
 
   defp do_percent_ok(true), do: {:ok, true}
 
   defp do_percent_ok(false),
-    do: {:error, raise(ArgumentError, message: "The total percent must be 100.")}
+    do: {:error, "The total percent must be 100."}
 
   @doc """
     Unite the duplicated accounts in split_list.
@@ -126,5 +121,5 @@ defmodule FinancialSystem.FinHelper do
   end
 
   def unite_equal_account_split(_),
-    do: raise(ArgumentError, message: "Check if the split list is valid.")
+    do: {:error, "Check if the split list is valid."}
 end

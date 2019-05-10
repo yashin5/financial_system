@@ -120,7 +120,8 @@ defmodule FinancialSystemTest do
     end
 
     test "User should be able to insert a value number in string type", %{account_pid: pid} do
-      assert FinancialSystem.deposit(pid, "brl", "1").value == 200
+      {:ok, account} = FinancialSystem.deposit(pid, "brl", "1")
+      assert account.value == 200
     end
 
     test "User not should be able to insert a integer value in a account", %{account_pid: pid} do
@@ -324,9 +325,9 @@ defmodule FinancialSystemTest do
       account_pid: pid_from,
       list: split_list
     } do
-      assert_raise ArgumentError, "You can not send to the same account as you are sending", fn ->
-        FinancialSystem.split(pid_from, split_list, "1")
-      end
+      {:error, message} = FinancialSystem.split(pid_from, split_list, "1")
+
+      assert ^message = "You can not send to the same account as you are sending"
     end
 
     test "User not should be able to make the transfer value less than 0", %{
