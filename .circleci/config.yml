@@ -1,4 +1,4 @@
- Check https://circleci.com/docs/2.0/language-elixir/ for more details
+# Check https://circleci.com/docs/2.0/language-elixir/ for more details
 version: 2
 jobs:
   build:
@@ -16,6 +16,6 @@ jobs:
       - checkout
 
       # specify any bash command here prefixed with `run: `
+      - run: mix do local.hex --force, local.rebar --force
       - run: mix deps.get
-      - run: mix ecto.create
       - run: mix test
