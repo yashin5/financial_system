@@ -1,4 +1,7 @@
+
 # FinancialSystem
+
+[![CircleCI](https://circleci.com/gh/yashin5/financial_system/tree/master.svg?style=svg&circle-token=4ca2de8fde25b3b61f471504131221a03df5eb81)](https://circleci.com/gh/yashin5/financial_system/tree/master)
 
 ## Features
 - Create account
@@ -19,12 +22,12 @@ To run this project locally you need to have Elixir installed in your machine. A
 
 1. Clone this repository:
 
-        git clone git@github.com:yashin5/financial_system.git 
+        git clone git@github.com:yashin5/financial_system.git
 
 2. Change to the project directory:
-    
+
         cd financial_system
-        
+
 3. Install the dependencies:
 
         mix deps.get
@@ -32,7 +35,7 @@ To run this project locally you need to have Elixir installed in your machine. A
 4. Run the project:
 
         iex -S mix
-        
+
 ## Useful commands
 - mix test
 - mix credo --strict
