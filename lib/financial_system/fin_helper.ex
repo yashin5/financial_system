@@ -14,7 +14,7 @@ defmodule FinancialSystem.FinHelper do
       FinancialSystem.FinHelpers.funds(pid, 220)
   """
   @spec funds(pid(), number()) :: {:ok, boolean()} | {:error, no_return()} | no_return()
-  def funds(pid, value) when is_integer(pid) and is_number(value) do
+  def funds(pid, value) when is_binary(pid) and is_number(value) do
     (AccountState.show(pid).value >= value)
     |> do_funds()
   end
@@ -40,7 +40,7 @@ defmodule FinancialSystem.FinHelper do
   @spec transfer_have_account_from(pid() | any(), list(Split.t()) | pid() | any()) ::
           {:ok, boolean()} | {:error, no_return()} | no_return()
   def transfer_have_account_from(account_from, split_list)
-      when is_integer(account_from) and is_list(split_list) do
+      when is_binary(account_from) and is_list(split_list) do
     split_list
     |> Enum.map(&have_or_not(&1))
     |> Enum.member?(account_from)
@@ -57,7 +57,7 @@ defmodule FinancialSystem.FinHelper do
     FinancialSystem.FinHelpers.transfer_have_account_from(pid, pid2)
   """
   def transfer_have_account_from(account_from, account_to)
-      when is_integer(account_from) and is_integer(account_to) do
+      when is_binary(account_from) and is_binary(account_to) do
     (account_from == account_to)
     |> do_transfer_have_account_from()
   end
