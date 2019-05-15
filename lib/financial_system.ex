@@ -21,13 +21,12 @@ defmodule FinancialSystem do
          {:ok, value_in_integer} <- Currency.amount_do(:store, value, currency_upcase),
          true <- byte_size(name) > 0 do
       {:ok,
-        AccountState.register_account(%Account{
-          account_id: AccountState.create_account_id(),
-          name: name,
-          currency: currency_upcase,
-          value: value_in_integer
-        })
-      }
+       AccountState.register_account(%Account{
+         account_id: AccountState.create_account_id(),
+         name: name,
+         currency: currency_upcase,
+         value: value_in_integer
+       })}
     end
   end
 
@@ -47,11 +46,12 @@ defmodule FinancialSystem do
   @impl true
   def show(account) when is_binary(account) do
     with {:ok, _} <- AccountState.account_exist(account) do
-      Currency.amount_do(
-        :show,
-        AccountState.show(account).value,
-        AccountState.show(account).currency
-      )
+      {:ok,
+       Currency.amount_do(
+         :show,
+         AccountState.show(account).value,
+         AccountState.show(account).currency
+       )}
     end
   end
 
@@ -76,7 +76,9 @@ defmodule FinancialSystem do
   end
 
   def deposit(_, _, _),
-    do: {:error, "The first arg must be a account ID and de second arg must be a number in type string."}
+    do:
+      {:error,
+       "The first arg must be a account ID and de second arg must be a number in type string."}
 
   @doc """
     Takes out the value of an account.
@@ -101,7 +103,9 @@ defmodule FinancialSystem do
   end
 
   def withdraw(_, _),
-    do: {:error, "The first arg must be a account ID and de second arg must be a number in type string."}
+    do:
+      {:error,
+       "The first arg must be a account ID and de second arg must be a number in type string."}
 
   @doc """
    Transfer of values ​​between accounts.
@@ -143,23 +147,19 @@ defmodule FinancialSystem do
       when is_binary(account_from) and is_list(split_list) and is_binary(value) do
     with {:ok, _} <- FinHelper.percent_ok(split_list),
          {:ok, _} <- FinHelper.transfer_have_account_from(account_from, split_list),
+         {:ok, united_accounts} <- FinHelper.unite_equal_account_split(split_list),
          {:ok, value_in_integer} <-
            Currency.amount_do(:store, value, AccountState.show(account_from).currency),
          {:ok, _} <-
            FinHelper.funds(account_from, value_in_integer) do
-      split_list
-      |> FinHelper.unite_equal_account_split()
+      united_accounts
       |> Enum.map(fn %Split{account: account_to, percent: percent} ->
-        {:ok, percent_in_decimal} = Currency.to_decimal(percent)
-
-        percent_in_decimal
-        |> Decimal.div(100)
-        |> Decimal.mult(Decimal.new(value))
-        |> Decimal.to_string()
+        percent
+        |> FinHelper.division_of_values_to_make_split_transfer(value)
         |> transfer(account_from, account_to)
       end)
 
-      AccountState.show(account_from)
+      {:ok, AccountState.show(account_from)}
     end
   end
 
@@ -167,4 +167,5 @@ defmodule FinancialSystem do
     do:
       {:error,
        "The first arg must be a account ID, the second must be a list with %Split{} and the third must be a number in type string."}
+
 end
