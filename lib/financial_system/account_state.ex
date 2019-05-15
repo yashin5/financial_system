@@ -52,26 +52,33 @@ defmodule FinancialSystem.AccountState do
     Show the state.
 
   ## Examples
-    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", 220)
+    {_, account} = FinancialSystem.create("Yashin Santos", "EUR", 220)
 
-    FinancialSystem.AccountState.show(pid)
+    FinancialSystem.AccountState.show(account.account_id)
   """
   @spec show(pid()) :: Account.t() | no_return()
   def show(account) when is_binary(account) do
     GenServer.call(:register_account, :get_data)[account]
   end
 
-  def account_exist(:check, account) do
+  @doc """
+    Checks if the account exists
+
+  ## Examples
+    {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+
+    FinancialSystem.AccountState.account_exist(account.account_id)
+  """
+  def account_exist(account) do
     do_account_exist(
-      :check,
       GenServer.call(:register_account, {:account_exist, account}),
       account
     )
   end
 
-  defp do_account_exist(:check, true, account), do: {:ok, account}
+  defp do_account_exist(true, account), do: {:ok, true}
 
-  defp do_account_exist(:check, false, account), do: {:error, "The account #{account} dont exist"}
+  defp do_account_exist(false, account), do: {:error, "The account #{account} dont exist"}
 
   def create_account_id() do
     UUID.uuid4()
@@ -81,9 +88,9 @@ defmodule FinancialSystem.AccountState do
     Subtracts value in deposit operations.
 
   ## Examples
-    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountState.withdraw(pid, 100)
+    FinancialSystem.AccountState.withdraw(account.account_id, 100)
   """
   @spec withdraw(pid(), number()) :: Account.t() | no_return()
   def withdraw(account, value) when is_binary(account) and is_number(value) and value > 0 do
@@ -95,9 +102,9 @@ defmodule FinancialSystem.AccountState do
     Sum value in deposit operations.
 
   ## Examples
-    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountState.deposit(pid, 100)
+    FinancialSystem.AccountState.deposit(account.account_id, 100)
   """
   @spec deposit(pid(), number()) :: Account.t() | no_return()
   def deposit(account, value) when is_binary(account) and is_number(value) and value > 0 do
