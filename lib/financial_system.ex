@@ -20,12 +20,14 @@ defmodule FinancialSystem do
     with {:ok, currency_upcase} <- CurrencyRequest.currency_is_valid(currency),
          {:ok, value_in_integer} <- Currency.amount_do(:store, value, currency_upcase),
          true <- byte_size(name) > 0 do
-      AccountState.register_account(%Account{
-        account_id: AccountState.create_account_id(),
-        name: name,
-        currency: currency_upcase,
-        value: value_in_integer
-      })
+      {:ok,
+        AccountState.register_account(%Account{
+          account_id: AccountState.create_account_id(),
+          name: name,
+          currency: currency_upcase,
+          value: value_in_integer
+        })
+      }
     end
   end
 
@@ -38,13 +40,13 @@ defmodule FinancialSystem do
     Show the value in account.
 
   ## Examples
-    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.show(pid)
+    FinancialSystem.show(account.account_id)
   """
   @impl true
   def show(account) when is_binary(account) do
-    with {:ok, _} <- AccountState.account_exist(:check, account) do
+    with {:ok, _} <- AccountState.account_exist(account) do
       Currency.amount_do(
         :show,
         AccountState.show(account).value,
@@ -53,19 +55,19 @@ defmodule FinancialSystem do
     end
   end
 
-  def show(_), do: raise(ArgumentError, message: "Please insert a valid PID.")
+  def show(_), do: raise(ArgumentError, message: "Please insert a valid account ID.")
 
   @doc """
     Deposit value in account.
 
   ## Examples
-    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.deposit(pid, "BRL", "10")
+    FinancialSystem.deposit(account.account_id, "BRL", "10")
   """
   @impl true
   def deposit(account, currency_from, value) when is_binary(account) and is_binary(value) do
-    with {:ok, _} <- AccountState.account_exist(:check, account),
+    with {:ok, _} <- AccountState.account_exist(account),
          {:ok, _} <- CurrencyRequest.currency_is_valid(currency_from),
          {:ok, value_in_integer} <-
            Currency.convert(currency_from, AccountState.show(account).currency, value) do
@@ -74,19 +76,19 @@ defmodule FinancialSystem do
   end
 
   def deposit(_, _, _),
-    do: {:error, "The first arg must be a pid and de second arg must be a number in type string."}
+    do: {:error, "The first arg must be a account ID and de second arg must be a number in type string."}
 
   @doc """
     Takes out the value of an account.
 
   ## Examples
-    {_, pid} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.withdraw(pid, "10")
+    FinancialSystem.withdraw(account.account_id, "10")
   """
   @impl true
   def withdraw(account, value) when is_binary(account) and is_binary(value) do
-    with {:ok, _} <- AccountState.account_exist(:check, account),
+    with {:ok, _} <- AccountState.account_exist(account),
          {:ok, value_in_integer} <-
            Currency.amount_do(:store, value, AccountState.show(account).currency),
          {:ok, _} <- FinHelper.funds(account, value_in_integer) do
@@ -99,7 +101,7 @@ defmodule FinancialSystem do
   end
 
   def withdraw(_, _),
-    do: {:error, "The first arg must be a pid and de second arg must be a number in type string."}
+    do: {:error, "The first arg must be a account ID and de second arg must be a number in type string."}
 
   @doc """
    Transfer of values ​​between accounts.
@@ -123,7 +125,7 @@ defmodule FinancialSystem do
   def transfer(_, _, _),
     do:
       {:error,
-       "The first arg must be a number in type string and the second and third args must be a pid."}
+       "The first arg must be a number in type string and the second and third args must be a account ID."}
 
   @doc """
    Transfer of values ​​between multiple accounts.
@@ -134,7 +136,7 @@ defmodule FinancialSystem do
     {_, account3} = FinancialSystem.create("Mateus Mathias", "BRL", "100")
     split_list = [%FinancialSystem.Split{account: account.account_id, percent: 50}, %FinancialSystem.Split{account: account3.account_id, percent: 50}]
 
-    FinancialSystem.split(account, split_list, "100")
+    FinancialSystem.split(account2.account_id, split_list, "100")
   """
   @impl true
   def split(account_from, split_list, value)
@@ -164,5 +166,5 @@ defmodule FinancialSystem do
   def split(_, _, _),
     do:
       {:error,
-       "The first arg must be a pid, the second must be a list with %Split{} and the third must be a number in type string."}
+       "The first arg must be a account ID, the second must be a list with %Split{} and the third must be a number in type string."}
 end
