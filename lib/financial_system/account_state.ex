@@ -45,13 +45,7 @@ defmodule FinancialSystem.AccountState do
   end
 
   def register_account(params) do
-    :register_account
-    |> GenServer.call({:create_account, params})
-    |> Map.get(params.account_id)
-    |> case do
-      nil -> {:error, :not_created}
-      account -> {:ok, account}
-    end
+    GenServer.call(:register_account, {:create_account, params})[params.account_id]
   end
 
   @doc """
