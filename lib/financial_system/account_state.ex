@@ -44,6 +44,15 @@ defmodule FinancialSystem.AccountState do
     end)
   end
 
+  @doc """
+    Register the account in system.
+
+  ## Examples
+    account_struct = %FinancialSystem.Account{ account_id: UUID.uuid4(), name: "Oliver Tsubasa", currency: "BRL", value: 100 }
+
+    FinancialSystem.AccountState.register_account(account_struct)
+  """
+  @spec register_account(Account.t()) :: Account.t() | no_return()
   def register_account(params) do
     GenServer.call(:register_account, {:create_account, params})[params.account_id]
   end
@@ -52,23 +61,24 @@ defmodule FinancialSystem.AccountState do
     Show the state.
 
   ## Examples
-    {_, account} = FinancialSystem.create("Yashin Santos", "EUR", 220)
+    {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
     FinancialSystem.AccountState.show(account.account_id)
   """
-  @spec show(pid()) :: Account.t() | no_return()
+  @spec show(String.t()) :: Account.t() | no_return()
   def show(account) when is_binary(account) do
     GenServer.call(:register_account, :get_data)[account]
   end
 
   @doc """
-    Checks if the account exists
+    Checks if the account exists.
 
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
     FinancialSystem.AccountState.account_exist(account.account_id)
   """
+  @spec account_exist(String.t()) :: {:ok, boolean()} | {:error, String.t()}
   def account_exist(account) do
     do_account_exist(
       GenServer.call(:register_account, {:account_exist, account}),
@@ -76,10 +86,17 @@ defmodule FinancialSystem.AccountState do
     )
   end
 
-  defp do_account_exist(true, account), do: {:ok, true}
+  defp do_account_exist(true, _), do: {:ok, true}
 
   defp do_account_exist(false, account), do: {:error, "The account #{account} dont exist"}
 
+  @doc """
+    Generate de account id.
+
+  ## Examples
+    FinancialSystem.AccountState.create_account_id()
+  """
+  @spec create_account_id() :: String.t()
   def create_account_id() do
     UUID.uuid4()
   end
@@ -92,8 +109,8 @@ defmodule FinancialSystem.AccountState do
 
     FinancialSystem.AccountState.withdraw(account.account_id, 100)
   """
-  @spec withdraw(pid(), number()) :: Account.t() | no_return()
-  def withdraw(account, value) when is_binary(account) and is_number(value) and value > 0 do
+  @spec withdraw(String.t(), integer()) :: Account.t() | no_return()
+  def withdraw(account, value) when is_binary(account) and is_integer(value) and value > 0 do
     GenServer.cast(:register_account, {:withdraw, account, value})
     show(account)
   end
@@ -106,8 +123,8 @@ defmodule FinancialSystem.AccountState do
 
     FinancialSystem.AccountState.deposit(account.account_id, 100)
   """
-  @spec deposit(pid(), number()) :: Account.t() | no_return()
-  def deposit(account, value) when is_binary(account) and is_number(value) and value > 0 do
+  @spec deposit(String.t(), integer()) :: Account.t() | no_return()
+  def deposit(account, value) when is_binary(account) and is_integer(value) and value > 0 do
     GenServer.cast(:register_account, {:deposit, account, value})
     show(account)
   end
