@@ -53,9 +53,11 @@ defmodule FinancialSystem.AccountState do
     FinancialSystem.AccountState.register_account(account_struct)
   """
   @spec register_account(Account.t()) :: Account.t() | no_return()
-  def register_account(params) do
-    GenServer.call(:register_account, {:create_account, params})[params.account_id]
+  def register_account(%Account{account_id: _, name: _, currency: _, value: _} = params) do
+    {:ok, GenServer.call(:register_account, {:create_account, params})[params.account_id]}
   end
+
+  def register_account(_), do: {:error, "The arg must be a %Account struct."}
 
   @doc """
     Show the state.

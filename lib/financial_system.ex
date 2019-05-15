@@ -5,7 +5,7 @@ defmodule FinancialSystem do
 
   @behaviour FinancialSystem.Financial
 
-  alias FinancialSystem.{Account, AccountState, Currency, FinHelper, Split}
+  alias FinancialSystem.{Account, AccountState, Currency, FinHelper}
   alias FinancialSystem.Currency.CurrencyRequest
 
   @doc """
@@ -19,14 +19,15 @@ defmodule FinancialSystem do
       when is_binary(name) and is_binary(currency) and is_binary(value) do
     with {:ok, currency_upcase} <- CurrencyRequest.currency_is_valid(currency),
          {:ok, value_in_integer} <- Currency.amount_do(:store, value, currency_upcase),
-         true <- byte_size(name) > 0 do
-      {:ok,
-       AccountState.register_account(%Account{
-         account_id: AccountState.create_account_id(),
-         name: name,
-         currency: currency_upcase,
-         value: value_in_integer
-       })}
+         true <- byte_size(name) > 0,
+         {:ok, account_created} <-
+           AccountState.register_account(%Account{
+             account_id: AccountState.create_account_id(),
+             name: name,
+             currency: currency_upcase,
+             value: value_in_integer
+           }) do
+      {:ok, account_created}
     end
   end
 
@@ -151,12 +152,11 @@ defmodule FinancialSystem do
          {:ok, value_in_integer} <-
            Currency.amount_do(:store, value, AccountState.show(account_from).currency),
          {:ok, _} <-
-           FinHelper.funds(account_from, value_in_integer) do
-      united_accounts
-      |> Enum.map(fn %Split{account: account_to, percent: percent} ->
-        percent
-        |> FinHelper.division_of_values_to_make_split_transfer(value)
-        |> transfer(account_from, account_to)
+           FinHelper.funds(account_from, value_in_integer),
+         {:ok, list_to_transfer} <-
+           FinHelper.division_of_values_to_make_split_transfer(united_accounts, value) do
+      Enum.map(list_to_transfer, fn data_transfer ->
+        transfer(data_transfer.value_to_transfer, account_from, data_transfer.account_to_transfer)
       end)
 
       {:ok, AccountState.show(account_from)}
@@ -167,5 +167,4 @@ defmodule FinancialSystem do
     do:
       {:error,
        "The first arg must be a account ID, the second must be a list with %Split{} and the third must be a number in type string."}
-
 end

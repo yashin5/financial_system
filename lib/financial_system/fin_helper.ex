@@ -116,12 +116,22 @@ defmodule FinancialSystem.FinHelper do
   def unite_equal_account_split(_),
     do: {:error, "Check if the split list is valid."}
 
-  def division_of_values_to_make_split_transfer(percent, value) do
-    {:ok, percent_in_decimal} = Currency.to_decimal(percent)
+  def division_of_values_to_make_split_transfer(split_list, value) do
+    {:ok,
+     split_list
+     |> Enum.map(fn %Split{account: account_to, percent: percent} ->
+       {:ok, percent_in_decimal} = Currency.to_decimal(percent)
 
-    percent_in_decimal
-        |> Decimal.div(100)
-        |> Decimal.mult(Decimal.new(value))
-        |> Decimal.to_string()
+       %{
+         value_to_transfer:
+           percent_in_decimal
+           |> Decimal.div(100)
+           |> Decimal.mult(Decimal.new(value))
+           |> Decimal.to_string(),
+         account_to_transfer: account_to
+       }
+     end)}
   end
+
+  def division_of_values_to_make_transfer(_, _), do: {:error, ""}
 end
