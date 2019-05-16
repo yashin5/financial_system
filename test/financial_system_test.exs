@@ -5,18 +5,25 @@ defmodule FinancialSystemTest do
   describe "create/3" do
     setup do
       account_struct = %FinancialSystem.Account{
+        account_id: "abc",
         name: "Oliver Tsubasa",
         currency: "BRL",
         value: 100
       }
 
       account_struct2 = %FinancialSystem.Account{
+        account_id: "abd",
         name: "Yashin Santos",
         currency: "BRL",
         value: 10
       }
 
-      account_struct3 = %FinancialSystem.Account{name: "Inu Yasha", currency: "BRL", value: 0}
+      account_struct3 = %FinancialSystem.Account{
+        account_id: "adb",
+        name: "Inu Yasha",
+        currency: "BRL",
+        value: 0
+      }
 
       {:ok,
        [

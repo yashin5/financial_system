@@ -1,8 +1,12 @@
 defmodule FinancialSystem.FinancialOperations do
-  @behaviour FinancialSystem.Financial
+  @moduledoc """
+  This module is responsable to define the operations in this API
+  """
 
   alias FinancialSystem.{AccountState, Currency, FinHelper}
   alias FinancialSystem.Currency.CurrencyRequest
+
+  @behaviour FinancialSystem.Financial
 
   @doc """
     Show the value in account.
@@ -12,6 +16,7 @@ defmodule FinancialSystem.FinancialOperations do
 
     FinancialSystem.show(account.account_id)
   """
+
   @impl true
   def show(account) when is_binary(account) do
     with {:ok, _} <- AccountState.account_exist(account) do
@@ -122,8 +127,12 @@ defmodule FinancialSystem.FinancialOperations do
            FinHelper.funds(account_from, value_in_integer),
          {:ok, list_to_transfer} <-
            FinHelper.division_of_values_to_make_split_transfer(united_accounts, value) do
-      Enum.map(list_to_transfer, fn data_transfer ->
-        transfer(data_transfer.value_to_transfer, account_from, data_transfer.account_to_transfer)
+      Enum.each(list_to_transfer, fn data_transfer ->
+        transfer(
+          data_transfer.value_to_transfer,
+          account_from,
+          data_transfer.account_to_transfer
+        )
       end)
 
       {:ok, AccountState.show(account_from)}

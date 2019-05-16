@@ -7,6 +7,7 @@ defmodule AccountStateTest do
       {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
       account_struct = %FinancialSystem.Account{
+        account_id: "abc",
         name: "Yashin Santos",
         currency: "BRL",
         value: 100
@@ -43,6 +44,7 @@ defmodule AccountStateTest do
       {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
       account_struct = %FinancialSystem.Account{
+        account_id: "abc",
         name: "Yashin Santos",
         currency: "BRL",
         value: 100

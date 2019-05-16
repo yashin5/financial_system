@@ -15,7 +15,8 @@ defmodule FinancialSystem.FinHelper do
   """
   @spec funds(String.t(), number()) :: {:ok, boolean()} | {:error, no_return()} | no_return()
   def funds(account_id, value) when is_binary(account_id) and is_number(value) do
-    (AccountState.show(account_id).value >= value)
+    AccountState.show(account_id).value
+    |> Kernel.>=(value)
     |> do_funds()
   end
 
@@ -49,7 +50,8 @@ defmodule FinancialSystem.FinHelper do
 
   def transfer_have_account_from(account_from, account_to)
       when is_binary(account_from) and is_binary(account_to) do
-    (account_from == account_to)
+    account_from
+    |> Kernel.==(account_to)
     |> do_transfer_have_account_from()
   end
 

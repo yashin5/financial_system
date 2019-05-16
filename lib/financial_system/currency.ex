@@ -48,7 +48,8 @@ defmodule FinancialSystem.Currency do
   end
 
   defp is_greater_or_equal_than_0(decimal) do
-    Decimal.cmp(decimal, Decimal.new(0))
+    decimal
+    |> Decimal.cmp(Decimal.new(0))
     |> do_is_greater_or_equal_than_0(decimal)
   end
 
@@ -70,12 +71,16 @@ defmodule FinancialSystem.Currency do
       when is_binary(currency_to) and is_binary(value) do
     with {:ok, currency_to_upcase} <- CurrencyRequest.currency_is_valid(currency_to),
          {:ok, decimal_not_evaluated} <- to_decimal(value),
-         {:ok, currency_to_to_decimal} <-
-           to_decimal(CurrencyRequest.get_from_currency(:value, currency_to_upcase)),
+         {:ok, currency_to_value} <-
+           CurrencyRequest.get_from_currency(:value, currency_to_upcase),
+         {:ok, currency_to_decimal_precision} <-
+           CurrencyRequest.get_from_currency(:precision, currency_to_upcase),
+         {:ok, currency_to_decimal} <-
+           to_decimal(currency_to_value),
          {:ok, decimal_evaluated} <- is_greater_or_equal_than_0(decimal_not_evaluated) do
       decimal_evaluated
-      |> Decimal.mult(currency_to_to_decimal)
-      |> amount_do(CurrencyRequest.get_from_currency(:precision, currency_to_upcase))
+      |> Decimal.mult(currency_to_decimal)
+      |> amount_do(currency_to_decimal_precision)
     end
   end
 
@@ -91,15 +96,21 @@ defmodule FinancialSystem.Currency do
     with {:ok, currency_from_upcase} <- CurrencyRequest.currency_is_valid(currency_from),
          {:ok, currency_to_upcase} <- CurrencyRequest.currency_is_valid(currency_to),
          {:ok, decimal_not_evaluated} <- to_decimal(value),
-         {:ok, currency_from_to_decimal} <-
-           to_decimal(CurrencyRequest.get_from_currency(:value, currency_from_upcase)),
-         {:ok, currency_to_to_decimal} <-
-           to_decimal(CurrencyRequest.get_from_currency(:value, currency_to_upcase)),
+         {:ok, currency_from_value} <-
+           CurrencyRequest.get_from_currency(:value, currency_from_upcase),
+         {:ok, currency_to_value} <-
+           CurrencyRequest.get_from_currency(:value, currency_to_upcase),
+         {:ok, currency_to_decimal_precision} <-
+           CurrencyRequest.get_from_currency(:precision, currency_to_upcase),
+         {:ok, currency_from_decimal} <-
+           to_decimal(currency_from_value),
+         {:ok, currency_to_decimal} <-
+           to_decimal(currency_to_value),
          {:ok, decimal_evaluated} <- is_greater_or_equal_than_0(decimal_not_evaluated) do
       decimal_evaluated
-      |> Decimal.div(currency_from_to_decimal)
-      |> Decimal.mult(currency_to_to_decimal)
-      |> amount_do(CurrencyRequest.get_from_currency(:precision, currency_to_upcase))
+      |> Decimal.div(currency_from_decimal)
+      |> Decimal.mult(currency_to_decimal)
+      |> amount_do(currency_to_decimal_precision)
     end
   end
 
