@@ -6,11 +6,11 @@ defmodule FinancialSystem.Financial do
               {:ok, pid()} | {:error, no_return()} | no_return()
   @callback show(pid() | any()) :: String.t() | no_return()
   @callback deposit(pid() | any(), String.t() | any(), String.t() | any()) ::
-              Account.t() | no_return()
+              {:ok, Account.t()} | {:error, String.t()}
   @callback withdraw(pid() | any(), String.t() | any()) ::
-              Account.t() | {:error, no_return()} | no_return()
+              {:ok, Account.t()} | {:error, String.t()}
   @callback transfer(String.t() | any(), pid() | any(), pid() | any()) ::
-              Account.t() | no_return()
+              {:ok, Account.t()} | {:error, String.t()}
   @callback split(pid() | any(), Split.t() | any(), String.t() | any()) ::
-              [Account.t()] | {:error, no_return()} | no_return()
+              {:ok, Account.t()} | {:error, String.t()}
 end
