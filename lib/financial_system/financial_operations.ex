@@ -4,7 +4,7 @@ defmodule FinancialSystem.FinancialOperations do
   """
 
   alias FinancialSystem.{AccountState, Currency, FinHelper}
-  alias FinancialSystem.Currency.CurrencyRequest
+  alias FinancialSystem.Currency.CurrencyImpl
 
   @behaviour FinancialSystem.Financial
 
@@ -41,7 +41,7 @@ defmodule FinancialSystem.FinancialOperations do
   @impl true
   def deposit(account, currency_from, value) when is_binary(account) and is_binary(value) do
     with {:ok, _} <- AccountState.account_exist(account),
-         {:ok, _} <- CurrencyRequest.currency_is_valid(currency_from),
+         {:ok, _} <- CurrencyImpl.currency_is_valid(currency_from),
          {:ok, value_in_integer} <-
            Currency.convert(currency_from, AccountState.show(account).currency, value) do
       {:ok, AccountState.deposit(account, value_in_integer)}

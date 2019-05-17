@@ -1,5 +1,9 @@
 defmodule FinancialSystemTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
+
+  import Mox
+  setup :verify_on_exit!
+
   doctest FinancialSystem
 
   describe "create/3" do
@@ -36,24 +40,62 @@ defmodule FinancialSystemTest do
     test "User should be able to create a account with value number in string type", %{
       account_struct2: account_struct
     } do
-      {_, pid2} = FinancialSystem.create("Yashin Santos", "BRL", "0.10")
+      expect(CurrencyRequestMock, :load_from_config, 4, fn ->
+        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      end)
 
-      assert GenServer.call(pid2, :get_data) == account_struct
+      {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "0.10")
+      account_data = FinancialSystem.AccountState.show(account.account_id)
+
+      account_simulate = %FinancialSystem.Account{
+        account_id: "abd",
+        name: account_data.name,
+        currency: account_data.currency,
+        value: account_data.value
+      }
+
+      assert account_simulate == account_struct
     end
 
     test "User should be able to create a account with low case currency", %{
       account_struct: account_struct
     } do
-      {_, pid2} = FinancialSystem.create("Oliver Tsubasa", "brl", "1")
+      expect(CurrencyRequestMock, :load_from_config, 4, fn ->
+        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      end)
 
-      assert GenServer.call(pid2, :get_data) == account_struct
+      {_, account} = FinancialSystem.create("Oliver Tsubasa", "brl", "1")
+      account_data = FinancialSystem.AccountState.show(account.account_id)
+
+      account_simulate = %FinancialSystem.Account{
+        account_id: "abc",
+        name: account_data.name,
+        currency: account_data.currency,
+        value: account_data.value
+      }
+
+      assert account_simulate == account_struct
     end
 
     test "User should be able to create a account with amount 0", %{
       account_struct3: account_struct
     } do
-      {_, pid2} = FinancialSystem.create("Inu Yasha", "brl", "0")
-      assert GenServer.call(pid2, :get_data) == account_struct
+      expect(CurrencyRequestMock, :load_from_config, 4, fn ->
+        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      end)
+
+      {_, account} = FinancialSystem.create("Inu Yasha", "brl", "0")
+
+      account_data = FinancialSystem.AccountState.show(account.account_id)
+
+      account_simulate = %FinancialSystem.Account{
+        account_id: "adb",
+        name: account_data.name,
+        currency: account_data.currency,
+        value: account_data.value
+      }
+
+      assert account_simulate == account_struct
     end
 
     test "User dont should be able to create a account with a name is not a string" do
@@ -98,37 +140,43 @@ defmodule FinancialSystemTest do
   end
 
   describe "show/1" do
-    setup do
-      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", "1")
+    test "User should be able to see the value in account" do
+      expect(CurrencyRequestMock, :load_from_config, 7, fn ->
+        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      end)
 
-      {:ok, [account_pid: account_pid]}
-    end
+      {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
-    test "User should be able to see the value in account", %{account_pid: pid} do
-      assert FinancialSystem.show(pid) == "1.00"
+      {:ok, account_value} = FinancialSystem.show(account.account_id)
+
+      assert account_value == "1.00"
     end
 
     test "User dont should be able to see the value in account if pass a invalid pid" do
-      assert_raise ArgumentError, "Please insert a valid PID.", fn ->
-        FinancialSystem.show("pid")
-      end
+      {:error, message} = FinancialSystem.show("account")
+
+      assert ^message = "The account account dont exist"
     end
   end
 
   describe "deposit/3" do
     setup do
-      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", "1")
+      expect(CurrencyRequestMock, :load_from_config, 9, fn ->
+        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      end)
+
+      {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
       on_exit(fn ->
         nil
       end)
 
-      {:ok, [account_pid: account_pid]}
+      {:ok, [account: account.account_id]}
     end
 
-    test "User should be able to insert a value number in string type", %{account_pid: pid} do
-      {:ok, account} = FinancialSystem.deposit(pid, "brl", "1")
-      assert account.value == 200
+    test "User should be able to insert a value number in string type", %{account: account} do
+      {:ok, account_actual_state} = FinancialSystem.deposit(account, "brl", "1")
+      assert account_actual_state.value == 200
     end
 
     test "User not should be able to insert a integer value in a account", %{account_pid: pid} do
@@ -153,17 +201,21 @@ defmodule FinancialSystemTest do
     end
 
     test "User not should be able to make the deposit inserting a invalid currency", %{
-      account_pid: pid
+      account_pid: account
     } do
-      {:error, message} = FinancialSystem.deposit(pid, "brrl", "1")
+      {:error, message} = FinancialSystem.deposit(account.account_id, "brrl", "1")
 
       assert ^message = "The currency is not valid. Please, check it and try again."
     end
 
     test "User not should be able to make the deposit inserting a value equal or less than 0", %{
-      account_pid: pid
+      account_pid: account
     } do
-      {:error, message} = FinancialSystem.deposit(pid, "brl", "-1")
+      expect(CurrencyRequestMock, :load_from_config, 2, fn ->
+        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      end)
+
+      {:error, message} = FinancialSystem.deposit(account.account_id, "brl", "-1")
 
       assert ^message = "The value must be greater or equal to 0."
     end

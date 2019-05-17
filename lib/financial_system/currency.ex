@@ -3,7 +3,7 @@ defmodule FinancialSystem.Currency do
   This module is responsable for make conversion of the values in financial operations.
   """
 
-  alias FinancialSystem.Currency.CurrencyRequest
+  alias FinancialSystem.Currency.CurrencyImpl
 
   @doc """
     Convert a number in type string to decimal.
@@ -69,12 +69,12 @@ defmodule FinancialSystem.Currency do
   @spec convert(String.t(), String.t(), number()) :: {:ok, integer()} | no_return()
   def convert("USD", currency_to, value)
       when is_binary(currency_to) and is_binary(value) do
-    with {:ok, currency_to_upcase} <- CurrencyRequest.currency_is_valid(currency_to),
+    with {:ok, currency_to_upcase} <- CurrencyImpl.currency_is_valid(currency_to),
          {:ok, decimal_not_evaluated} <- to_decimal(value),
          {:ok, currency_to_value} <-
-           CurrencyRequest.get_from_currency(:value, currency_to_upcase),
+           CurrencyImpl.get_from_currency(:value, currency_to_upcase),
          {:ok, currency_to_decimal_precision} <-
-           CurrencyRequest.get_from_currency(:precision, currency_to_upcase),
+           CurrencyImpl.get_from_currency(:precision, currency_to_upcase),
          {:ok, currency_to_decimal} <-
            to_decimal(currency_to_value),
          {:ok, decimal_evaluated} <- is_greater_or_equal_than_0(decimal_not_evaluated) do
@@ -93,15 +93,15 @@ defmodule FinancialSystem.Currency do
   """
   def convert(currency_from, currency_to, value)
       when is_binary(currency_from) and value > 0 and is_binary(currency_to) and is_binary(value) do
-    with {:ok, currency_from_upcase} <- CurrencyRequest.currency_is_valid(currency_from),
-         {:ok, currency_to_upcase} <- CurrencyRequest.currency_is_valid(currency_to),
+    with {:ok, currency_from_upcase} <- CurrencyImpl.currency_is_valid(currency_from),
+         {:ok, currency_to_upcase} <- CurrencyImpl.currency_is_valid(currency_to),
          {:ok, decimal_not_evaluated} <- to_decimal(value),
          {:ok, currency_from_value} <-
-           CurrencyRequest.get_from_currency(:value, currency_from_upcase),
+           CurrencyImpl.get_from_currency(:value, currency_from_upcase),
          {:ok, currency_to_value} <-
-           CurrencyRequest.get_from_currency(:value, currency_to_upcase),
+           CurrencyImpl.get_from_currency(:value, currency_to_upcase),
          {:ok, currency_to_decimal_precision} <-
-           CurrencyRequest.get_from_currency(:precision, currency_to_upcase),
+           CurrencyImpl.get_from_currency(:precision, currency_to_upcase),
          {:ok, currency_from_decimal} <-
            to_decimal(currency_from_value),
          {:ok, currency_to_decimal} <-
@@ -129,9 +129,8 @@ defmodule FinancialSystem.Currency do
           {:ok, String.t()} | {:error, String.t()}
   def amount_do(:show = operation, value, currency)
       when is_atom(operation) and is_integer(value) and value >= 0 and is_binary(currency) do
-    with {:ok, currency_upcase} <- CurrencyRequest.currency_is_valid(currency) do
-      {:ok,
-       to_decimal(value, CurrencyRequest.get_from_currency(:precision, currency_upcase), :show)}
+    with {:ok, currency_upcase} <- CurrencyImpl.currency_is_valid(currency) do
+      {:ok, to_decimal(value, CurrencyImpl.get_from_currency(:precision, currency_upcase), :show)}
     end
   end
 
@@ -143,13 +142,13 @@ defmodule FinancialSystem.Currency do
   """
   def amount_do(:store = operation, value, currency)
       when is_atom(operation) and is_binary(value) and is_binary(currency) do
-    with {:ok, currency_upcase} <- CurrencyRequest.currency_is_valid(currency),
+    with {:ok, currency_upcase} <- CurrencyImpl.currency_is_valid(currency),
          {:ok, decimal_not_evaluated} <- to_decimal(value),
          {:ok, decimal_evaluated} <- is_greater_or_equal_than_0(decimal_not_evaluated) do
       {:ok,
        to_integer(
          decimal_evaluated,
-         CurrencyRequest.get_from_currency(:precision, currency_upcase),
+         CurrencyImpl.get_from_currency(:precision, currency_upcase),
          :convert
        )}
     end
