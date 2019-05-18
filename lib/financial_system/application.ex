@@ -1,4 +1,8 @@
 defmodule FinancialSystem.Application do
+  @moduledoc """
+  This module is responsable to start the process :register_account.
+  """
+
   use Application
 
   alias FinancialSystem.AccountState

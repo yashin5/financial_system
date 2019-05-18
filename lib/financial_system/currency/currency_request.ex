@@ -1,4 +1,8 @@
 defmodule FinancialSystem.Currency.CurrencyRequest do
+  @moduledoc """
+  This module is responsable to simulate a API what retuns the currency
+  and decimal precision of currencys.
+  """
   @callback load_from_config() :: map() | no_return()
 
   def load_from_config do

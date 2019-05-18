@@ -22,15 +22,21 @@ defmodule FinancialSystem.Currency do
   end
 
   @doc """
-    Convert a number in integer or float type to decimal.
+    Convert a number in integer type to decimal.
 
   ## Examples
-    FinancialSystem.Currency.to_decimal(10.502323)
+    FinancialSystem.Currency.to_decimal(10)
   """
   def to_decimal(value) when is_integer(value) do
     {:ok, Decimal.new(value)}
   end
 
+  @doc """
+    Convert a number in float type to decimal.
+
+  ## Examples
+    FinancialSystem.Currency.to_decimal(10.502323)
+  """
   def to_decimal(value) when is_float(value) do
     {:ok, Decimal.from_float(value)}
   end
@@ -66,7 +72,7 @@ defmodule FinancialSystem.Currency do
   ## Examples
     FinancialSystem.Currency.convert("USD", "BRL", "10")
   """
-  @spec convert(String.t(), String.t(), number()) :: {:ok, integer()} | no_return()
+  @spec convert(String.t(), String.t(), String.t()) :: {:ok, integer()} | {:error, String.t()}
   def convert("USD", currency_to, value)
       when is_binary(currency_to) and is_binary(value) do
     with {:ok, currency_to_upcase} <- CurrencyImpl.currency_is_valid(currency_to),

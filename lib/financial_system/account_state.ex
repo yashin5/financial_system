@@ -52,7 +52,7 @@ defmodule FinancialSystem.AccountState do
 
     FinancialSystem.AccountState.register_account(account_struct)
   """
-  @spec register_account(Account.t()) :: Account.t() | no_return()
+  @spec register_account(Account.t() | any()) :: {:ok, Account.t()} | {:error, String.t()}
   def register_account(%Account{account_id: _, name: _, currency: _, value: _} = params) do
     {:ok, GenServer.call(:register_account, {:create_account, params})[params.account_id]}
   end
@@ -99,7 +99,7 @@ defmodule FinancialSystem.AccountState do
     FinancialSystem.AccountState.create_account_id()
   """
   @spec create_account_id() :: String.t()
-  def create_account_id() do
+  def create_account_id do
     UUID.uuid4()
   end
 
