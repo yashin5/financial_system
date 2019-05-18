@@ -208,10 +208,6 @@ defmodule FinancialOperationsTest do
     test "User not should be able to make the transfer inserting a invalid pid_to", %{
       account2_id: account_id
     } do
-      expect(CurrencyRequestMock, :load_from_config, 3, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
-      end)
-
       {:error, message} = FinancialSystem.transfer("1", account_id, "pid_to")
 
       assert ^message = "The account pid_to dont exist"

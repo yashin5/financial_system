@@ -32,7 +32,9 @@ defmodule CurrencyImplTest do
         %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
       end)
 
-      assert FinancialSystem.Currency.CurrencyImpl.get_from_currency(:precision, "BRL") == 2
+      {_, decimal_precision} = FinancialSystem.Currency.CurrencyImpl.get_from_currency(:precision, "BRL")
+
+      assert decimal_precision == 2
     end
 
     test "User not should be able to get a decimal places with a invalid currency" do
@@ -51,7 +53,9 @@ defmodule CurrencyImplTest do
         %{"quotes" => %{"USDBRL" => 3.702199}}
       end)
 
-      assert FinancialSystem.Currency.CurrencyImpl.get_from_currency(:value, "BRL") == 3.702199
+      {_, currency_value} = FinancialSystem.Currency.CurrencyImpl.get_from_currency(:value, "BRL")
+
+      assert currency_value == 3.702199
     end
 
     test "User not should be able to get a current value of a currency with a invalid currency" do
