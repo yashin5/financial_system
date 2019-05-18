@@ -15,9 +15,11 @@ defmodule FinancialSystem.FinHelper do
   """
   @spec funds(String.t(), number()) :: {:ok, boolean()} | {:error, no_return()} | no_return()
   def funds(account_id, value) when is_binary(account_id) and is_number(value) do
-    AccountState.show(account_id).value
-    |> Kernel.>=(value)
-    |> do_funds()
+    with {:ok, _} <- AccountState.account_exist(account_id) do
+      AccountState.show(account_id).value
+      |> Kernel.>=(value)
+      |> do_funds()
+    end
   end
 
   def funds(_, _), do: {:error, "Check the account ID and de value."}
@@ -42,18 +44,24 @@ defmodule FinancialSystem.FinHelper do
           {:ok, boolean()} | {:error, String.t()}
   def transfer_have_account_from(account_from, split_list)
       when is_binary(account_from) and is_list(split_list) do
-    split_list
-    |> Enum.map(&have_or_not(&1))
-    |> Enum.member?(account_from)
-    |> do_transfer_have_account_from()
+        with {:ok, _} <- AccountState.account_exist(account_from) do
+          split_list
+          |> Enum.map(&have_or_not(&1))
+          |> Enum.member?(account_from)
+          |> do_transfer_have_account_from()
+        end
+
   end
 
   def transfer_have_account_from(account_from, account_to)
       when is_binary(account_from) and is_binary(account_to) do
-    account_from
-    |> Kernel.==(account_to)
-    |> do_transfer_have_account_from()
-  end
+        with {:ok, _} <- AccountState.account_exist(account_from),
+        {:ok, _} <- AccountState.account_exist(account_to) do
+          account_from
+          |> Kernel.==(account_to)
+          |> do_transfer_have_account_from()
+        end
+      end
 
   def transfer_have_account_from(_, _),
     do:
