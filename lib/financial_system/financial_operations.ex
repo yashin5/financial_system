@@ -16,7 +16,6 @@ defmodule FinancialSystem.FinancialOperations do
 
     FinancialSystem.show(account.account_id)
   """
-
   @impl true
   def show(account) when is_binary(account) do
     with {:ok, _} <- AccountState.account_exist(account) do
