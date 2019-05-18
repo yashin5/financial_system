@@ -129,8 +129,9 @@ defmodule FinancialSystem.Currency do
           {:ok, String.t()} | {:error, String.t()}
   def amount_do(:show = operation, value, currency)
       when is_atom(operation) and is_integer(value) and value >= 0 and is_binary(currency) do
-    with {:ok, currency_upcase} <- CurrencyImpl.currency_is_valid(currency) do
-      {:ok, to_decimal(value, CurrencyImpl.get_from_currency(:precision, currency_upcase), :show)}
+    with {:ok, currency_upcase} <- CurrencyImpl.currency_is_valid(currency),
+         {:ok, currency_precision} <- CurrencyImpl.get_from_currency(:precision, currency_upcase) do
+      {:ok, to_decimal(value, currency_precision, :show)}
     end
   end
 
