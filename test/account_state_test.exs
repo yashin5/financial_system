@@ -7,7 +7,7 @@ defmodule AccountStateTest do
   doctest FinancialSystem.AccountState
 
   describe "handle_call/1" do
-    test "User should be able to show a actual state" do
+    test "Should be able to show a actual state" do
       expect(CurrencyRequestMock, :load_from_config, 4, fn ->
         %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
       end)
@@ -41,14 +41,14 @@ defmodule AccountStateTest do
       {:ok, [account_id: account.account_id]}
     end
 
-    test "User should be able to add a integer value to an account", %{account_id: account} do
+    test "Should be able to add a integer value to an account", %{account_id: account} do
       GenServer.cast(:register_account, {:deposit, account, 1})
       value = GenServer.call(:register_account, :get_data)[account].value
 
       assert value == 101
     end
 
-    test "User should be able to subtract a value to an account", %{account_id: account} do
+    test "Should be able to subtract a value to an account", %{account_id: account} do
       GenServer.cast(:register_account, {:withdraw, account, 1})
       value = GenServer.call(:register_account, :get_data)[account].value
 
@@ -57,7 +57,7 @@ defmodule AccountStateTest do
   end
 
   describe "show/1" do
-    test "User should be able to see the account state" do
+    test "Should be able to see the account state" do
       expect(CurrencyRequestMock, :load_from_config, 4, fn ->
         %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
       end)
@@ -77,7 +77,7 @@ defmodule AccountStateTest do
   end
 
   describe "withdraw/2" do
-    test "User should be able to subtract a value from account" do
+    test "Should be able to subtract a value from account" do
       expect(CurrencyRequestMock, :load_from_config, 4, fn ->
         %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
       end)
@@ -93,7 +93,7 @@ defmodule AccountStateTest do
   end
 
   describe "deposit/2" do
-    test "User should be able to subtract a value from account" do
+    test "Should be able to subtract a value from account" do
       expect(CurrencyRequestMock, :load_from_config, 4, fn ->
         %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
       end)

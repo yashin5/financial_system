@@ -37,7 +37,7 @@ defmodule FinancialSystemTest do
        ]}
     end
 
-    test "User should be able to create a account with value number in string type", %{
+    test "Should be able to create a account with value number in string type", %{
       account_struct2: account_struct
     } do
       expect(CurrencyRequestMock, :load_from_config, 4, fn ->
@@ -57,7 +57,7 @@ defmodule FinancialSystemTest do
       assert account_simulate == account_struct
     end
 
-    test "User should be able to create a account with low case currency", %{
+    test "Should be able to create a account with low case currency", %{
       account_struct: account_struct
     } do
       expect(CurrencyRequestMock, :load_from_config, 4, fn ->
@@ -77,7 +77,7 @@ defmodule FinancialSystemTest do
       assert account_simulate == account_struct
     end
 
-    test "User should be able to create a account with amount 0", %{
+    test "Should be able to create a account with amount 0", %{
       account_struct3: account_struct
     } do
       expect(CurrencyRequestMock, :load_from_config, 4, fn ->
@@ -98,14 +98,14 @@ defmodule FinancialSystemTest do
       assert account_simulate == account_struct
     end
 
-    test "User dont should be able to create a account with a name is not a string" do
+    test "Not should be able to create a account with a name is not a string" do
       {:error, message} = FinancialSystem.create(1, "brll", "0")
 
       assert ^message =
                "First and second args must be a string and third arg must be a number in type string greater than 0."
     end
 
-    test "User dont should be able to create a account with a value less than 0" do
+    test "Not should be able to create a account with a value less than 0" do
       expect(CurrencyRequestMock, :load_from_config, 2, fn ->
         %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
       end)
@@ -115,28 +115,28 @@ defmodule FinancialSystemTest do
       assert ^message = "The value must be greater or equal to 0."
     end
 
-    test "User dont should be able to create a account with a value in integer format" do
+    test "Not should be able to create a account with a value in integer format" do
       {:error, message} = FinancialSystem.create("Oliver Tsubasa", "brl", 10)
 
       assert ^message =
                "First and second args must be a string and third arg must be a number in type string greater than 0."
     end
 
-    test "User dont should be able to create a account without a name" do
+    test "Not should be able to create a account without a name" do
       {:error, message} = FinancialSystem.create("", "BRL", 10)
 
       assert ^message =
                "First and second args must be a string and third arg must be a number in type string greater than 0."
     end
 
-    test "User dont should be able to create a account with a value in float format" do
+    test "Not should be able to create a account with a value in float format" do
       {:error, message} = FinancialSystem.create("Oliver Tsubasa", "brl", 10.0)
 
       assert ^message =
                "First and second args must be a string and third arg must be a number in type string greater than 0."
     end
 
-    test "User dont should be able to create a account with a invalid currency" do
+    test "Not should be able to create a account with a invalid currency" do
       expect(CurrencyRequestMock, :load_from_config, 1, fn ->
         %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
       end)

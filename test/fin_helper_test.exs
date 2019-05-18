@@ -17,23 +17,23 @@ defmodule FinHelperTest do
       {:ok, [account_id: account.account_id]}
     end
 
-    test "User should be able to verify if the account have de funds necessary for the transaction inserting a integer value",
+    test "Should be able to verify if the account have de funds necessary for the transaction inserting a integer value",
          %{account_id: account} do
       assert {:ok, true} = FinancialSystem.FinHelper.funds(account, 10)
     end
 
-    test "User should be able to verify if the account have de funds necessary for the transaction inserting a float value",
+    test "Should be able to verify if the account have de funds necessary for the transaction inserting a float value",
          %{account_id: account} do
       assert {:ok, true} = FinancialSystem.FinHelper.funds(account, 20.0)
     end
 
-    test "User not should be able to verify when inserting a string in value", %{account_id: account} do
+    test "Not should be able to verify when inserting a string in value", %{account_id: account} do
       {:error, message} = FinancialSystem.FinHelper.funds(account, "10")
 
       assert ^message = "Check the account ID and de value."
     end
 
-    test "User not should be able to verify when inserting a invalid pid" do
+    test "Not should be able to verify when inserting a invalid pid" do
       {:error, message} = FinancialSystem.FinHelper.funds("pid", 10)
 
       assert ^message = "The account pid dont exist"
@@ -64,37 +64,37 @@ defmodule FinHelperTest do
        ]}
     end
 
-    test "User should be able to verify if in split list not have the same account is sending the value",
+    test "Should be able to verify if in split list not have the same account is sending the value",
          %{account2_id: account, list: split_list} do
       assert {:ok, true} = FinancialSystem.FinHelper.transfer_have_account_from(account, split_list)
     end
 
-    test "User should be able to verify if in transfer not have the same account is sending the value",
+    test "Should be able to verify if in transfer not have the same account is sending the value",
          %{account2_id: account2, account_id: account} do
       assert {:ok, true} = FinancialSystem.FinHelper.transfer_have_account_from(account, account2)
     end
 
-    test "User should be able to verify if in transfer have the same account is sending the value",
+    test "Should be able to verify if in transfer have the same account is sending the value",
          %{account_id: account} do
       {:error, message} = FinancialSystem.FinHelper.transfer_have_account_from(account, account)
 
       assert ^message = "You can not send to the same account as you are sending"
     end
 
-    test "User should be able to verify if in split list have the same account is sending the value",
+    test "Should be able to verify if in split list have the same account is sending the value",
          %{account_id: account, list: split_list} do
       {:error, message} = FinancialSystem.FinHelper.transfer_have_account_from(account, split_list)
 
       assert ^message = "You can not send to the same account as you are sending"
     end
 
-    test "User not should be able to verify if insert a invalid pid", %{list: split_list} do
+    test "Not should be able to verify if insert a invalid pid", %{list: split_list} do
       {:error, message} = FinancialSystem.FinHelper.transfer_have_account_from("pid", split_list)
 
       assert ^message = "The account pid dont exist"
     end
 
-    test "User not should be able to verify if insert a invalid pid_to", %{account_id: account} do
+    test "Not should be able to verify if insert a invalid pid_to", %{account_id: account} do
       {:error, message} = FinancialSystem.FinHelper.transfer_have_account_from(account, "split_list")
 
       assert ^message = "The account split_list dont exist"
@@ -123,13 +123,13 @@ defmodule FinHelperTest do
       {:ok, [list: list_to, list_false: list_to_false]}
     end
 
-    test "User should be able to verify if in split list the total percent is 100", %{
+    test "Should be able to verify if in split list the total percent is 100", %{
       list: split_list
     } do
       assert {:ok, true} = FinancialSystem.FinHelper.percent_ok(split_list)
     end
 
-    test "User not should be able to do a split if the total percent is less than 100", %{
+    test "Not should be able to do a split if the total percent is less than 100", %{
       list_false: split_list
     } do
       {:error, message} = FinancialSystem.FinHelper.percent_ok(split_list)
@@ -137,7 +137,7 @@ defmodule FinHelperTest do
       assert ^message = "The total percent must be 100."
     end
 
-    test "User not should be able to verify if insert a invalid list" do
+    test "Not should be able to verify if insert a invalid list" do
       {:error, message} = FinancialSystem.FinHelper.percent_ok("split_list")
 
       assert ^message = "Check if the split list is valid."
@@ -160,7 +160,7 @@ defmodule FinHelperTest do
       {:ok, [account_pid: account_pid, list: list_to]}
     end
 
-    test "User should be able to verify if have a duplicated account in split list and unity it.",
+    test "Should be able to verify if have a duplicated account in split list and unity it.",
          %{account_pid: pid, list: split_list} do
 
       {_, list_return} = FinancialSystem.FinHelper.unite_equal_account_split(split_list)
@@ -169,7 +169,7 @@ defmodule FinHelperTest do
       assert list_return_simulate == list_return
     end
 
-    test "User not should be able to verify if inserting a invalid pid" do
+    test "Not should be able to verify if inserting a invalid pid" do
       {:error, message} = FinancialSystem.FinHelper.unite_equal_account_split("split_list")
 
       assert ^message = "Check if the split list is valid."
