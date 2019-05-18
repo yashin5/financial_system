@@ -32,7 +32,8 @@ defmodule CurrencyImplTest do
         %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
       end)
 
-      {_, decimal_precision} = FinancialSystem.Currency.CurrencyImpl.get_from_currency(:precision, "BRL")
+      {_, decimal_precision} =
+        FinancialSystem.Currency.CurrencyImpl.get_from_currency(:precision, "BRL")
 
       assert decimal_precision == 2
     end

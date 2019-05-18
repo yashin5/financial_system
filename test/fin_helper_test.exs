@@ -66,7 +66,8 @@ defmodule FinHelperTest do
 
     test "Should be able to verify if in split list not have the same account is sending the value",
          %{account2_id: account, list: split_list} do
-      assert {:ok, true} = FinancialSystem.FinHelper.transfer_have_account_from(account, split_list)
+      assert {:ok, true} =
+               FinancialSystem.FinHelper.transfer_have_account_from(account, split_list)
     end
 
     test "Should be able to verify if in transfer not have the same account is sending the value",
@@ -83,7 +84,8 @@ defmodule FinHelperTest do
 
     test "Should be able to verify if in split list have the same account is sending the value",
          %{account_id: account, list: split_list} do
-      {:error, message} = FinancialSystem.FinHelper.transfer_have_account_from(account, split_list)
+      {:error, message} =
+        FinancialSystem.FinHelper.transfer_have_account_from(account, split_list)
 
       assert ^message = "You can not send to the same account as you are sending"
     end
@@ -95,7 +97,8 @@ defmodule FinHelperTest do
     end
 
     test "Not should be able to verify if insert a invalid pid_to", %{account_id: account} do
-      {:error, message} = FinancialSystem.FinHelper.transfer_have_account_from(account, "split_list")
+      {:error, message} =
+        FinancialSystem.FinHelper.transfer_have_account_from(account, "split_list")
 
       assert ^message = "The account split_list dont exist"
     end
@@ -162,7 +165,6 @@ defmodule FinHelperTest do
 
     test "Should be able to verify if have a duplicated account in split list and unity it.",
          %{account_pid: pid, list: split_list} do
-
       {_, list_return} = FinancialSystem.FinHelper.unite_equal_account_split(split_list)
       list_return_simulate = [%FinancialSystem.Split{account: pid, percent: 100}]
 

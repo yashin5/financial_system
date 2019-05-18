@@ -75,7 +75,7 @@ defmodule CurrencyTest do
       end)
 
       {_, value} = FinancialSystem.Currency.amount_do(:store, "1.0", "BTC")
-      assert  value == 100_000_000
+      assert value == 100_000_000
     end
 
     test "Not should be able to transform a value inserting a number in integer type" do

@@ -88,7 +88,7 @@ defmodule AccountStateTest do
 
       value = FinancialSystem.AccountState.show(account.account_id).value
 
-      assert  value == 99
+      assert value == 99
     end
   end
 
