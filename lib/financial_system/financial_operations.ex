@@ -118,7 +118,8 @@ defmodule FinancialSystem.FinancialOperations do
   @impl true
   def split(account_from, split_list, value)
       when is_binary(account_from) and is_list(split_list) and is_binary(value) do
-    with {:ok, _} <- FinHelper.percent_ok(split_list),
+    with {:ok, _} <- AccountState.account_exist(account_from),
+         {:ok, _} <- FinHelper.percent_ok(split_list),
          {:ok, _} <- FinHelper.transfer_have_account_from(account_from, split_list),
          {:ok, united_accounts} <- FinHelper.unite_equal_account_split(split_list),
          {:ok, value_in_integer} <-
