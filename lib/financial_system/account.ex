@@ -3,8 +3,6 @@ defmodule FinancialSystem.Account do
   This module is responsable for detemrinate the struct of accounts.
   """
 
-  @behaviour FinancialSystem.Financial
-
   alias FinancialSystem.{AccountState, Currency}
   alias FinancialSystem.Currency.CurrencyImpl
 
@@ -29,7 +27,7 @@ defmodule FinancialSystem.Account do
     FinancialSystem.create("Yashin Santos",  "EUR", "220")
   """
   @spec create(String.t() | any(), String.t() | any(), String.t() | any()) ::
-          {:ok, Account.t()} | {:error, String.t()}
+          {:ok, t()} | {:error, String.t()}
   def create(name, currency, value)
       when is_binary(name) and is_binary(currency) and is_binary(value) do
     with {:ok, currency_upcase} <- CurrencyImpl.currency_is_valid(currency),
