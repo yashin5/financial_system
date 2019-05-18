@@ -37,7 +37,7 @@ defmodule FinancialSystem.Currency.CurrencyImpl do
   def get_from_currency(:precision = operation, currency)
       when is_atom(operation) and is_binary(currency) and byte_size(currency) > 0 do
     with {:ok, _} <- currency_is_valid(currency) do
-      get_currency.load_from_config()["decimal"]["USD#{currency}"]
+      {:ok, get_currency.load_from_config()["decimal"]["USD#{currency}"]}
     end
   end
 
@@ -50,7 +50,7 @@ defmodule FinancialSystem.Currency.CurrencyImpl do
   def get_from_currency(:value = operation, currency)
       when is_atom(operation) and is_binary(currency) and byte_size(currency) > 0 do
     with {:ok, _} <- currency_is_valid(currency) do
-      get_currency.load_from_config()["quotes"]["USD#{currency}"]
+      {:ok, get_currency.load_from_config()["quotes"]["USD#{currency}"]}
     end
   end
 end

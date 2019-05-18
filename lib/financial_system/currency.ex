@@ -144,11 +144,12 @@ defmodule FinancialSystem.Currency do
       when is_atom(operation) and is_binary(value) and is_binary(currency) do
     with {:ok, currency_upcase} <- CurrencyImpl.currency_is_valid(currency),
          {:ok, decimal_not_evaluated} <- to_decimal(value),
-         {:ok, decimal_evaluated} <- is_greater_or_equal_than_0(decimal_not_evaluated) do
+         {:ok, decimal_evaluated} <- is_greater_or_equal_than_0(decimal_not_evaluated),
+         {:ok, currency_precision} <- CurrencyImpl.get_from_currency(:precision, currency_upcase) do
       {:ok,
        to_integer(
          decimal_evaluated,
-         CurrencyImpl.get_from_currency(:precision, currency_upcase),
+         currency_precision,
          :convert
        )}
     end
