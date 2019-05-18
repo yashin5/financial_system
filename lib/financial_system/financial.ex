@@ -9,6 +9,6 @@ defmodule FinancialSystem.Financial do
               {:ok, Account.t()} | {:error, String.t()}
   @callback transfer(String.t() | any(), String.t() | any(), String.t() | any()) ::
               {:ok, Account.t()} | {:error, String.t()}
-  @callback split(String.t() | any(), Split.t() | any(), String.t() | any()) ::
+  @callback split(String.t() | any(), list(Split.t()) | any(), String.t() | any()) ::
               {:ok, Account.t()} | {:error, String.t()}
 end
