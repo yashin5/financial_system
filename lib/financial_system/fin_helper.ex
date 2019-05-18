@@ -3,7 +3,7 @@ defmodule FinancialSystem.FinHelper do
   This module is responsable to help other modules with the financial operations.
   """
 
-  alias FinancialSystem.{Split, AccountState, Currency}
+  alias FinancialSystem.{AccountState, Currency, Split}
 
   @doc """
     Verify if the account have funds for the operation.
@@ -11,9 +11,9 @@ defmodule FinancialSystem.FinHelper do
   ## Examples
       {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-      FinancialSystem.FinHelpers.funds(account.account_id, 220)
+      FinancialSystem.FinHelper.funds(account.account_id, 220)
   """
-  @spec funds(String.t(), number()) :: {:ok, boolean()} | {:error, no_return()} | no_return()
+  @spec funds(String.t(), String.t()) :: {:ok, boolean()} | {:error, String.t()}
   def funds(account_id, value) when is_binary(account_id) and is_number(value) do
     with {:ok, _} <- AccountState.account_exist(account_id) do
       AccountState.show(account_id).value
@@ -44,24 +44,32 @@ defmodule FinancialSystem.FinHelper do
           {:ok, boolean()} | {:error, String.t()}
   def transfer_have_account_from(account_from, split_list)
       when is_binary(account_from) and is_list(split_list) do
-        with {:ok, _} <- AccountState.account_exist(account_from) do
-          split_list
-          |> Enum.map(&have_or_not(&1))
-          |> Enum.member?(account_from)
-          |> do_transfer_have_account_from()
-        end
-
+    with {:ok, _} <- AccountState.account_exist(account_from) do
+      split_list
+      |> Enum.map(&have_or_not(&1))
+      |> Enum.member?(account_from)
+      |> do_transfer_have_account_from()
+    end
   end
 
+  @doc """
+    Verify if the accounts are the same.
+
+  ## Examples
+    {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+    {_, account2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
+
+    FinancialSystem.FinHelper.transfer_have_account_from(account2.account_id, account.account_id)
+  """
   def transfer_have_account_from(account_from, account_to)
       when is_binary(account_from) and is_binary(account_to) do
-        with {:ok, _} <- AccountState.account_exist(account_from),
-        {:ok, _} <- AccountState.account_exist(account_to) do
-          account_from
-          |> Kernel.==(account_to)
-          |> do_transfer_have_account_from()
-        end
-      end
+    with {:ok, _} <- AccountState.account_exist(account_from),
+         {:ok, _} <- AccountState.account_exist(account_to) do
+      account_from
+      |> Kernel.==(account_to)
+      |> do_transfer_have_account_from()
+    end
+  end
 
   def transfer_have_account_from(_, _),
     do:
@@ -112,7 +120,7 @@ defmodule FinancialSystem.FinHelper do
 
     FinancialSystem.FinHelper.unite_equal_account_split(split_list)
   """
-  @spec unite_equal_account_split(list(Split.t())) ::
+  @spec unite_equal_account_split(list(Split.t()) | any()) ::
           {:ok, list(Split.t())} | {:error, String.t()}
   def unite_equal_account_split(split_list) when is_list(split_list) do
     {:ok,
@@ -126,7 +134,20 @@ defmodule FinancialSystem.FinHelper do
   def unite_equal_account_split(_),
     do: {:error, "Check if the split list is valid."}
 
-  def division_of_values_to_make_split_transfer(split_list, value) do
+  @doc """
+    Divides the amount to be transferred to each account in a split.
+
+  ## Examples
+    {_, account2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
+    {_, account3} = FinancialSystem.create("Mateus Mathias", "BRL", "100")
+    split_list = [%FinancialSystem.Split{account: account2.account_id, percent: 80}, %FinancialSystem.Split{account: account2.account_id, percent: 20}]
+
+    FinancialSystem.FinHelper.division_of_values_to_make_split_transfer(split_list, 100)
+  """
+  @spec division_of_values_to_make_split_transfer(list(Split.t()) | any(), String.t() | any()) ::
+          {:ok, list(map())} | {:error, String.t()}
+  def division_of_values_to_make_split_transfer(split_list, value)
+      when is_list(split_list) and is_binary(value) do
     {:ok,
      split_list
      |> Enum.map(fn %Split{account: account_to, percent: percent} ->
@@ -143,5 +164,8 @@ defmodule FinancialSystem.FinHelper do
      end)}
   end
 
-  def division_of_values_to_make_transfer(_, _), do: {:error, ""}
+  def division_of_values_to_make_split_transfer(_, _),
+    do:
+      {:error,
+       "The first arg must be a list with %Struct{} and second arg must be a number in string type"}
 end
