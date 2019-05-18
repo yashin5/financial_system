@@ -106,6 +106,10 @@ defmodule FinancialSystemTest do
     end
 
     test "User dont should be able to create a account with a value less than 0" do
+      expect(CurrencyRequestMock, :load_from_config, 2, fn ->
+        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      end)
+
       {:error, message} = FinancialSystem.create("Oliver Tsubasa", "brl", "-1")
 
       assert ^message = "The value must be greater or equal to 0."
@@ -133,6 +137,10 @@ defmodule FinancialSystemTest do
     end
 
     test "User dont should be able to create a account with a invalid currency" do
+      expect(CurrencyRequestMock, :load_from_config, 1, fn ->
+        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      end)
+
       {:error, message} = FinancialSystem.create("Oliver Tsubasa", "brll", "0")
 
       assert ^message = "The currency is not valid. Please, check it and try again."
@@ -161,7 +169,7 @@ defmodule FinancialSystemTest do
 
   describe "deposit/3" do
     setup do
-      expect(CurrencyRequestMock, :load_from_config, 9, fn ->
+      expect(CurrencyRequestMock, :load_from_config, 4, fn ->
         %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
       end)
 
@@ -175,47 +183,55 @@ defmodule FinancialSystemTest do
     end
 
     test "User should be able to insert a value number in string type", %{account: account} do
+      expect(CurrencyRequestMock, :load_from_config, 9, fn ->
+        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      end)
+
       {:ok, account_actual_state} = FinancialSystem.deposit(account, "brl", "1")
+
       assert account_actual_state.value == 200
     end
 
-    test "User not should be able to insert a integer value in a account", %{account_pid: pid} do
-      {:error, message} = FinancialSystem.deposit(pid, "brl", 1)
+    test "User not should be able to insert a integer value in a account", %{account: account} do
+      {:error, message} = FinancialSystem.deposit(account, "brl", 1)
 
       assert ^message =
-               "The first arg must be a pid and de second arg must be a number in type string."
+               "The first arg must be a account ID and de second arg must be a number in type string."
     end
 
-    test "User not should be able to insert a float value in a account", %{account_pid: pid} do
-      {:error, message} = FinancialSystem.deposit(pid, "brl", 1.0)
+    test "User not should be able to insert a float value in a account", %{account: account} do
+      {:error, message} = FinancialSystem.deposit(account, "brl", 1.0)
 
       assert ^message =
-               "The first arg must be a pid and de second arg must be a number in type string."
+               "The first arg must be a account ID and de second arg must be a number in type string."
     end
 
     test "User not should be able to make the deposit inserting a invalid pid" do
       {:error, message} = FinancialSystem.deposit("pid", "brl", "1")
 
-      assert ^message =
-               "The first arg must be a pid and de second arg must be a number in type string."
+      assert ^message = "The account pid dont exist"
     end
 
     test "User not should be able to make the deposit inserting a invalid currency", %{
-      account_pid: account
+      account: account
     } do
-      {:error, message} = FinancialSystem.deposit(account.account_id, "brrl", "1")
+      expect(CurrencyRequestMock, :load_from_config, 1, fn ->
+        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      end)
+
+      {:error, message} = FinancialSystem.deposit(account, "brrl", "1")
 
       assert ^message = "The currency is not valid. Please, check it and try again."
     end
 
     test "User not should be able to make the deposit inserting a value equal or less than 0", %{
-      account_pid: account
+      account: account
     } do
-      expect(CurrencyRequestMock, :load_from_config, 2, fn ->
+      expect(CurrencyRequestMock, :load_from_config, 9, fn ->
         %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
       end)
 
-      {:error, message} = FinancialSystem.deposit(account.account_id, "brl", "-1")
+      {:error, message} = FinancialSystem.deposit(account, "brl", "-1")
 
       assert ^message = "The value must be greater or equal to 0."
     end
@@ -223,18 +239,26 @@ defmodule FinancialSystemTest do
 
   describe "withdraw/2" do
     setup do
-      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", "1")
+      expect(CurrencyRequestMock, :load_from_config, 4, fn ->
+        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      end)
+
+      {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
       on_exit(fn ->
         nil
       end)
 
-      {:ok, [account_pid: account_pid]}
+      {:ok, [account: account.account_id]}
     end
 
     test "User should be able to take a value of an account inserting a value number in string type",
-         %{account_pid: pid} do
-      {:ok, account} = FinancialSystem.withdraw(pid, "1")
+         %{account: account} do
+      expect(CurrencyRequestMock, :load_from_config, 3, fn ->
+        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      end)
+
+      {:ok, account} = FinancialSystem.withdraw(account, "1")
 
       assert account.value == 0
     end
@@ -242,34 +266,38 @@ defmodule FinancialSystemTest do
     test "User not should be able to make the withdraw inserting a invalid pid" do
       {:error, message} = FinancialSystem.withdraw("pid", "1")
 
-      assert ^message =
-               "The first arg must be a pid and de second arg must be a number in type string."
+      assert ^message = "The account pid dont exist"
     end
 
     test "User not should be able to make the withdraw inserting a value equal or less than 0", %{
-      account_pid: pid
+      account: account
     } do
-      {:error, message} = FinancialSystem.withdraw(pid, "-1")
+      expect(CurrencyRequestMock, :load_from_config, 1, fn ->
+        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      end)
+
+      {:error, message} = FinancialSystem.withdraw(account, "-1")
 
       assert ^message = "The value must be greater or equal to 0."
     end
 
     test "User not should be able to make the withdraw inserting a integer value", %{
-      account_pid: pid
+      account: account
     } do
-      {:error, message} = FinancialSystem.withdraw(pid, 1)
+      {:error, message} = FinancialSystem.withdraw(account, 1)
 
       assert ^message =
-               "The first arg must be a pid and de second arg must be a number in type string."
+        "The first arg must be a account ID and de second arg must be a number in type string."
     end
 
     test "User not should be able to make the withdraw inserting a float value", %{
-      account_pid: pid
+      account: account
     } do
-      {:error, message} = FinancialSystem.withdraw(pid, 1.0)
+
+      {:error, message} = FinancialSystem.withdraw(account, 1.0)
 
       assert ^message =
-               "The first arg must be a pid and de second arg must be a number in type string."
+        "The first arg must be a account ID and de second arg must be a number in type string."
     end
   end
 
