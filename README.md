@@ -1,11 +1,16 @@
 
-# FinancialSystem
+FinancialSystem
 
 [![CircleCI](https://circleci.com/gh/yashin5/financial_system/tree/master.svg?style=svg&circle-token=4ca2de8fde25b3b61f471504131221a03df5eb81)](https://circleci.com/gh/yashin5/financial_system/tree/master)
+
+# Introduction
+This app makes you able to create accounts to make financial operations like you will see in the next topics.
+For knowledge, **the accounts store the value in integer type and all operations are made in decimal library to grow up the precision.**
 
 ## Features
 - Create account
 - Show value in account
+- Withdraw
 - Deposit
 - Transfer between accounts
 - Split transfer
