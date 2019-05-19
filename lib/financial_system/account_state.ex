@@ -93,17 +93,6 @@ defmodule FinancialSystem.AccountState do
   defp do_account_exist(false, account), do: {:error, "The account #{account} dont exist"}
 
   @doc """
-    Generate de account id.
-
-  ## Examples
-    FinancialSystem.AccountState.create_account_id()
-  """
-  @spec create_account_id() :: String.t()
-  def create_account_id do
-    UUID.uuid4()
-  end
-
-  @doc """
     Subtracts value in deposit operations.
 
   ## Examples
