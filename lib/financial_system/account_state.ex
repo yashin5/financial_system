@@ -67,7 +67,7 @@ defmodule FinancialSystem.AccountState do
 
     FinancialSystem.AccountState.show(account.account_id)
   """
-  @spec show(String.t()) :: Account.t() | no_return()
+  @spec show(String.t()) :: Account.t() | no_return() | atom()
   def show(account) when is_binary(account) do
     GenServer.call(:register_account, :get_data)[account]
   end
