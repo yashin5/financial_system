@@ -21,7 +21,7 @@ For knowledge, **the accounts store the value in integer type and all operations
 - [Elixir](https://github.com/elixir-lang/elixir)
 - [Poison](https://github.com/devinus/poison)
 - [Decimal](https://github.com/ericmj/decimal)
-
+- [UUID](https://github.com/zyro/elixir-uuid)
 ## Get started
 To run this project locally you need to have Elixir installed in your machine. After this, follow these steps:
 
