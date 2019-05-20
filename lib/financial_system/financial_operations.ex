@@ -4,7 +4,6 @@ defmodule FinancialSystem.FinancialOperations do
   """
 
   alias FinancialSystem.{AccountState, Currency, FinHelper}
-  alias FinancialSystem.Currency.CurrencyImpl
 
   @behaviour FinancialSystem.Financial
 
@@ -40,7 +39,7 @@ defmodule FinancialSystem.FinancialOperations do
   @impl true
   def deposit(account, currency_from, value) when is_binary(account) and is_binary(value) do
     with {:ok, _} <- AccountState.account_exist(account),
-         {:ok, _} <- CurrencyImpl.currency_is_valid(currency_from),
+         {:ok, _} <- currency_finder().currency_is_valid(currency_from),
          {:ok, value_in_integer} <-
            Currency.convert(currency_from, AccountState.show(account).currency, value) do
       {:ok, AccountState.deposit(account, value_in_integer)}
@@ -139,8 +138,10 @@ defmodule FinancialSystem.FinancialOperations do
     end
   end
 
-  def split(_, _, _),
-    do:
-      {:error,
-       "The first arg must be a account ID, the second must be a list with %Split{} and the third must be a number in type string."}
+  def split(_, _, _) do
+    {:error,
+     "The first arg must be a account ID, the second must be a list with %Split{} and the third must be a number in type string."}
+  end
+
+  defp currency_finder, do: Application.get_env(:financial_system, __MODULE__)[:currency_finder]
 end

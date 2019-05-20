@@ -3,6 +3,10 @@
 use Mix.Config
 
 config :financial_system, file: "currency_rate.json"
+
+config :financial_system, FinancialSystem.FinancialOperations,
+  currency_finder: FinancialSystem.Currency.CurrencyImpl
+
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
 # file won't be loaded nor affect the parent project. For this reason,

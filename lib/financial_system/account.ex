@@ -34,12 +34,9 @@ defmodule FinancialSystem.Account do
          {:ok, value_in_integer} <- Currency.amount_do(:store, value, currency_upcase),
          true <- byte_size(name) > 0,
          {:ok, account_created} <-
-           AccountState.register_account(%__MODULE__{
-             account_id: create_account_id(),
-             name: name,
-             currency: currency_upcase,
-             value: value_in_integer
-           }) do
+           name
+           |> new(currency_upcase, value_in_integer)
+           |> AccountState.register_account() do
       {:ok, account_created}
     end
   end
@@ -47,6 +44,15 @@ defmodule FinancialSystem.Account do
   def create(_, _, _) do
     {:error,
      "First and second args must be a string and third arg must be a number in type string greater than 0."}
+  end
+
+  defp new(name, currency, value) do
+    %__MODULE__{
+      account_id: create_account_id(),
+      name: name,
+      currency: currency,
+      value: value
+    }
   end
 
   defp create_account_id do

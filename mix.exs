@@ -36,7 +36,7 @@ defmodule FinancialSystem.MixProject do
       {:excoveralls, "~> 0.10", only: :test},
       {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false},
       {:uuid, "~> 1.1"},
-      {:mox, "~> 0.5.0"}
+      {:mox, "~> 0.5.0", only: :test}
     ]
   end
 end

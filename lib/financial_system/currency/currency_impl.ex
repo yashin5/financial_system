@@ -6,6 +6,8 @@ defmodule FinancialSystem.Currency.CurrencyImpl do
 
   alias FinancialSystem.Currency.CurrencyBehaviour
 
+  # TODO: Move code from CurrencyRequest.load_from_config/0 to this module
+
   defp get_currency, do: Application.get_env(:financial_system, :currency_request)
 
   @doc """
