@@ -6,6 +6,7 @@ defmodule FinancialSystem.MixProject do
       app: :financial_system,
       version: "0.1.0",
       elixir: "~> 1.8",
+      elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       test_coverage: [tool: ExCoveralls],
@@ -18,9 +19,13 @@ defmodule FinancialSystem.MixProject do
     ]
   end
 
+  defp elixirc_paths(:test), do: ["lib", "test/support", "test"]
+  defp elixirc_paths(_), do: ["lib"]
+
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
+      mod: {FinancialSystem.Application, []},
       extra_applications: [:logger, :poison]
     ]
   end
@@ -32,7 +37,10 @@ defmodule FinancialSystem.MixProject do
       {:poison, "~> 3.1"},
       {:decimal, "~> 1.0"},
       {:ex_doc, "~> 0.12"},
-      {:excoveralls, "~> 0.10", only: :test}
+      {:excoveralls, "~> 0.10", only: :test},
+      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false},
+      {:uuid, "~> 1.1"},
+      {:mox, "~> 0.5.0", only: :test}
     ]
   end
 end
