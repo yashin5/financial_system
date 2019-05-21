@@ -23,6 +23,7 @@ This app makes you able to create accounts to make financial operations like you
 - [Decimal](https://github.com/ericmj/decimal) (To precision arithmetic)
 - [UUID](https://github.com/zyro/elixir-uuid) (To generate ID to accounts)
 - [MOX](https://github.com/plataformatec/mox) (To mocking tests)
+
 ## Get started
 To run this project locally you need to have Elixir installed in your machine. After this, follow these steps:
 
