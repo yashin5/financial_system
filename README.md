@@ -17,7 +17,7 @@ This app makes you able to create accounts to make financial operations like you
 
 ## Stack
 
-##### This system was build with Elixir using ```mix new ```.
+##### This system was build with Elixir using ```mix new ``` end:
 - [Elixir](https://github.com/elixir-lang/elixir)
 - [Poison](https://github.com/devinus/poison)
 - [Decimal](https://github.com/ericmj/decimal)
