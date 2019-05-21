@@ -90,7 +90,7 @@ defmodule FinancialSystem.AccountState do
 
   defp do_account_exist(true, _), do: {:ok, true}
 
-  defp do_account_exist(false, account), do: {:error, :account_dont_exist}
+  defp do_account_exist(false, _), do: {:error, :account_dont_exist}
 
   @doc """
     Subtracts value in deposit operations.
