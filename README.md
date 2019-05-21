@@ -3,9 +3,14 @@
 
 [![CircleCI](https://circleci.com/gh/yashin5/financial_system/tree/master.svg?style=svg&circle-token=4ca2de8fde25b3b61f471504131221a03df5eb81)](https://circleci.com/gh/yashin5/financial_system/tree/master)
 
+## Introduction
+This app makes you able to create accounts to make financial operations like you will see in the next topics.
+
+
 ## Features
 - Create account
 - Show value in account
+- Withdraw
 - Deposit
 - Transfer between accounts
 - Split transfer
@@ -16,7 +21,7 @@
 - [Elixir](https://github.com/elixir-lang/elixir)
 - [Poison](https://github.com/devinus/poison)
 - [Decimal](https://github.com/ericmj/decimal)
-
+- [UUID](https://github.com/zyro/elixir-uuid)
 ## Get started
 To run this project locally you need to have Elixir installed in your machine. After this, follow these steps:
 
@@ -40,7 +45,7 @@ To run this project locally you need to have Elixir installed in your machine. A
 - mix test
 - mix credo --strict
 - mix coveralls
-- mix docs
+- mix dialyzer
 - mix deps.get
 - mix format
 - iex -S mix
@@ -50,45 +55,48 @@ To run this project locally you need to have Elixir installed in your machine. A
 ##### Create user account
 
 ```elixir
-account1 = FinancialSystem.CreateAccount.create_user("Mario Freitas", "marios@email.com", "BRL", 100)
-account2 = FinancialSystem.CreateAccount.create_user("Mario Marcelo", "mm@email.com", "USD", 100)
-account3 = FinancialSystem.CreateAccount.create_user("Maria Julia", "mjulia@email.com", "EUR", 100)
-account4 = FinancialSystem.CreateAccount.create_user("Fernando Francisco", "ff@email.com", "CZK", 100)
-account5 = FinancialSystem.CreateAccount.create_user("Antonio Marques", "antonio@email.com", "BRL", 100)
+{:ok, account1} = FinancialSystem.create("Yashin Santos",  "EUR", "220")
+{:ok, account2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
+{:ok, account3} = FinancialSystem.create("Mateus Mathias", "BRL", "100")
 ```
 ##### Show value in account
 
 ```elixir
-FinancialSystem.get_value_in_account(account1)
+FinancialSystem.show(account1.account_id)
 ```
 
 ##### Deposit into account
 
 ```elixir
-FinancialSystem.deposit(account1, "USD", 10)
+FinancialSystem.deposit(account1.account_id, "USD", "10")
+```
+
+##### Withdraw from account
+
+```elixir
+FinancialSystem.withdraw(account1.account_id, "10")
 ```
 
 ##### Transfer between accounts
 
 ```elixir
-FinancialSystem.transfer(account1, account2, 20)
+FinancialSystem.transfer("20", account1.account_id, account2.account_id)
 ```
 
 ##### Split transfer
 
 ```elixir
 list_to = [
-  %FinancialSystem.SplitList{account: account2, percent: 10},
-  %FinancialSystem.SplitList{account: account2, percent: 10},
-  %FinancialSystem.SplitList{account: account3, percent: 30},
-  %FinancialSystem.SplitList{account: account4, percent: 40},
-  %FinancialSystem.SplitList{account: account5, percent: 10},
+  %FinancialSystem.Split{account: account2.account_id, percent: 25},
+  %FinancialSystem.Split{account: account2.account_id, percent: 25},
+  %FinancialSystem.Split{account: account3.account_id, percent: 50}
 ]
 
-FinancialSystem.split(account1, list_to, 100)
+FinancialSystem.split(account1.account_id, list_to, "100")
 ```
 
 ## Reference
 - [Elixir school](https://elixirschool.com/pt/)
 - [O Guia de estilo elixir](https://github.com/gusaiani/elixir_style_guide/blob/master/README_ptBR.md)
 - [The complete Elixir and Phoenix bootcamp](https://www.udemy.com/the-complete-elixir-and-phoenix-bootcamp-and-tutorial/learn/v4/t/lecture/5911740?start=540)
+- [The Pragmatic Studio](https://pragmaticstudio.com/)
