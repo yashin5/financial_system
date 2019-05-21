@@ -1,5 +1,5 @@
 defmodule CurrencyTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   import Mox
   setup :verify_on_exit!
@@ -32,27 +32,25 @@ defmodule CurrencyTest do
     test "Not should be able to convert the value if insert a float" do
       {:error, message} = FinancialSystem.Currency.convert("USD", "BRL", 1.0)
 
-      assert ^message =
-               "The first and second args must be a valid currencys and third arg must be a number in string type."
+      assert ^message = :invalid_value_type
     end
 
     test "Not should be able to convert the value if insert a integer" do
       {:error, message} = FinancialSystem.Currency.convert("USD", "BRL", 1)
 
-      assert ^message =
-               "The first and second args must be a valid currencys and third arg must be a number in string type."
+      assert ^message = :invalid_value_type
     end
 
     test "Not should be able to convert the value with a invalid currency in first parameter" do
       {:error, message} = FinancialSystem.Currency.convert("BRLL", "BRL", "1")
 
-      assert ^message = "The currency is not valid. Please, check it and try again."
+      assert ^message = :currency_is_not_valid
     end
 
     test "Not should be able to convert the value with a invalid currency in second parameter" do
       {:error, message} = FinancialSystem.Currency.convert("USD", "BRRL", "1")
 
-      assert ^message = "The currency is not valid. Please, check it and try again."
+      assert ^message = :currency_is_not_valid
     end
   end
 
@@ -65,28 +63,25 @@ defmodule CurrencyTest do
     test "Not should be able to transform a value inserting a number in integer type" do
       {:error, message} = FinancialSystem.Currency.amount_do(:store, 1, "BTC")
 
-      assert ^message =
-               "The first arg must be :store or :show, second arg must be a number and third must be a valid currency"
+      assert ^message = :invalid_value_type
     end
 
     test "Not should be able to transform a value inserting a number in float type" do
       {:error, message} = FinancialSystem.Currency.amount_do(:store, 1.0, "BTC")
 
-      assert ^message =
-               "The first arg must be :store or :show, second arg must be a number and third must be a valid currency"
+      assert ^message = :invalid_value_type
     end
 
     test "Not should be able to transform a value inserting a invalid atom" do
       {:error, message} = FinancialSystem.Currency.amount_do(:stores, "1.0", "BTC")
 
-      assert ^message =
-               "The first arg must be :store or :show, second arg must be a number and third must be a valid currency"
+      assert ^message = :invalid_arguments_type
     end
 
     test "Not should be able to transform a value inserting a invalid currency" do
       {:error, message} = FinancialSystem.Currency.amount_do(:store, "1.0", "BTCC")
 
-      assert ^message = "The currency is not valid. Please, check it and try again."
+      assert ^message = :currency_is_not_valid
     end
 
     test "Should be able to transform a integer value in decimal to show the value to user" do
@@ -103,21 +98,19 @@ defmodule CurrencyTest do
     test "Not should be able to transform a value with a value less than 0" do
       {:error, message} = FinancialSystem.Currency.amount_do(:show, -1, "BTC")
 
-      assert ^message =
-               "The first arg must be :store or :show, second arg must be a number and third must be a valid currency"
+      assert ^message = :invalid_value_type
     end
 
     test "Not should be able to transform a value with a invalid atomn" do
       {:error, message} = FinancialSystem.Currency.amount_do(":show", 1, "BTC")
 
-      assert ^message =
-               "The first arg must be :store or :show, second arg must be a number and third must be a valid currency"
+      assert ^message = :invalid_arguments_type
     end
 
     test "Not should be able to transform a value with a invalid currency" do
       {:error, message} = FinancialSystem.Currency.amount_do(:show, 1, "BBTC")
 
-      assert ^message = "The currency is not valid. Please, check it and try again."
+      assert ^message = :currency_is_not_valid
     end
   end
 end

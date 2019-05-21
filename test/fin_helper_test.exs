@@ -1,5 +1,5 @@
 defmodule FinHelperTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   import Mox
   setup :verify_on_exit!
@@ -30,13 +30,13 @@ defmodule FinHelperTest do
     test "Not should be able to verify when inserting a string in value", %{account_id: account} do
       {:error, message} = FinancialSystem.FinHelper.funds(account, "10")
 
-      assert ^message = "Check the account ID and de value."
+      assert ^message = :invalid_arguments_type
     end
 
-    test "Not should be able to verify when inserting a invalid pid" do
-      {:error, message} = FinancialSystem.FinHelper.funds("pid", 10)
+    test "Not should be able to verify when inserting a invalid account id" do
+      {:error, message} = FinancialSystem.FinHelper.funds("account id", 10)
 
-      assert ^message = "The account pid dont exist"
+      assert ^message = :account_dont_exist
     end
   end
 
@@ -79,7 +79,7 @@ defmodule FinHelperTest do
          %{account_id: account} do
       {:error, message} = FinancialSystem.FinHelper.transfer_have_account_from(account, account)
 
-      assert ^message = "You can not send to the same account as you are sending"
+      assert ^message = :cannot_send_to_the_same
     end
 
     test "Should be able to verify if in split list have the same account is sending the value",
@@ -87,26 +87,27 @@ defmodule FinHelperTest do
       {:error, message} =
         FinancialSystem.FinHelper.transfer_have_account_from(account, split_list)
 
-      assert ^message = "You can not send to the same account as you are sending"
+      assert ^message = :cannot_send_to_the_same
     end
 
-    test "Not should be able to verify if insert a invalid pid", %{list: split_list} do
-      {:error, message} = FinancialSystem.FinHelper.transfer_have_account_from("pid", split_list)
+    test "Not should be able to verify if insert a invalid account id", %{list: split_list} do
+      {:error, message} =
+        FinancialSystem.FinHelper.transfer_have_account_from("account id", split_list)
 
-      assert ^message = "The account pid dont exist"
+      assert ^message = :account_dont_exist
     end
 
-    test "Not should be able to verify if insert a invalid pid_to", %{account_id: account} do
+    test "Not should be able to verify if insert a invalid account id_to", %{account_id: account} do
       {:error, message} =
         FinancialSystem.FinHelper.transfer_have_account_from(account, "split_list")
 
-      assert ^message = "The account split_list dont exist"
+      assert ^message = :account_dont_exist
     end
   end
 
   describe "percent_ok/1" do
     setup do
-      expect(CurrencyMock, :currency_is_valid, 2,fn currency ->
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
@@ -137,13 +138,13 @@ defmodule FinHelperTest do
     } do
       {:error, message} = FinancialSystem.FinHelper.percent_ok(split_list)
 
-      assert ^message = "The total percent must be 100."
+      assert ^message = :invalid_total_percent
     end
 
     test "Not should be able to verify if insert a invalid list" do
       {:error, message} = FinancialSystem.FinHelper.percent_ok("split_list")
 
-      assert ^message = "Check if the split list is valid."
+      assert ^message = :invalid_split_list_type
     end
   end
 
@@ -153,28 +154,28 @@ defmodule FinHelperTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", "1")
+      {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
       list_to = [
-        %FinancialSystem.Split{account: account_pid, percent: 20},
-        %FinancialSystem.Split{account: account_pid, percent: 80}
+        %FinancialSystem.Split{account: account.account_id, percent: 20},
+        %FinancialSystem.Split{account: account.account_id, percent: 80}
       ]
 
-      {:ok, [account_pid: account_pid, list: list_to]}
+      {:ok, [account_id: account.account_id, list: list_to]}
     end
 
     test "Should be able to verify if have a duplicated account in split list and unity it.",
-         %{account_pid: pid, list: split_list} do
+         %{account_id: account, list: split_list} do
       {_, list_return} = FinancialSystem.FinHelper.unite_equal_account_split(split_list)
-      list_return_simulate = [%FinancialSystem.Split{account: pid, percent: 100}]
+      list_return_simulate = [%FinancialSystem.Split{account: account, percent: 100}]
 
       assert list_return_simulate == list_return
     end
 
-    test "Not should be able to verify if inserting a invalid pid" do
+    test "Not should be able to verify if inserting a invalid account id" do
       {:error, message} = FinancialSystem.FinHelper.unite_equal_account_split("split_list")
 
-      assert ^message = "Check if the split list is valid."
+      assert ^message = :invalid_split_list_type
     end
   end
 end

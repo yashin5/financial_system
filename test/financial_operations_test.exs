@@ -8,7 +8,7 @@ defmodule FinancialOperationsTest do
 
   describe "show/1" do
     test "Should be able to see the value in account" do
-      expect(CurrencyMock, :currency_is_valid,fn currency ->
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
@@ -18,10 +18,10 @@ defmodule FinancialOperationsTest do
       assert account_value == "1.00"
     end
 
-    test "User dont should be able to see the value in account if pass a invalid pid" do
+    test "User dont should be able to see the value in account if pass a invalid account id" do
       {:error, message} = FinancialSystem.show("account")
 
-      assert ^message = "The account account dont exist"
+      assert ^message = :account_dont_exist
     end
   end
 
@@ -55,21 +55,19 @@ defmodule FinancialOperationsTest do
     test "Not should be able to insert a integer value in a account", %{account: account} do
       {:error, message} = FinancialSystem.deposit(account, "brl", 1)
 
-      assert ^message =
-               "The first arg must be a account ID and de second arg must be a number in type string."
+      assert ^message = :invalid_value_type
     end
 
     test "Not should be able to insert a float value in a account", %{account: account} do
       {:error, message} = FinancialSystem.deposit(account, "brl", 1.0)
 
-      assert ^message =
-               "The first arg must be a account ID and de second arg must be a number in type string."
+      assert ^message = :invalid_value_type
     end
 
-    test "Not should be able to make the deposit inserting a invalid pid" do
-      {:error, message} = FinancialSystem.deposit("pid", "brl", "1")
+    test "Not should be able to make the deposit inserting a invalid account id" do
+      {:error, message} = FinancialSystem.deposit("account id", "brl", "1")
 
-      assert ^message = "The account pid dont exist"
+      assert ^message = :account_dont_exist
     end
 
     test "Not should be able to make the deposit inserting a invalid currency", %{
@@ -81,7 +79,7 @@ defmodule FinancialOperationsTest do
 
       {:error, message} = FinancialSystem.deposit(account, "brrl", "1")
 
-      assert ^message = "The currency is not valid. Please, check it and try again."
+      assert ^message = :currency_is_not_valid
     end
 
     test "Not should be able to make the deposit inserting a value equal or less than 0", %{
@@ -93,7 +91,7 @@ defmodule FinancialOperationsTest do
 
       {:error, message} = FinancialSystem.deposit(account, "brl", "-1")
 
-      assert ^message = "The value must be greater or equal to 0."
+      assert ^message = :invalid_value_less_than_0
     end
   end
 
@@ -121,10 +119,10 @@ defmodule FinancialOperationsTest do
       assert account_actual_value == 0
     end
 
-    test "Not should be able to make the withdraw inserting a invalid pid" do
-      {:error, message} = FinancialSystem.withdraw("pid", "1")
+    test "Not should be able to make the withdraw inserting a invalid account id" do
+      {:error, message} = FinancialSystem.withdraw("account id", "1")
 
-      assert ^message = "The account pid dont exist"
+      assert ^message = :account_dont_exist
     end
 
     test "Not should be able to make the withdraw inserting a value equal or less than 0", %{
@@ -132,7 +130,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} = FinancialSystem.withdraw(account, "-1")
 
-      assert ^message = "The value must be greater or equal to 0."
+      assert ^message = :invalid_value_less_than_0
     end
 
     test "Not should be able to make the withdraw inserting a integer value", %{
@@ -140,8 +138,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} = FinancialSystem.withdraw(account, 1)
 
-      assert ^message =
-               "The first arg must be a account ID and de second arg must be a number in type string."
+      assert ^message = :invalid_value_type
     end
 
     test "Not should be able to make the withdraw inserting a float value", %{
@@ -149,14 +146,13 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} = FinancialSystem.withdraw(account, 1.0)
 
-      assert ^message =
-               "The first arg must be a account ID and de second arg must be a number in type string."
+      assert ^message = :invalid_value_type
     end
   end
 
   describe "transfer/3" do
     setup do
-      expect(CurrencyMock, :currency_is_valid, 2,fn currency ->
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
@@ -175,9 +171,9 @@ defmodule FinancialOperationsTest do
            account_id: account_id_from,
            account2_id: account2_id_to
          } do
-          expect(CurrencyMock, :currency_is_valid, fn currency ->
-            {:ok, String.upcase(currency)}
-          end)
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
 
       FinancialSystem.transfer("1", account_id_from, account2_id_to)
 
@@ -188,20 +184,20 @@ defmodule FinancialOperationsTest do
       assert actual_value_to == "3.00"
     end
 
-    test "Not should be able to make the transfer inserting a invalid pid_from", %{
+    test "Not should be able to make the transfer inserting a invalid account_id_from", %{
       account2_id: account_id
     } do
-      {:error, message} = FinancialSystem.transfer("1", "pid_from", account_id)
+      {:error, message} = FinancialSystem.transfer("1", "account id_from", account_id)
 
-      assert ^message = "The account pid_from dont exist"
+      assert ^message = :account_dont_exist
     end
 
-    test "Not should be able to make the transfer inserting a invalid pid_to", %{
+    test "Not should be able to make the transfer inserting a invalid account_id_to", %{
       account2_id: account_id
     } do
-      {:error, message} = FinancialSystem.transfer("1", account_id, "pid_to")
+      {:error, message} = FinancialSystem.transfer("1", account_id, "account id_to")
 
-      assert ^message = "The account pid_to dont exist"
+      assert ^message = :account_dont_exist
     end
 
     test "Not should be able to make the transfer inserting a number in integer type", %{
@@ -210,8 +206,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} = FinancialSystem.transfer(1, account_id_from, account2_id_to)
 
-      assert ^message =
-               "The first arg must be a number in type string and the second and third args must be a account ID."
+      assert ^message = :invalid_value_type
     end
 
     test "Not should be able to make the transfer inserting a number in float type", %{
@@ -220,8 +215,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} = FinancialSystem.transfer(1.0, account_id_from, account2_id_to)
 
-      assert ^message =
-               "The first arg must be a number in type string and the second and third args must be a account ID."
+      assert ^message = :invalid_value_type
     end
 
     test "Not should be able to make the transfer inserting a value equal or less than 0", %{
@@ -230,13 +224,13 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} = FinancialSystem.transfer("-1", account_id_from, account2_id_to)
 
-      assert ^message = "The value must be greater or equal to 0."
+      assert ^message = :invalid_value_less_than_0
     end
   end
 
   describe "split/3" do
     setup do
-      expect(CurrencyMock, :currency_is_valid, 3,fn currency ->
+      expect(CurrencyMock, :currency_is_valid, 3, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
@@ -269,9 +263,9 @@ defmodule FinancialOperationsTest do
            account3_id: account3,
            account2_id: account2
          } do
-          expect(CurrencyMock, :currency_is_valid, 2,fn currency ->
-            {:ok, String.upcase(currency)}
-          end)
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
 
       FinancialSystem.split(account2, split_list, "1")
 
@@ -290,7 +284,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} = FinancialSystem.split(account, split_list, "1")
 
-      assert ^message = "You can not send to the same account as you are sending"
+      assert ^message = :cannot_send_to_the_same
     end
 
     test "Not should be able to make the transfer value less than 0", %{
@@ -299,15 +293,15 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} = FinancialSystem.split(account, split_list, "-1")
 
-      assert ^message = "The value must be greater or equal to 0."
+      assert ^message = :invalid_value_less_than_0
     end
 
-    test "Not should be able to make the transfer inserting a invalid pid", %{
+    test "Not should be able to make the transfer inserting a invalid account id", %{
       list: split_list
     } do
-      {:error, message} = FinancialSystem.split("pid_from", split_list, "1")
+      {:error, message} = FinancialSystem.split("account id", split_list, "1")
 
-      assert ^message = "The account pid_from dont exist"
+      assert ^message = :account_dont_exist
     end
 
     test "Not should be able to make the transfer inserting a number in integer type", %{
@@ -316,8 +310,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} = FinancialSystem.split(account, split_list, 1)
 
-      assert ^message =
-               "The first arg must be a account ID, the second must be a list with %Split{} and the third must be a number in type string."
+      assert ^message = :invalid_value_type
     end
 
     test "Not should be able to make the transfer inserting a number in float type", %{
@@ -326,8 +319,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} = FinancialSystem.split(account, split_list, 1.0)
 
-      assert ^message =
-               "The first arg must be a account ID, the second must be a list with %Split{} and the third must be a number in type string."
+      assert ^message = :invalid_value_type
     end
   end
 end

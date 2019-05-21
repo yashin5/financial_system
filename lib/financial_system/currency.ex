@@ -14,11 +14,9 @@ defmodule FinancialSystem.Currency do
   @spec to_decimal(String.t() | number(), none() | integer(), none() | atom()) ::
           {:ok, Decimal.t()} | Decimal.t() | String.t() | no_return()
   def to_decimal(value) when is_binary(value) do
-    try do
-      {:ok, Decimal.new(value)}
-    rescue
-      Decimal.Error -> {:error, "The value must be a string."}
-    end
+    {:ok, Decimal.new(value)}
+  rescue
+    Decimal.Error -> {:error, :invalid_value_type}
   end
 
   @doc """
@@ -42,7 +40,7 @@ defmodule FinancialSystem.Currency do
   end
 
   def to_decimal(_),
-    do: {:error, "The arg must be a integer, float or number string."}
+    do: {:error, :invalid_value_type}
 
   defp to_decimal(value, precision, :show) when precision in 0..8 do
     with {:ok, value_in_decimal} <- to_decimal(value) do
@@ -64,7 +62,7 @@ defmodule FinancialSystem.Currency do
   end
 
   defp do_is_greater_or_equal_than_0(:lt, _),
-    do: {:error, "The value must be greater or equal to 0."}
+    do: {:error, :invalid_value_less_than_0}
 
   @doc """
     converts the values from USD ​​based on the currency.
@@ -120,10 +118,31 @@ defmodule FinancialSystem.Currency do
     end
   end
 
-  def convert(_, _, _),
-    do:
-      {:error,
-       "The first and second args must be a valid currencys and third arg must be a number in string type."}
+  def convert(currency_from, currency_to, value)
+      when not is_binary(currency_from) and is_binary(currency_to) and
+             value > 0 and is_binary(value) do
+    {:error, :invalid_currency_type}
+  end
+
+  def convert(currency_from, currency_to, value)
+      when is_binary(currency_from) and not is_binary(currency_to) and value > 0 and
+             is_binary(value) do
+    {:error, :invalid_currency_type}
+  end
+
+  def convert(currency_from, currency_to, value)
+      when is_binary(currency_from) and is_binary(currency_to) and
+             value > 0 and not is_binary(value) do
+    {:error, :invalid_value_type}
+  end
+
+  def convert(currency_from, currency_to, value)
+      when is_binary(currency_from) and is_binary(currency_to) and
+             not value > 0 and is_binary(value) do
+    {:error, :invalid_value_less_than_0}
+  end
+
+  def convert(_, _, _), do: {:error, :invalid_arguments_type}
 
   @doc """
     converts the value to string based in currency to show to the user.
@@ -162,10 +181,22 @@ defmodule FinancialSystem.Currency do
     end
   end
 
-  def amount_do(_, _, _),
-    do:
-      {:error,
-       "The first arg must be :store or :show, second arg must be a number and third must be a valid currency"}
+  def amount_do(operation, value, currency)
+      when not is_atom(operation) and is_binary(value) and is_binary(currency) do
+    {:error, :invalid_operation_type}
+  end
+
+  def amount_do(operation, value, currency)
+      when is_atom(operation) and not is_binary(value) and is_binary(currency) do
+    {:error, :invalid_value_type}
+  end
+
+  def amount_do(operation, value, currency)
+      when is_atom(operation) and is_binary(value) and not is_binary(currency) do
+    {:error, :invalid_currency_type}
+  end
+
+  def amount_do(_, _, _), do: {:error, :invalid_arguments_type}
 
   defp amount_do(value, precision) do
     {:ok, to_integer(value, precision, :convert)}

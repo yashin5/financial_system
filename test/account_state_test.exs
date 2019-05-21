@@ -1,5 +1,6 @@
 defmodule AccountStateTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
+
 
   import Mox
   setup :verify_on_exit!

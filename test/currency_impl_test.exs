@@ -1,5 +1,5 @@
 defmodule CurrencyImplTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   import Mox
   setup :verify_on_exit!
@@ -14,7 +14,7 @@ defmodule CurrencyImplTest do
     test "Should be able to verify if the currency is not valid" do
       {:error, message} = FinancialSystem.Currency.CurrencyImpl.currency_is_valid("brll")
 
-      assert ^message = "The currency is not valid. Please, check it and try again."
+      assert ^message = :currency_is_not_valid
     end
   end
 
@@ -30,7 +30,7 @@ defmodule CurrencyImplTest do
       {:error, message} =
         FinancialSystem.Currency.CurrencyImpl.get_from_currency(:precision, "BRLL")
 
-      assert ^message = "The currency is not valid. Please, check it and try again."
+      assert ^message = :currency_is_not_valid
     end
 
     test "Should be able to get a current value of a currency" do
@@ -42,7 +42,7 @@ defmodule CurrencyImplTest do
     test "Not should be able to get a current value of a currency with a invalid currency" do
       {:error, message} = FinancialSystem.Currency.CurrencyImpl.get_from_currency(:value, "BRLL")
 
-      assert ^message = "The currency is not valid. Please, check it and try again."
+      assert ^message = :currency_is_not_valid
     end
   end
 end

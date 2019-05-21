@@ -7,6 +7,8 @@ defmodule FinancialSystem.FinancialOperations do
 
   @behaviour FinancialSystem.Financial
 
+  defp currency_finder, do: Application.get_env(:financial_system, :currency_finder)
+
   @doc """
     Show the value in account.
 
@@ -26,7 +28,7 @@ defmodule FinancialSystem.FinancialOperations do
     end
   end
 
-  def show(_), do: raise(ArgumentError, message: "Please insert a valid account ID.")
+  def show(account_id) when not is_binary(account_id), do: {:error, :invalid_account_id_type}
 
   @doc """
     Deposit value in account.
@@ -37,19 +39,31 @@ defmodule FinancialSystem.FinancialOperations do
     FinancialSystem.deposit(account.account_id, "BRL", "10")
   """
   @impl true
-  def deposit(account, currency_from, value) when is_binary(account) and is_binary(value) do
-    with {:ok, _} <- AccountState.account_exist(account),
+  def deposit(account_id, currency_from, value) when is_binary(account_id) and is_binary(value) do
+    with {:ok, _} <- AccountState.account_exist(account_id),
          {:ok, _} <- currency_finder().currency_is_valid(currency_from),
          {:ok, value_in_integer} <-
-           Currency.convert(currency_from, AccountState.show(account).currency, value) do
-      {:ok, AccountState.deposit(account, value_in_integer)}
+           Currency.convert(currency_from, AccountState.show(account_id).currency, value) do
+      {:ok, AccountState.deposit(account_id, value_in_integer)}
     end
   end
 
-  def deposit(_, _, _),
-    do:
-      {:error,
-       "The first arg must be a account ID and de second arg must be a number in type string."}
+  def deposit(account_id, currency_from, value)
+      when not is_binary(account_id) and is_binary(currency_from) and is_binary(value) do
+    {:error, :invalid_account_id_type}
+  end
+
+  def deposit(account_id, currency_from, value)
+      when is_binary(account_id) and is_binary(currency_from) and not is_binary(value) do
+    {:error, :invalid_value_type}
+  end
+
+  def deposit(account_id, currency_from, value)
+      when is_binary(account_id) and not is_binary(currency_from) and is_binary(value) do
+    {:error, :invalid_currency_type}
+  end
+
+  def deposit(_, _, _), do: {:error, :invalid_arguments_type}
 
   @doc """
     Takes out the value of an account.
@@ -60,23 +74,28 @@ defmodule FinancialSystem.FinancialOperations do
     FinancialSystem.withdraw(account.account_id, "10")
   """
   @impl true
-  def withdraw(account, value) when is_binary(account) and is_binary(value) do
-    with {:ok, _} <- AccountState.account_exist(account),
+  def withdraw(account_id, value) when is_binary(account_id) and is_binary(value) do
+    with {:ok, _} <- AccountState.account_exist(account_id),
          {:ok, value_in_integer} <-
-           Currency.amount_do(:store, value, AccountState.show(account).currency),
-         {:ok, _} <- FinHelper.funds(account, value_in_integer) do
+           Currency.amount_do(:store, value, AccountState.show(account_id).currency),
+         {:ok, _} <- FinHelper.funds(account_id, value_in_integer) do
       {:ok,
        AccountState.withdraw(
-         account,
+         account_id,
          value_in_integer
        )}
     end
   end
 
-  def withdraw(_, _),
-    do:
-      {:error,
-       "The first arg must be a account ID and de second arg must be a number in type string."}
+  def withdraw(account, value) when not is_binary(account) and is_binary(value) do
+    {:error, :invalid_account_id_type}
+  end
+
+  def withdraw(account, value) when is_binary(account) and not is_binary(value) do
+    {:error, :invalid_value_type}
+  end
+
+  def withdraw(_, _), do: {:error, :invalid_arguments_type}
 
   @doc """
    Transfer of values ​​between accounts.
@@ -97,10 +116,17 @@ defmodule FinancialSystem.FinancialOperations do
     end
   end
 
-  def transfer(_, _, _),
-    do:
-      {:error,
-       "The first arg must be a number in type string and the second and third args must be a account ID."}
+  def transfer(value, account_from, account_to)
+      when (not is_binary(account_from) and is_binary(account_to)) or is_binary(value) do
+    {:error, :invalid_account_id_type}
+  end
+
+  def transfer(value, account_from, account_to)
+      when is_binary(account_from) and is_binary(account_to) and not is_binary(value) do
+    {:error, :invalid_value_type}
+  end
+
+  def transfer(_, _, _), do: {:error, :invalid_arguments_type}
 
   @doc """
    Transfer of values ​​between multiple accounts.
@@ -138,10 +164,22 @@ defmodule FinancialSystem.FinancialOperations do
     end
   end
 
-  def split(_, _, _) do
-    {:error,
-     "The first arg must be a account ID, the second must be a list with %Split{} and the third must be a number in type string."}
+  def split(account_from, split_list, value)
+      when not is_binary(account_from) and is_list(split_list) and is_binary(value) do
+    {:error, :invalid_account_id_type}
   end
 
-  defp currency_finder, do: Application.get_env(:financial_system, :currency_finder)
+  def split(account_from, split_list, value)
+      when is_binary(account_from) and not is_list(split_list) and is_binary(value) do
+    {:error, :invalid_split_list_type}
+  end
+
+  def split(account_from, split_list, value)
+      when is_binary(account_from) and is_list(split_list) and not is_binary(value) do
+    {:error, :invalid_value_type}
+  end
+
+  def split(_, _, _) do
+    {:error, :invalid_arguments_type}
+  end
 end

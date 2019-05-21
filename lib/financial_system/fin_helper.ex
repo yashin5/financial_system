@@ -22,12 +22,20 @@ defmodule FinancialSystem.FinHelper do
     end
   end
 
-  def funds(_, _), do: {:error, "Check the account ID and de value."}
+  def funds(account_id, value) when not is_binary(account_id) and is_binary(value) do
+    {:error, :invalid_account_id_type}
+  end
+
+  def funds(account_id, value) when is_binary(account_id) and not is_binary(value) do
+    {:error, :invalid_value_type}
+  end
+
+  def funds(_, _), do: {:error, :invalid_arguments_type}
 
   defp do_funds(true), do: {:ok, true}
 
   defp do_funds(false),
-    do: {:error, "Does not have the necessary funds"}
+    do: {:error, :do_not_have_funds}
 
   @doc """
     Verify if the list of split have a account from inside him.
@@ -71,15 +79,22 @@ defmodule FinancialSystem.FinHelper do
     end
   end
 
-  def transfer_have_account_from(_, _),
-    do:
-      {:error,
-       "First arg must be a account ID and second arg must be a account ID or a Split struct"}
+  def transfer_have_account_from(account_from, account_to)
+      when not is_binary(account_from) or is_binary(account_to) or is_list(account_to) do
+    {:error, :invalid_account_id_type}
+  end
+
+  def transfer_have_account_from(account_from, account_to)
+      when is_binary(account_from) or not is_binary(account_to) or not is_list(account_to) do
+    {:error, :invalid_type_to_compare}
+  end
+
+  def transfer_have_account_from(_, _), do: {:error, :invalid_arguments_type}
 
   defp do_transfer_have_account_from(false), do: {:ok, true}
 
   defp do_transfer_have_account_from(true),
-    do: {:error, "You can not send to the same account as you are sending"}
+    do: {:error, :cannot_send_to_the_same}
 
   defp have_or_not(%Split{account: account_to}) do
     account_to
@@ -103,12 +118,12 @@ defmodule FinancialSystem.FinHelper do
     |> do_percent_ok()
   end
 
-  def percent_ok(_), do: {:error, "Check if the split list is valid."}
+  def percent_ok(_), do: {:error, :invalid_split_list_type}
 
   defp do_percent_ok(true), do: {:ok, true}
 
   defp do_percent_ok(false),
-    do: {:error, "The total percent must be 100."}
+    do: {:error, :invalid_total_percent}
 
   @doc """
     Unite the duplicated accounts in split_list.
@@ -132,7 +147,7 @@ defmodule FinancialSystem.FinHelper do
   end
 
   def unite_equal_account_split(_),
-    do: {:error, "Check if the split list is valid."}
+    do: {:error, :invalid_split_list_type}
 
   @doc """
     Divides the amount to be transferred to each account in a split.
@@ -164,8 +179,13 @@ defmodule FinancialSystem.FinHelper do
      end)}
   end
 
-  def division_of_values_to_make_split_transfer(_, _),
-    do:
-      {:error,
-       "The first arg must be a list with %Struct{} and second arg must be a number in string type"}
+  def division_of_values_to_make_split_transfer(split_list, value)
+      when not is_list(split_list) and is_binary(value) do
+    {:error, :invalid_split_list_type}
+  end
+
+  def division_of_values_to_make_split_transfer(split_list, value)
+      when is_list(split_list) and not is_binary(value) do
+    {:error, :invalid_value_type}
+  end
 end

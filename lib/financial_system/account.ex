@@ -42,10 +42,22 @@ defmodule FinancialSystem.Account do
     end
   end
 
-  def create(_, _, _) do
-    {:error,
-     "First and second args must be a string and third arg must be a number in type string greater than 0."}
+  def create(name, currency, value)
+      when not is_binary(name) and is_binary(currency) and is_binary(value) do
+    {:error, :invalid_name}
   end
+
+  def create(name, currency, value)
+      when is_binary(name) and not is_binary(currency) and is_binary(value) do
+    {:error, :invalid_currency_type}
+  end
+
+  def create(name, currency, value)
+      when is_binary(name) and is_binary(currency) and not is_binary(value) do
+    {:error, :invalid_value_type}
+  end
+
+  def create(_, _, _), do: {:error, :invalid_arguments_type}
 
   defp new(name, currency, value) do
     %__MODULE__{

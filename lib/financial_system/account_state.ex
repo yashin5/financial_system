@@ -57,7 +57,7 @@ defmodule FinancialSystem.AccountState do
     {:ok, GenServer.call(:register_account, {:create_account, params})[params.account_id]}
   end
 
-  def register_account(_), do: {:error, "The arg must be a %Account struct."}
+  def register_account(_), do: {:error, :invalid_arguments_type}
 
   @doc """
     Show the state.
@@ -90,7 +90,7 @@ defmodule FinancialSystem.AccountState do
 
   defp do_account_exist(true, _), do: {:ok, true}
 
-  defp do_account_exist(false, account), do: {:error, "The account #{account} dont exist"}
+  defp do_account_exist(false, account), do: {:error, :account_dont_exist}
 
   @doc """
     Subtracts value in deposit operations.

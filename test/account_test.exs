@@ -101,8 +101,7 @@ defmodule FinancialSystemTest do
     test "Not should be able to create a account with a name is not a string" do
       {:error, message} = FinancialSystem.create(1, "brll", "0")
 
-      assert ^message =
-               "First and second args must be a string and third arg must be a number in type string greater than 0."
+      assert ^message = :invalid_name
     end
 
     test "Not should be able to create a account with a value less than 0" do
@@ -112,28 +111,25 @@ defmodule FinancialSystemTest do
 
       {:error, message} = FinancialSystem.create("Oliver Tsubasa", "brl", "-1")
 
-      assert ^message = "The value must be greater or equal to 0."
+      assert ^message = :invalid_value_less_than_0
     end
 
     test "Not should be able to create a account with a value in integer format" do
       {:error, message} = FinancialSystem.create("Oliver Tsubasa", "brl", 10)
 
-      assert ^message =
-               "First and second args must be a string and third arg must be a number in type string greater than 0."
+      assert ^message = :invalid_value_type
     end
 
     test "Not should be able to create a account without a name" do
       {:error, message} = FinancialSystem.create("", "BRL", 10)
 
-      assert ^message =
-               "First and second args must be a string and third arg must be a number in type string greater than 0."
+      assert ^message = :invalid_value_type
     end
 
     test "Not should be able to create a account with a value in float format" do
       {:error, message} = FinancialSystem.create("Oliver Tsubasa", "brl", 10.0)
 
-      assert ^message =
-               "First and second args must be a string and third arg must be a number in type string greater than 0."
+      assert ^message = :invalid_value_type
     end
 
     test "Not should be able to create a account with a invalid currency" do
@@ -143,7 +139,7 @@ defmodule FinancialSystemTest do
 
       {:error, message} = FinancialSystem.create("Oliver Tsubasa", "brll", "0")
 
-      assert ^message = "The currency is not valid. Please, check it and try again."
+      assert ^message = :currency_is_not_valid
     end
   end
 end

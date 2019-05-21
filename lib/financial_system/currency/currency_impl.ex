@@ -36,7 +36,7 @@ defmodule FinancialSystem.Currency.CurrencyImpl do
   defp do_currency_is_valid(true, currency), do: {:ok, String.upcase(currency)}
 
   defp do_currency_is_valid(false, _) do
-    {:error, "The currency is not valid. Please, check it and try again."}
+    {:error, :currency_is_not_valid}
   end
 
   @doc """
