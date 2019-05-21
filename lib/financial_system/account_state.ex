@@ -6,7 +6,7 @@ defmodule FinancialSystem.AccountState do
   alias FinancialSystem.Account, as: Account
 
   def start_link(state \\ %{}) do
-    GenServer.start(__MODULE__, state, name: :register_account)
+    GenServer.start_link(__MODULE__, state, name: :register_account)
   end
 
   def init(state) do
