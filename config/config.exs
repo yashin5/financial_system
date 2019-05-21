@@ -4,8 +4,7 @@ use Mix.Config
 
 config :financial_system, file: "currency_rate.json"
 
-config :financial_system, FinancialSystem.FinancialOperations,
-  currency_finder: FinancialSystem.Currency.CurrencyImpl
+config :financial_system, :currency_finder, FinancialSystem.Currency.CurrencyImpl
 
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
@@ -31,9 +30,7 @@ config :financial_system, FinancialSystem.FinancialOperations,
 # by uncommenting the line below and defining dev.exs, test.exs and such.
 # Configuration from the imported file will override the ones defined
 # here (which is why it is important to import them last).
-#
 
-config :financial_system, :currency_request, FinancialSystem.Currency.CurrencyRequest
 
 case Mix.env() do
   :dev -> nil

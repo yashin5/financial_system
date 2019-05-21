@@ -143,5 +143,5 @@ defmodule FinancialSystem.FinancialOperations do
      "The first arg must be a account ID, the second must be a list with %Split{} and the third must be a number in type string."}
   end
 
-  defp currency_finder, do: Application.get_env(:financial_system, __MODULE__)[:currency_finder]
+  defp currency_finder, do: Application.get_env(:financial_system, :currency_finder)
 end

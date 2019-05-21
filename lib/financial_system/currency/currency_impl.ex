@@ -6,9 +6,19 @@ defmodule FinancialSystem.Currency.CurrencyImpl do
 
   alias FinancialSystem.Currency.CurrencyBehaviour
 
-  # TODO: Move code from CurrencyRequest.load_from_config/0 to this module
+  defp load_from_config do
+    get_currency_path()
+    |> File.read()
+    |> do_load_from_config()
+  end
 
-  defp get_currency, do: Application.get_env(:financial_system, :currency_request)
+  defp do_load_from_config({:ok, body}), do: Poison.decode!(body)
+
+  defp do_load_from_config({:error, reason}), do: reason
+
+  defp get_currency_path do
+    Application.get_env(:financial_system, :file)
+  end
 
   @doc """
     Verify if currency is valid.
@@ -18,7 +28,7 @@ defmodule FinancialSystem.Currency.CurrencyImpl do
   """
   @impl CurrencyBehaviour
   def currency_is_valid(currency) when byte_size(currency) > 0 and is_binary(currency) do
-    get_currency().load_from_config()["quotes"]
+    load_from_config()["quotes"]
     |> Map.has_key?("USD#{String.upcase(currency)}")
     |> do_currency_is_valid(currency)
   end
@@ -39,7 +49,7 @@ defmodule FinancialSystem.Currency.CurrencyImpl do
   def get_from_currency(:precision = operation, currency)
       when is_atom(operation) and is_binary(currency) and byte_size(currency) > 0 do
     with {:ok, _} <- currency_is_valid(currency) do
-      {:ok, get_currency().load_from_config()["decimal"]["USD#{currency}"]}
+      {:ok, load_from_config()["decimal"]["USD#{currency}"]}
     end
   end
 
@@ -52,7 +62,7 @@ defmodule FinancialSystem.Currency.CurrencyImpl do
   def get_from_currency(:value = operation, currency)
       when is_atom(operation) and is_binary(currency) and byte_size(currency) > 0 do
     with {:ok, _} <- currency_is_valid(currency) do
-      {:ok, get_currency().load_from_config()["quotes"]["USD#{currency}"]}
+      {:ok, load_from_config()["quotes"]["USD#{currency}"]}
     end
   end
 end

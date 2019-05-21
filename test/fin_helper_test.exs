@@ -8,8 +8,8 @@ defmodule FinHelperTest do
 
   describe "funds/2" do
     setup do
-      expect(CurrencyRequestMock, :load_from_config, 4, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Roberta Santos", "BRL", "20.0")
@@ -42,8 +42,8 @@ defmodule FinHelperTest do
 
   describe "transfer_have_account_from/2" do
     setup do
-      expect(CurrencyRequestMock, :load_from_config, 12, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, 3, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
@@ -106,8 +106,8 @@ defmodule FinHelperTest do
 
   describe "percent_ok/1" do
     setup do
-      expect(CurrencyRequestMock, :load_from_config, 8, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, 2,fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
@@ -149,8 +149,8 @@ defmodule FinHelperTest do
 
   describe "unite_equal_account_split/1" do
     setup do
-      expect(CurrencyRequestMock, :load_from_config, 4, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account_pid} = FinancialSystem.create("Yashin Santos", "BRL", "1")

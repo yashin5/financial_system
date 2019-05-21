@@ -8,8 +8,8 @@ defmodule AccountStateTest do
 
   describe "handle_call/1" do
     test "Should be able to show a actual state" do
-      expect(CurrencyRequestMock, :load_from_config, 4, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
@@ -28,8 +28,8 @@ defmodule AccountStateTest do
 
   describe "handle_cast/2" do
     setup do
-      expect(CurrencyRequestMock, :load_from_config, 4, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
@@ -58,8 +58,8 @@ defmodule AccountStateTest do
 
   describe "show/1" do
     test "Should be able to see the account state" do
-      expect(CurrencyRequestMock, :load_from_config, 4, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
@@ -78,8 +78,8 @@ defmodule AccountStateTest do
 
   describe "withdraw/2" do
     test "Should be able to subtract a value from account" do
-      expect(CurrencyRequestMock, :load_from_config, 4, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
@@ -94,8 +94,8 @@ defmodule AccountStateTest do
 
   describe "deposit/2" do
     test "Should be able to subtract a value from account" do
-      expect(CurrencyRequestMock, :load_from_config, 4, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")

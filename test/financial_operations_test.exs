@@ -8,12 +8,11 @@ defmodule FinancialOperationsTest do
 
   describe "show/1" do
     test "Should be able to see the value in account" do
-      expect(CurrencyRequestMock, :load_from_config, 7, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid,fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
-
       {_, account_value} = FinancialSystem.show(account.account_id)
 
       assert account_value == "1.00"
@@ -28,8 +27,8 @@ defmodule FinancialOperationsTest do
 
   describe "deposit/3" do
     setup do
-      expect(CurrencyRequestMock, :load_from_config, 4, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
@@ -42,8 +41,8 @@ defmodule FinancialOperationsTest do
     end
 
     test "Should be able to insert a value number in string type", %{account: account} do
-      expect(CurrencyRequestMock, :load_from_config, 9, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account_actual_state} = FinancialSystem.deposit(account, "brl", "1")
@@ -76,8 +75,8 @@ defmodule FinancialOperationsTest do
     test "Not should be able to make the deposit inserting a invalid currency", %{
       account: account
     } do
-      expect(CurrencyRequestMock, :load_from_config, 1, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {:error, message} = FinancialSystem.deposit(account, "brrl", "1")
@@ -88,8 +87,8 @@ defmodule FinancialOperationsTest do
     test "Not should be able to make the deposit inserting a value equal or less than 0", %{
       account: account
     } do
-      expect(CurrencyRequestMock, :load_from_config, 9, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {:error, message} = FinancialSystem.deposit(account, "brl", "-1")
@@ -100,8 +99,8 @@ defmodule FinancialOperationsTest do
 
   describe "withdraw/2" do
     setup do
-      expect(CurrencyRequestMock, :load_from_config, 4, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
@@ -115,10 +114,6 @@ defmodule FinancialOperationsTest do
 
     test "Should be able to take a value of an account inserting a value number in string type",
          %{account: account} do
-      expect(CurrencyRequestMock, :load_from_config, 3, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
-      end)
-
       {_, account_actual_state} = FinancialSystem.withdraw(account, "1")
 
       account_actual_value = account_actual_state.value
@@ -135,10 +130,6 @@ defmodule FinancialOperationsTest do
     test "Not should be able to make the withdraw inserting a value equal or less than 0", %{
       account: account
     } do
-      expect(CurrencyRequestMock, :load_from_config, 1, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
-      end)
-
       {:error, message} = FinancialSystem.withdraw(account, "-1")
 
       assert ^message = "The value must be greater or equal to 0."
@@ -165,8 +156,8 @@ defmodule FinancialOperationsTest do
 
   describe "transfer/3" do
     setup do
-      expect(CurrencyRequestMock, :load_from_config, 8, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, 2,fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
@@ -184,9 +175,9 @@ defmodule FinancialOperationsTest do
            account_id: account_id_from,
            account2_id: account2_id_to
          } do
-      expect(CurrencyRequestMock, :load_from_config, 18, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
-      end)
+          expect(CurrencyMock, :currency_is_valid, fn currency ->
+            {:ok, String.upcase(currency)}
+          end)
 
       FinancialSystem.transfer("1", account_id_from, account2_id_to)
 
@@ -237,10 +228,6 @@ defmodule FinancialOperationsTest do
       account_id: account_id_from,
       account2_id: account2_id_to
     } do
-      expect(CurrencyRequestMock, :load_from_config, 1, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
-      end)
-
       {:error, message} = FinancialSystem.transfer("-1", account_id_from, account2_id_to)
 
       assert ^message = "The value must be greater or equal to 0."
@@ -249,8 +236,8 @@ defmodule FinancialOperationsTest do
 
   describe "split/3" do
     setup do
-      expect(CurrencyRequestMock, :load_from_config, 12, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, 3,fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
@@ -282,9 +269,9 @@ defmodule FinancialOperationsTest do
            account3_id: account3,
            account2_id: account2
          } do
-      expect(CurrencyRequestMock, :load_from_config, 36, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
-      end)
+          expect(CurrencyMock, :currency_is_valid, 2,fn currency ->
+            {:ok, String.upcase(currency)}
+          end)
 
       FinancialSystem.split(account2, split_list, "1")
 
@@ -310,10 +297,6 @@ defmodule FinancialOperationsTest do
       account2_id: account,
       list: split_list
     } do
-      expect(CurrencyRequestMock, :load_from_config, 1, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
-      end)
-
       {:error, message} = FinancialSystem.split(account, split_list, "-1")
 
       assert ^message = "The value must be greater or equal to 0."

@@ -4,7 +4,6 @@ defmodule FinancialSystem.Account do
   """
 
   alias FinancialSystem.{AccountState, Currency}
-  alias FinancialSystem.Currency.CurrencyImpl
 
   @typedoc """
     Abstract account struct type.
@@ -20,6 +19,8 @@ defmodule FinancialSystem.Account do
 
   defstruct [:account_id, :name, :currency, :value]
 
+  defp currency_finder, do: Application.get_env(:financial_system, :currency_finder)
+
   @doc """
     Create user accounts
 
@@ -30,7 +31,7 @@ defmodule FinancialSystem.Account do
           {:ok, t()} | {:error, String.t()}
   def create(name, currency, value)
       when is_binary(name) and is_binary(currency) and is_binary(value) do
-    with {:ok, currency_upcase} <- CurrencyImpl.currency_is_valid(currency),
+    with {:ok, currency_upcase} <- currency_finder().currency_is_valid(currency),
          {:ok, value_in_integer} <- Currency.amount_do(:store, value, currency_upcase),
          true <- byte_size(name) > 0,
          {:ok, account_created} <-

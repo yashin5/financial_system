@@ -40,8 +40,8 @@ defmodule FinancialSystemTest do
     test "Should be able to create a account with value number in string type", %{
       account_struct2: account_struct
     } do
-      expect(CurrencyRequestMock, :load_from_config, 4, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "0.10")
@@ -60,8 +60,8 @@ defmodule FinancialSystemTest do
     test "Should be able to create a account with low case currency", %{
       account_struct: account_struct
     } do
-      expect(CurrencyRequestMock, :load_from_config, 4, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Oliver Tsubasa", "brl", "1")
@@ -80,8 +80,8 @@ defmodule FinancialSystemTest do
     test "Should be able to create a account with amount 0", %{
       account_struct3: account_struct
     } do
-      expect(CurrencyRequestMock, :load_from_config, 4, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Inu Yasha", "brl", "0")
@@ -106,8 +106,8 @@ defmodule FinancialSystemTest do
     end
 
     test "Not should be able to create a account with a value less than 0" do
-      expect(CurrencyRequestMock, :load_from_config, 2, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {:error, message} = FinancialSystem.create("Oliver Tsubasa", "brl", "-1")
@@ -137,8 +137,8 @@ defmodule FinancialSystemTest do
     end
 
     test "Not should be able to create a account with a invalid currency" do
-      expect(CurrencyRequestMock, :load_from_config, 1, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
       end)
 
       {:error, message} = FinancialSystem.create("Oliver Tsubasa", "brll", "0")

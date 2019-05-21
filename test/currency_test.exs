@@ -26,10 +26,6 @@ defmodule CurrencyTest do
 
   describe "convert/3" do
     test "Should be able to convert the value in number in type string." do
-      expect(CurrencyRequestMock, :load_from_config, 5, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
-      end)
-
       assert FinancialSystem.Currency.convert("USD", "BRL", "1.0") == {:ok, 370}
     end
 
@@ -48,20 +44,12 @@ defmodule CurrencyTest do
     end
 
     test "Not should be able to convert the value with a invalid currency in first parameter" do
-      expect(CurrencyRequestMock, :load_from_config, 1, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
-      end)
-
       {:error, message} = FinancialSystem.Currency.convert("BRLL", "BRL", "1")
 
       assert ^message = "The currency is not valid. Please, check it and try again."
     end
 
     test "Not should be able to convert the value with a invalid currency in second parameter" do
-      expect(CurrencyRequestMock, :load_from_config, 1, fn ->
-        %{"decimal" => %{"USDBRL" => 2}, "quotes" => %{"USDBRL" => 3.702199}}
-      end)
-
       {:error, message} = FinancialSystem.Currency.convert("USD", "BRRL", "1")
 
       assert ^message = "The currency is not valid. Please, check it and try again."
@@ -70,10 +58,6 @@ defmodule CurrencyTest do
 
   describe "amount_do/3" do
     test "Should be able to transform a number in string type in integer to store the value in state" do
-      expect(CurrencyRequestMock, :load_from_config, 3, fn ->
-        %{"decimal" => %{"USDBTC" => 8}, "quotes" => %{"USDBTC" => 0.000149}}
-      end)
-
       {_, value} = FinancialSystem.Currency.amount_do(:store, "1.0", "BTC")
       assert value == 100_000_000
     end
@@ -100,30 +84,18 @@ defmodule CurrencyTest do
     end
 
     test "Not should be able to transform a value inserting a invalid currency" do
-      expect(CurrencyRequestMock, :load_from_config, 1, fn ->
-        %{"decimal" => %{"USDBTC" => 8}, "quotes" => %{"USDBTC" => 0.000149}}
-      end)
-
       {:error, message} = FinancialSystem.Currency.amount_do(:store, "1.0", "BTCC")
 
       assert ^message = "The currency is not valid. Please, check it and try again."
     end
 
     test "Should be able to transform a integer value in decimal to show the value to user" do
-      expect(CurrencyRequestMock, :load_from_config, 3, fn ->
-        %{"decimal" => %{"USDBTC" => 8}, "quotes" => %{"USDBTC" => 0.000149}}
-      end)
-
       {_, value} = FinancialSystem.Currency.amount_do(:show, 1, "BTC")
 
       assert value == "1E-8"
     end
 
     test "Should be able to transform a float value in decimal to show the value to user" do
-      expect(CurrencyRequestMock, :load_from_config, 3, fn ->
-        %{"decimal" => %{"USDBTC" => 8}, "quotes" => %{"USDBTC" => 0.000149}}
-      end)
-
       {_, value} = FinancialSystem.Currency.amount_do(:show, 1, "BTC")
       assert value == "1E-8"
     end
@@ -143,10 +115,6 @@ defmodule CurrencyTest do
     end
 
     test "Not should be able to transform a value with a invalid currency" do
-      expect(CurrencyRequestMock, :load_from_config, 1, fn ->
-        %{"decimal" => %{"USDBTC" => 8}, "quotes" => %{"USDBTC" => 0.000149}}
-      end)
-
       {:error, message} = FinancialSystem.Currency.amount_do(:show, 1, "BBTC")
 
       assert ^message = "The currency is not valid. Please, check it and try again."
