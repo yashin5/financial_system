@@ -17,11 +17,13 @@ This app makes you able to create accounts to make financial operations like you
 
 ## Stack
 
-##### This system was build with Elixir using ```mix new ```.
-- [Elixir](https://github.com/elixir-lang/elixir)
-- [Poison](https://github.com/devinus/poison)
-- [Decimal](https://github.com/ericmj/decimal)
-- [UUID](https://github.com/zyro/elixir-uuid)
+##### This system was build with Elixir using ```mix new ``` end:
+- [Elixir](https://github.com/elixir-lang/elixir) (v1.8.1)
+- [Poison](https://github.com/devinus/poison) (To parse the HTTP Json response)
+- [Decimal](https://github.com/ericmj/decimal) (To precision arithmetic)
+- [UUID](https://github.com/zyro/elixir-uuid) (To generate ID to accounts)
+- [MOX](https://github.com/plataformatec/mox) (To mocking tests)
+
 ## Get started
 To run this project locally you need to have Elixir installed in your machine. After this, follow these steps:
 
@@ -100,3 +102,4 @@ FinancialSystem.split(account1.account_id, list_to, "100")
 - [O Guia de estilo elixir](https://github.com/gusaiani/elixir_style_guide/blob/master/README_ptBR.md)
 - [The complete Elixir and Phoenix bootcamp](https://www.udemy.com/the-complete-elixir-and-phoenix-bootcamp-and-tutorial/learn/v4/t/lecture/5911740?start=540)
 - [The Pragmatic Studio](https://pragmaticstudio.com/)
+- [Exceptions are Evil](https://github.com/plataformatec/mox)
