@@ -70,7 +70,7 @@ defmodule FinancialSystem.Currency do
   ## Examples
     FinancialSystem.Currency.convert("USD", "BRL", "10")
   """
-  @spec convert(String.t(), String.t(), String.t()) :: {:ok, integer()} | {:error, String.t()}
+  @spec convert(String.t(), String.t(), String.t()) :: {:ok, integer()} | {:error, atom()}
   def convert("USD", currency_to, value)
       when is_binary(currency_to) and is_binary(value) do
     with {:ok, currency_to_upcase} <- CurrencyImpl.currency_is_valid(currency_to),
@@ -150,8 +150,8 @@ defmodule FinancialSystem.Currency do
   ## Examples
     FinancialSystem.Currency.amount_do(:show, 10, "BRL")
   """
-  @spec amount_do(atom(), integer() | String.t(), String.t()) ::
-          {:ok, String.t()} | {:error, String.t()}
+  @spec amount_do(atom(), pos_integer() | String.t(), String.t()) ::
+          {:ok, String.t() | pos_integer()} | {:error, atom()}
   def amount_do(:show = operation, value, currency)
       when is_atom(operation) and is_integer(value) and value >= 0 and is_binary(currency) do
     with {:ok, currency_upcase} <- CurrencyImpl.currency_is_valid(currency),

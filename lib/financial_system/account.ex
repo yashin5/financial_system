@@ -28,7 +28,7 @@ defmodule FinancialSystem.Account do
     FinancialSystem.create("Yashin Santos",  "EUR", "220")
   """
   @spec create(String.t() | any(), String.t() | any(), String.t() | any()) ::
-          {:ok, t()} | {:error, String.t()}
+          {:ok, t()} | {:error, atom()}
   def create(name, currency, value)
       when is_binary(name) and is_binary(currency) and is_binary(value) do
     with {:ok, currency_upcase} <- currency_finder().currency_is_valid(currency),

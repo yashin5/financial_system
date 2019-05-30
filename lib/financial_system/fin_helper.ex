@@ -13,7 +13,7 @@ defmodule FinancialSystem.FinHelper do
 
       FinancialSystem.FinHelper.funds(account.account_id, 220)
   """
-  @spec funds(String.t(), String.t()) :: {:ok, boolean()} | {:error, String.t()}
+  @spec funds(String.t(), String.t()) :: {:ok, boolean()} | {:error, atom()}
   def funds(account_id, value) when is_binary(account_id) and is_number(value) do
     with {:ok, _} <- AccountState.account_exist(account_id) do
       AccountState.show(account_id).value
@@ -49,7 +49,7 @@ defmodule FinancialSystem.FinHelper do
     FinancialSystem.FinHelper.transfer_have_account_from(account2.account_id, split_list)
   """
   @spec transfer_have_account_from(String.t() | any(), list(Split.t()) | String.t() | any()) ::
-          {:ok, boolean()} | {:error, String.t()}
+          {:ok, boolean()} | {:error, atom()}
   def transfer_have_account_from(account_from, split_list)
       when is_binary(account_from) and is_list(split_list) do
     with {:ok, _} <- AccountState.account_exist(account_from) do
@@ -110,7 +110,7 @@ defmodule FinancialSystem.FinHelper do
 
     FinancialSystem.FinHelper.percent_ok(split_list)
   """
-  @spec percent_ok(list(Split.t()) | any()) :: {:ok, boolean()} | {:error, String.t()}
+  @spec percent_ok(list(Split.t()) | any()) :: {:ok, boolean()} | {:error, atom()}
   def percent_ok(split_list) when is_list(split_list) do
     split_list
     |> Enum.reduce(0, fn %Split{percent: percent}, acc -> acc + percent end)
@@ -136,7 +136,7 @@ defmodule FinancialSystem.FinHelper do
     FinancialSystem.FinHelper.unite_equal_account_split(split_list)
   """
   @spec unite_equal_account_split(list(Split.t()) | any()) ::
-          {:ok, list(Split.t())} | {:error, String.t()}
+          {:ok, list(Split.t())} | {:error, atom()}
   def unite_equal_account_split(split_list) when is_list(split_list) do
     {:ok,
      split_list
@@ -160,7 +160,7 @@ defmodule FinancialSystem.FinHelper do
     FinancialSystem.FinHelper.division_of_values_to_make_split_transfer(split_list, 100)
   """
   @spec division_of_values_to_make_split_transfer(list(Split.t()) | any(), String.t() | any()) ::
-          {:ok, list(map())} | {:error, String.t()}
+          {:ok, list(map())} | {:error, atom()}
   def division_of_values_to_make_split_transfer(split_list, value)
       when is_list(split_list) and is_binary(value) do
     {:ok,
