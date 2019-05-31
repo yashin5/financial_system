@@ -13,7 +13,7 @@ defmodule FinancialSystem.FinHelper do
 
       FinancialSystem.FinHelper.funds(account.account_id, 220)
   """
-  @spec funds(String.t(), String.t()) :: {:ok, boolean()} | {:error, atom()}
+  @spec funds(String.t(), integer()) :: {:ok, boolean()} | {:error, atom()}
   def funds(account_id, value) when is_binary(account_id) and is_number(value) do
     with {:ok, _} <- AccountState.account_exist(account_id) do
       AccountState.show(account_id).value
