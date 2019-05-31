@@ -3,24 +3,24 @@ defmodule FinancialSystem do
   This module is responsable to implement the financial operations.
   """
 
-  @behaviour FinancialSystem.Financial
+  alias FinancialSystem.{Account, Financial, FinancialOperations}
 
-  alias FinancialSystem.{Account, FinancialOperations}
+  @behaviour FinancialSystem.Financial
 
   defdelegate create(name, currency, value), to: Account
 
-  @impl true
+  @impl Financial
   defdelegate show(account), to: FinancialOperations
 
-  @impl true
+  @impl Financial
   defdelegate deposit(account, currency, value), to: FinancialOperations
 
-  @impl true
+  @impl Financial
   defdelegate withdraw(account, value), to: FinancialOperations
 
-  @impl true
+  @impl Financial
   defdelegate transfer(account_from, account_to, value), to: FinancialOperations
 
-  @impl true
+  @impl Financial
   defdelegate split(account_from, split_list, value), to: FinancialOperations
 end

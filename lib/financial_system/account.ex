@@ -9,10 +9,10 @@ defmodule FinancialSystem.Account do
     Abstract account struct type.
   """
   @type t :: %__MODULE__{
-          account_id: integer(),
+          account_id: String.t(),
           name: String.t(),
           currency: String.t(),
-          value: String.t()
+          value: integer()
         }
 
   @enforce_keys [:account_id, :name, :currency, :value]
