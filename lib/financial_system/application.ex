@@ -11,6 +11,7 @@ defmodule FinancialSystem.Application do
     import Supervisor.Spec
 
     children = [
+      worker(FinancialSystem.Repo, []),
       worker(AccountState, [])
     ]
 
