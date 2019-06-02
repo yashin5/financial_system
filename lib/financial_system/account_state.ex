@@ -2,41 +2,8 @@ defmodule FinancialSystem.AccountState do
   @moduledoc """
   This module is responsable for keep and managing the accounts state.
   """
-  use GenServer
+
   alias FinancialSystem.Account, as: Account
-
-  def start_link(state \\ %{}) do
-    GenServer.start_link(__MODULE__, state, name: :register_account)
-  end
-
-  def init(state) do
-    {:ok, state}
-  end
-
-  def handle_call(:get_data, _, state) do
-    {:reply, state, state}
-  end
-
-  def handle_call({:create_account, state}, _, system_accounts) do
-    {:reply, Map.put(system_accounts, state.account_id, state),
-     Map.put(system_accounts, state.account_id, state)}
-  end
-
-  def handle_call({:account_exist, account}, _, system_accounts) do
-    {:reply, Map.has_key?(system_accounts, account), system_accounts}
-  end
-
-  def handle_cast({:deposit, account, value}, system_accounts) do
-    operation = fn a, b -> a + b end
-
-    {:noreply, make_operation(system_accounts, account, value, operation)}
-  end
-
-  def handle_cast({:withdraw, account, value}, system_accounts) do
-    operation = fn a, b -> a - b end
-
-    {:noreply, make_operation(system_accounts, account, value, operation)}
-  end
 
   defp make_operation(system_accounts, account, value, operation) do
     Map.update!(system_accounts, account, fn acc ->
