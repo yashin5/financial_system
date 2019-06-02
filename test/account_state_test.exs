@@ -6,6 +6,49 @@ defmodule AccountStateTest do
 
   doctest FinancialSystem.AccountState
 
+  describe "register_account/1" do
+    test "Should be able to registry a account into system" do
+      {:ok, account} =
+        %FinancialSystem.Account{
+          name: "Yashin Santos",
+          currency: "BRL",
+          value: 100,
+          account_id: UUID.uuid4()
+        }
+        |> FinancialSystem.AccountState.register_account()
+
+      account_actual_state = FinancialSystem.AccountState.show(account.id)
+
+      assert account_actual_state == account
+    end
+
+    test "Not should be able to registry if the arg not be a %Account struct" do
+      {:error, message} = FinancialSystem.AccountState.register_account("error")
+
+      assert ^message = :invalid_arguments_type
+    end
+  end
+
+  describe "delete/1" do
+    test "Should be able to delete an account" do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
+
+      {:ok, message} = FinancialSystem.AccountState.delete_account(account.id)
+
+      assert ^message = :account_deleted
+    end
+
+    test "Not should be able to delete if the id dont be in string type" do
+      {:error, message} = FinancialSystem.AccountState.delete_account(1)
+
+      assert ^message = :invalid_account_id_type
+    end
+  end
+
   describe "show/1" do
     test "Should be able to see the account state" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->

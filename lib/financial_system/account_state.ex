@@ -26,15 +26,9 @@ defmodule FinancialSystem.AccountState do
     |> do_register_account()
   end
 
-  defp do_register_account({:ok, result}), do: {:ok, result}
+  def register_account(_), do: {:error, :invalid_arguments_type}
 
-  defp do_register_account({:error, reasons}) do
-    Ecto.Changeset.traverse_errors(reasons, fn {msg, opts} ->
-      Enum.reduce(opts, msg, fn {key, value}, acc ->
-        String.replace(acc, "%{#{key}}", to_string(value))
-      end)
-    end)
-  end
+  defp do_register_account({:ok, result}), do: {:ok, result}
 
   @doc """
     Delete an account from system.

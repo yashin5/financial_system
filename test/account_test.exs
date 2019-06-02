@@ -142,4 +142,35 @@ defmodule FinancialSystemTest do
       assert ^message = :currency_is_not_valid
     end
   end
+
+  describe "delete/1" do
+    test "Should be able to delete an account" do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} = FinancialSystem.create("Oliver Tsubasa", "brl", "1")
+
+      {:ok, message} = FinancialSystem.delete(account.id)
+
+      assert ^message = :account_deleted
+    end
+
+    test "Not should be able to delete if insert id different from type string" do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} = FinancialSystem.create("Oliver Tsubasa", "brl", "1")
+      {:error, message} = FinancialSystem.delete(1.1)
+
+      assert ^message = :invalid_account_id_type
+    end
+
+    test "Not should be able to delete an inexistent account" do
+      {:error, message} = FinancialSystem.delete("account.ida")
+
+      assert ^message = :account_dont_exist
+    end
+  end
 end
