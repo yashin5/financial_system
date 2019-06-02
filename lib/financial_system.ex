@@ -9,6 +9,8 @@ defmodule FinancialSystem do
 
   defdelegate create(name, currency, value), to: Account
 
+  defdelegate delete(account_id), to: Account
+
   @impl Financial
   defdelegate show(account), to: FinancialOperations
 

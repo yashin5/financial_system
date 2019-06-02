@@ -71,4 +71,12 @@ defmodule FinancialSystem.Account do
   defp create_account_id do
     UUID.uuid4()
   end
+
+  def delete(account_id) when is_binary(account_id) do
+    with {:ok, _} <- AccountState.account_exist(account_id) do
+      AccountState.delete_account(account_id)
+    end
+  end
+
+  def delete(_), do: {:error, :invalid_account_id_type}
 end
