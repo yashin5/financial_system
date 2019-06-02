@@ -36,6 +36,14 @@ defmodule FinancialSystem.AccountState do
     end)
   end
 
+  @doc """
+    Delete an account from system.
+
+  ## Examples
+    {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+
+    FinancialSystem.AccountState.delete_account(account.id)
+  """
   def delete_account(account_id) when is_binary(account_id) do
     AccountsRepo
     |> Repo.get(account_id)
