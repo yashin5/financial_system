@@ -98,8 +98,9 @@ defmodule FinancialSystem.AccountState do
   """
   @spec withdraw(String.t(), pos_integer()) :: Account.t() | no_return()
   def withdraw(account, value) when is_binary(account) and is_integer(value) and value > 0 do
-    GenServer.cast(:register_account, {:withdraw, account, value})
-    show(account)
+    operation = fn a, b -> a - b end
+
+    make_operation(account, value, operation)
   end
 
   @doc """
@@ -112,7 +113,16 @@ defmodule FinancialSystem.AccountState do
   """
   @spec deposit(String.t(), integer()) :: Account.t() | no_return()
   def deposit(account, value) when is_binary(account) and is_integer(value) and value > 0 do
-    GenServer.cast(:register_account, {:deposit, account, value})
+    operation = fn a, b -> a + b end
+
+    make_operation(account, value, operation)
+  end
+
+  defp make_operation(account, value, operation) do
+    show(account)
+    |> AccountsRepo.changeset(%{value: operation.(show(account).value, value)})
+    |> Repo.update()
+
     show(account)
   end
 end
