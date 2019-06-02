@@ -35,6 +35,17 @@ defmodule FinancialSystem.AccountState do
     end)
   end
 
+  def delete_account(account_id) when is_binary(account_id) do
+    AccountsRepo
+    |> Repo.get(account_id)
+    |> Repo.delete()
+    |> do_delete_account()
+  end
+
+  def delete_account(_), do: {:error, :invalid_account_id_type}
+
+  defp do_delete_account({:ok, _}), do: {:ok, :account_deleted}
+
   defp make_operation(system_accounts, account, value, operation) do
     Map.update!(system_accounts, account, fn acc ->
       %{acc | value: operation.(acc.value, value)}
