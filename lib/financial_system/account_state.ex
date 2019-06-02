@@ -5,6 +5,36 @@ defmodule FinancialSystem.AccountState do
 
   alias FinancialSystem.Account, as: Account
 
+  @doc """
+    Register the account in system.
+
+  ## Examples
+    account_struct = %FinancialSystem.Account{ account_id: UUID.uuid4(), name: "Oliver Tsubasa", currency: "BRL", value: 100 }
+
+    FinancialSystem.AccountState.register_account(account_struct)
+  """
+  def register_account(%Account{
+        name: name,
+        currency: currency,
+        value: value,
+        account_id: account_id
+      }) do
+    %AccountsRepo{name: name, currency: currency, value: value, id: account_id}
+    |> AccountsRepo.changeset()
+    |> Repo.insert()
+    |> do_register_account()
+  end
+
+  defp do_register_account({:ok, result}), do: {:ok, result}
+
+  defp do_register_account({:error, reasons}) do
+    Ecto.Changeset.traverse_errors(reasons, fn {msg, opts} ->
+      Enum.reduce(opts, msg, fn {key, value}, acc ->
+        String.replace(acc, "%{#{key}}", to_string(value))
+      end)
+    end)
+  end
+
   defp make_operation(system_accounts, account, value, operation) do
     Map.update!(system_accounts, account, fn acc ->
       %{acc | value: operation.(acc.value, value)}
