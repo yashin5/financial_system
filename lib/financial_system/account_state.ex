@@ -3,7 +3,8 @@ defmodule FinancialSystem.AccountState do
   This module is responsable for keep and managing the accounts state.
   """
 
-  alias FinancialSystem.Account, as: Account
+  alias FinancialSystem.{Account, Repo}
+  alias FinancialSystem.Accounts.AccountsRepo
 
   @doc """
     Register the account in system.
@@ -13,7 +14,6 @@ defmodule FinancialSystem.AccountState do
 
     FinancialSystem.AccountState.register_account(account_struct)
   """
-  @spec register_account(Account.t() | any()) :: {:ok, Account.t()} | {:error, atom()}
   def register_account(%Account{
         name: name,
         currency: currency,
@@ -47,19 +47,13 @@ defmodule FinancialSystem.AccountState do
 
   defp do_delete_account({:ok, _}), do: {:ok, :account_deleted}
 
-  defp make_operation(system_accounts, account, value, operation) do
-    Map.update!(system_accounts, account, fn acc ->
-      %{acc | value: operation.(acc.value, value)}
-    end)
-  end
-
   @doc """
     Show the state.
 
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountState.show(account.account_id)
+    FinancialSystem.AccountState.show(account.id)
   """
   @spec show(String.t()) :: Account.t() | no_return() | atom()
   def show(account) when is_binary(account) do
@@ -94,7 +88,7 @@ defmodule FinancialSystem.AccountState do
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountState.withdraw(account.account_id, 100)
+    FinancialSystem.AccountState.withdraw(account.id, 100)
   """
   @spec withdraw(String.t(), pos_integer()) :: Account.t() | no_return()
   def withdraw(account, value) when is_binary(account) and is_integer(value) and value > 0 do
@@ -109,7 +103,7 @@ defmodule FinancialSystem.AccountState do
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountState.deposit(account.account_id, 100)
+    FinancialSystem.AccountState.deposit(account.id, 100)
   """
   @spec deposit(String.t(), integer()) :: Account.t() | no_return()
   def deposit(account, value) when is_binary(account) and is_integer(value) and value > 0 do
