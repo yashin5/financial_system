@@ -72,6 +72,15 @@ defmodule FinancialSystem.Account do
     UUID.uuid4()
   end
 
+  @doc """
+    Delete a existent account.
+
+  ## Examples
+    {:ok, account} = FinancialSystem.create("Yashin Santos",  "EUR", "220")
+    
+    FinancialSystem.Account.delete(account.id)
+  """
+  @spec delete(String.t()) :: {:ok | :error, atom()}
   def delete(account_id) when is_binary(account_id) do
     with {:ok, _} <- AccountState.account_exist(account_id) do
       AccountState.delete_account(account_id)
