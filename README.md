@@ -64,37 +64,37 @@ To run this project locally you need to have Elixir installed in your machine. A
 ##### Show value in account
 
 ```elixir
-FinancialSystem.show(account1.account_id)
+FinancialSystem.show(account1.id)
 ```
 
 ##### Deposit into account
 
 ```elixir
-FinancialSystem.deposit(account1.account_id, "USD", "10")
+FinancialSystem.deposit(account1.id, "USD", "10")
 ```
 
 ##### Withdraw from account
 
 ```elixir
-FinancialSystem.withdraw(account1.account_id, "10")
+FinancialSystem.withdraw(account1.id, "10")
 ```
 
 ##### Transfer between accounts
 
 ```elixir
-FinancialSystem.transfer("20", account1.account_id, account2.account_id)
+FinancialSystem.transfer("20", account1.id, account2.id)
 ```
 
 ##### Split transfer
 
 ```elixir
 list_to = [
-  %FinancialSystem.Split{account: account2.account_id, percent: 25},
-  %FinancialSystem.Split{account: account2.account_id, percent: 25},
-  %FinancialSystem.Split{account: account3.account_id, percent: 50}
+  %FinancialSystem.Split{account: account2.id, percent: 25},
+  %FinancialSystem.Split{account: account2.id, percent: 25},
+  %FinancialSystem.Split{account: account3.id, percent: 50}
 ]
 
-FinancialSystem.split(account1.account_id, list_to, "100")
+FinancialSystem.split(account1.id, list_to, "100")
 ```
 
 ## Reference

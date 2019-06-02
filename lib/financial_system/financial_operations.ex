@@ -15,7 +15,7 @@ defmodule FinancialSystem.FinancialOperations do
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.show(account.account_id)
+    FinancialSystem.show(account.id)
   """
   @impl true
   def show(account) when is_binary(account) do
@@ -36,7 +36,7 @@ defmodule FinancialSystem.FinancialOperations do
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.deposit(account.account_id, "BRL", "10")
+    FinancialSystem.deposit(account.id, "BRL", "10")
   """
   @impl true
   def deposit(account_id, currency_from, value) when is_binary(account_id) and is_binary(value) do
@@ -71,7 +71,7 @@ defmodule FinancialSystem.FinancialOperations do
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.withdraw(account.account_id, "10")
+    FinancialSystem.withdraw(account.id, "10")
   """
   @impl true
   def withdraw(account_id, value) when is_binary(account_id) and is_binary(value) do
@@ -104,7 +104,7 @@ defmodule FinancialSystem.FinancialOperations do
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
     {_, account2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
 
-    FinancialSystem.transfer("15", account.account_id, account2.account_id)
+    FinancialSystem.transfer("15", account.id, account2.id)
   """
   @impl true
   def transfer(value, account_from, account_to)
@@ -135,9 +135,9 @@ defmodule FinancialSystem.FinancialOperations do
     {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "100")
     {_, account2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
     {_, account3} = FinancialSystem.create("Mateus Mathias", "BRL", "100")
-    split_list = [%FinancialSystem.Split{account: account.account_id, percent: 50}, %FinancialSystem.Split{account: account3.account_id, percent: 50}]
+    split_list = [%FinancialSystem.Split{account: account.id, percent: 50}, %FinancialSystem.Split{account: account3.id, percent: 50}]
 
-    FinancialSystem.split(account2.account_id, split_list, "100")
+    FinancialSystem.split(account2.id, split_list, "100")
   """
   @impl true
   def split(account_from, split_list, value)

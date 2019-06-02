@@ -13,7 +13,7 @@ defmodule FinancialOperationsTest do
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
-      {_, account_value} = FinancialSystem.show(account.account_id)
+      {_, account_value} = FinancialSystem.show(account.id)
 
       assert account_value == "1.00"
     end
@@ -37,7 +37,7 @@ defmodule FinancialOperationsTest do
         nil
       end)
 
-      {:ok, [account: account.account_id]}
+      {:ok, [account: account.id]}
     end
 
     test "Should be able to insert a value number in string type", %{account: account} do
@@ -107,7 +107,7 @@ defmodule FinancialOperationsTest do
         nil
       end)
 
-      {:ok, [account: account.account_id]}
+      {:ok, [account: account.id]}
     end
 
     test "Should be able to take a value of an account inserting a value number in string type",
@@ -163,7 +163,7 @@ defmodule FinancialOperationsTest do
         nil
       end)
 
-      {:ok, [account_id: account.account_id, account2_id: account2.account_id]}
+      {:ok, [account_id: account.id, account2_id: account2.id]}
     end
 
     test "Should be able to transfer value between accounts inserting a value number in string type",
@@ -239,8 +239,8 @@ defmodule FinancialOperationsTest do
       {_, account3} = FinancialSystem.create("Inu Yasha", "BRL", "5")
 
       list_to = [
-        %FinancialSystem.Split{account: account.account_id, percent: 20},
-        %FinancialSystem.Split{account: account3.account_id, percent: 80}
+        %FinancialSystem.Split{account: account.id, percent: 20},
+        %FinancialSystem.Split{account: account3.id, percent: 80}
       ]
 
       on_exit(fn ->
@@ -249,9 +249,9 @@ defmodule FinancialOperationsTest do
 
       {:ok,
        [
-         account_id: account.account_id,
-         account2_id: account2.account_id,
-         account3_id: account3.account_id,
+         account_id: account.id,
+         account2_id: account2.id,
+         account3_id: account3.id,
          list: list_to
        ]}
     end

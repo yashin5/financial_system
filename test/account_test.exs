@@ -45,7 +45,7 @@ defmodule FinancialSystemTest do
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "0.10")
-      account_data = FinancialSystem.AccountState.show(account.account_id)
+      account_data = FinancialSystem.AccountState.show(account.id)
 
       account_simulate = %FinancialSystem.Account{
         account_id: "abd",
@@ -65,7 +65,7 @@ defmodule FinancialSystemTest do
       end)
 
       {_, account} = FinancialSystem.create("Oliver Tsubasa", "brl", "1")
-      account_data = FinancialSystem.AccountState.show(account.account_id)
+      account_data = FinancialSystem.AccountState.show(account.id)
 
       account_simulate = %FinancialSystem.Account{
         account_id: "abc",
@@ -86,7 +86,7 @@ defmodule FinancialSystemTest do
 
       {_, account} = FinancialSystem.create("Inu Yasha", "brl", "0")
 
-      account_data = FinancialSystem.AccountState.show(account.account_id)
+      account_data = FinancialSystem.AccountState.show(account.id)
 
       account_simulate = %FinancialSystem.Account{
         account_id: "adb",

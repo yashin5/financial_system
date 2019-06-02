@@ -17,7 +17,7 @@ defmodule FinHelperTest do
 
       {_, account} = FinancialSystem.create("Roberta Santos", "BRL", "20.0")
 
-      {:ok, [account_id: account.account_id]}
+      {:ok, [account_id: account.id]}
     end
 
     test "Should be able to verify if the account have de funds necessary for the transaction inserting a integer value",
@@ -54,15 +54,15 @@ defmodule FinHelperTest do
       {_, account3} = FinancialSystem.create("Inu Yasha", "BRL", "5")
 
       list_to = [
-        %FinancialSystem.Split{account: account.account_id, percent: 20},
-        %FinancialSystem.Split{account: account3.account_id, percent: 80}
+        %FinancialSystem.Split{account: account.id, percent: 20},
+        %FinancialSystem.Split{account: account3.id, percent: 80}
       ]
 
       {:ok,
        [
-         account_id: account.account_id,
-         account2_id: account2.account_id,
-         account3_id: account3.account_id,
+         account_id: account.id,
+         account2_id: account2.id,
+         account3_id: account3.id,
          list: list_to
        ]}
     end
@@ -114,13 +114,13 @@ defmodule FinHelperTest do
       {_, account3} = FinancialSystem.create("Inu Yasha", "BRL", "5")
 
       list_to = [
-        %FinancialSystem.Split{account: account.account_id, percent: 20},
-        %FinancialSystem.Split{account: account3.account_id, percent: 80}
+        %FinancialSystem.Split{account: account.id, percent: 20},
+        %FinancialSystem.Split{account: account3.id, percent: 80}
       ]
 
       list_to_false = [
-        %FinancialSystem.Split{account: account.account_id, percent: 30},
-        %FinancialSystem.Split{account: account3.account_id, percent: 80}
+        %FinancialSystem.Split{account: account.id, percent: 30},
+        %FinancialSystem.Split{account: account3.id, percent: 80}
       ]
 
       {:ok, [list: list_to, list_false: list_to_false]}
@@ -156,11 +156,11 @@ defmodule FinHelperTest do
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
       list_to = [
-        %FinancialSystem.Split{account: account.account_id, percent: 20},
-        %FinancialSystem.Split{account: account.account_id, percent: 80}
+        %FinancialSystem.Split{account: account.id, percent: 20},
+        %FinancialSystem.Split{account: account.id, percent: 80}
       ]
 
-      {:ok, [account_id: account.account_id, list: list_to]}
+      {:ok, [account_id: account.id, list: list_to]}
     end
 
     test "Should be able to verify if have a duplicated account in split list and unity it.",
