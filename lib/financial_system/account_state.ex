@@ -13,6 +13,7 @@ defmodule FinancialSystem.AccountState do
 
     FinancialSystem.AccountState.register_account(account_struct)
   """
+  @spec register_account(Account.t() | any()) :: {:ok, Account.t()} | {:error, atom()}
   def register_account(%Account{
         name: name,
         currency: currency,
@@ -53,21 +54,6 @@ defmodule FinancialSystem.AccountState do
   end
 
   @doc """
-    Register the account in system.
-
-  ## Examples
-    account_struct = %FinancialSystem.Account{ account_id: UUID.uuid4(), name: "Oliver Tsubasa", currency: "BRL", value: 100 }
-
-    FinancialSystem.AccountState.register_account(account_struct)
-  """
-  @spec register_account(Account.t() | any()) :: {:ok, Account.t()} | {:error, atom()}
-  def register_account(%Account{account_id: _, name: _, currency: _, value: _} = params) do
-    {:ok, GenServer.call(:register_account, {:create_account, params})[params.account_id]}
-  end
-
-  def register_account(_), do: {:error, :invalid_arguments_type}
-
-  @doc """
     Show the state.
 
   ## Examples
@@ -77,7 +63,8 @@ defmodule FinancialSystem.AccountState do
   """
   @spec show(String.t()) :: Account.t() | no_return() | atom()
   def show(account) when is_binary(account) do
-    GenServer.call(:register_account, :get_data)[account]
+    AccountsRepo
+    |> Repo.get(account)
   end
 
   @doc """
@@ -86,19 +73,20 @@ defmodule FinancialSystem.AccountState do
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountState.account_exist(account.account_id)
+    FinancialSystem.AccountState.account_exist(account.id)
   """
   @spec account_exist(String.t()) :: {:ok, boolean()} | {:error, atom()}
-  def account_exist(account) do
-    do_account_exist(
-      GenServer.call(:register_account, {:account_exist, account}),
-      account
-    )
+  def account_exist(account_id) do
+    AccountsRepo
+    |> Repo.all()
+    |> Enum.map(fn accounts -> accounts.id == account_id end)
+    |> Enum.member?(true)
+    |> do_account_exist()
   end
 
-  defp do_account_exist(true, _), do: {:ok, true}
+  defp do_account_exist(true), do: {:ok, true}
 
-  defp do_account_exist(false, _), do: {:error, :account_dont_exist}
+  defp do_account_exist(false), do: {:error, :account_dont_exist}
 
   @doc """
     Subtracts value in deposit operations.
