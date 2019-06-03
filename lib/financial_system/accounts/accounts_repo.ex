@@ -1,8 +1,6 @@
 defmodule FinancialSystem.Accounts.AccountsRepo do
   use Ecto.Schema
 
-  alias FinancialSystem.{Account, Repo}
-
   @primary_key {:id, :binary_id, autogenerate: false}
 
   schema "accounts" do

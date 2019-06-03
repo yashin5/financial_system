@@ -39,7 +39,4 @@ config :financial_system, ecto_repos: [FinancialSystem.Repo]
 # Configuration from the imported file will override the ones defined
 # here (which is why it is important to import them last).
 
-case Mix.env() do
-  :dev -> nil
-  _ -> import_config "#{Mix.env()}.exs"
-end
+import_config "#{Mix.env()}.exs"

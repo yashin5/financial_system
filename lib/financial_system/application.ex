@@ -5,13 +5,13 @@ defmodule FinancialSystem.Application do
 
   use Application
 
-  alias FinancialSystem.AccountState
+  alias FinancialSystem.Repo
 
   def start(_type, _args) do
     import Supervisor.Spec
 
     children = [
-      worker(FinancialSystem.Repo, [])
+      worker(Repo, [])
     ]
 
     opts = [strategy: :one_for_one, name: FinancialSystem.Supervisor]

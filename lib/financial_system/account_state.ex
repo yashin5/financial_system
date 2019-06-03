@@ -115,7 +115,8 @@ defmodule FinancialSystem.AccountState do
   end
 
   defp make_operation(account, value, operation) do
-    show(account)
+    account
+    |> show()
     |> AccountsRepo.changeset(%{value: operation.(show(account).value, value)})
     |> Repo.update()
 

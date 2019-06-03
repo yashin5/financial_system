@@ -30,7 +30,7 @@ services:
       POSTGRES_DB: account_repository
       POSTGRES_USER: ysantos
       POSTGRES_PASSWORD: "@dmin123"
-      
+
 # Define the volumes
 volumes:
   postgres_data:
