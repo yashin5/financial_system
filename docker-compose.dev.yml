@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  app:
+    environment:
+      MIX_ENV: dev
+      DB_NAME: account_repository_dev
+      DB_USER: ysantos
+      DB_PASSWORD: "@dmin123"
+      DB_HOST: db
+
+  db:
+    environment:
+      POSTGRES_DB: account_repository_dev
+      POSTGRES_USER: ysantos
+      POSTGRES_PASSWORD: "@dmin123"
+

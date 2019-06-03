@@ -1,5 +1,5 @@
 
-FROM elixir:1.8
+FROM elixir:1.8.2-alpine
 
 # Create app directory and copy the Elixir projects into it
 RUN mkdir /app

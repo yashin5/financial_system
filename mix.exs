@@ -15,6 +15,9 @@ defmodule FinancialSystem.MixProject do
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test
+      ],
+      aliases: [
+        test: ["ecto.create", "ecto.migrate", "test"]
       ]
     ]
   end

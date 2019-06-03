@@ -3,6 +3,8 @@ defmodule FinancialSystem.Accounts.AccountsRepo do
 
   @primary_key {:id, :binary_id, autogenerate: false}
 
+  @derive {Jason.Encoder, except: [:__meta__]}
+
   schema "accounts" do
     field(:name, :string)
     field(:currency, :string)

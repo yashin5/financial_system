@@ -1,36 +1,19 @@
 # Version of docker-compose
 version: '3'
 
-# Containers we are going to run
 services:
-  # Our Phoenix container
-  elixir:
-    # The build parameters for this container.
+  app:
     build:
-      # Here we define that it should build from the current directory
       context: .
-    environment:
-      # Variables to connect to our Postgres server
-      PGUSER: ysantos
-      PGPASSWORD: "@dmin123"
-      PGPORT: 5432
-      # Hostname of our Postgres container
-      PGHOST: db
     depends_on:
-      # The db container needs to be started before we start this container
       - db
-services:
-  postgres:
+
+  db:
     image: postgres:11.1-alpine
     ports:
       - 5432:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: account_repository
-      POSTGRES_USER: ysantos
-      POSTGRES_PASSWORD: "@dmin123"
-
 # Define the volumes
 volumes:
   postgres_data:

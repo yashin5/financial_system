@@ -7,10 +7,11 @@ config :financial_system, file: "currency_rate.json"
 config :financial_system, :currency_finder, FinancialSystem.Currency.CurrencyImpl
 
 config :financial_system, FinancialSystem.Repo,
-  database: "account_repository",
-  username: "ysantos",
-  password: "@dmin123",
-  hostname: "localhost"
+  database: System.get_env("DB_NAME") || "account_repository_dev",
+  username: System.get_env("DB_USER") || "ysantos",
+  password: System.get_env("DB_PASSWORD") || "@dmin123",
+  hostname: System.get_env("DB_HOST") || "db",
+  port: 5432
 
 config :financial_system, ecto_repos: [FinancialSystem.Repo]
 
