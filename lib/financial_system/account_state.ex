@@ -3,8 +3,7 @@ defmodule FinancialSystem.AccountState do
   This module is responsable for keep and managing the accounts state.
   """
 
-  alias FinancialSystem.{Account, Repo}
-  alias FinancialSystem.Accounts.AccountsRepo
+  alias FinancialSystem.{Account, Accounts.AccountsRepo, Repo}
 
   @doc """
     Register the account in system.
@@ -14,13 +13,12 @@ defmodule FinancialSystem.AccountState do
 
     FinancialSystem.AccountState.register_account(account_struct)
   """
-  def register_account(%Account{
+  def register_account(%AccountsRepo{
         name: name,
         currency: currency,
-        value: value,
-        account_id: account_id
+        value: value
       }) do
-    %AccountsRepo{name: name, currency: currency, value: value, id: account_id}
+    %AccountsRepo{name: name, currency: currency, value: value}
     |> AccountsRepo.changeset()
     |> Repo.insert()
     |> do_register_account()
@@ -57,7 +55,7 @@ defmodule FinancialSystem.AccountState do
 
     FinancialSystem.AccountState.show(account.id)
   """
-  @spec show(String.t()) :: Account.t() | no_return() | atom()
+  @spec show(String.t()) :: AccountsRepo.t() | no_return() | atom()
   def show(account) when is_binary(account) do
     AccountsRepo
     |> Repo.get(account)
@@ -92,7 +90,7 @@ defmodule FinancialSystem.AccountState do
 
     FinancialSystem.AccountState.withdraw(account.id, 100)
   """
-  @spec withdraw(String.t(), pos_integer()) :: Account.t() | no_return()
+  @spec withdraw(String.t(), pos_integer()) :: AccountsRepo.t() | no_return()
   def withdraw(account, value) when is_binary(account) and is_integer(value) and value > 0 do
     operation = fn a, b -> a - b end
 
@@ -107,7 +105,7 @@ defmodule FinancialSystem.AccountState do
 
     FinancialSystem.AccountState.deposit(account.id, 100)
   """
-  @spec deposit(String.t(), integer()) :: Account.t() | no_return()
+  @spec deposit(String.t(), integer()) :: AccountsRepo.t() | no_return()
   def deposit(account, value) when is_binary(account) and is_integer(value) and value > 0 do
     operation = fn a, b -> a + b end
 

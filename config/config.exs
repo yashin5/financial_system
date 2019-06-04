@@ -10,8 +10,7 @@ config :financial_system, FinancialSystem.Repo,
   database: System.get_env("DB_NAME") || "account_repository_dev",
   username: System.get_env("DB_USER") || "ysantos",
   password: System.get_env("DB_PASSWORD") || "@dmin123",
-  hostname: System.get_env("DB_HOST") || "localhost",
-  port: 5432
+  hostname: System.get_env("DB_HOST") || "localhost"
 
 config :financial_system, ecto_repos: [FinancialSystem.Repo]
 

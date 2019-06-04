@@ -1,9 +1,14 @@
 defmodule FinancialSystem.Accounts.AccountsRepo do
   use Ecto.Schema
 
-  @primary_key {:id, :binary_id, autogenerate: false}
+  @type t :: %__MODULE__{
+          id: String.t(),
+          name: String.t(),
+          currency: String.t(),
+          value: integer()
+        }
 
-  @derive {Jason.Encoder, except: [:__meta__]}
+  @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "accounts" do
     field(:name, :string)
@@ -14,6 +19,6 @@ defmodule FinancialSystem.Accounts.AccountsRepo do
   def changeset(accounts, params \\ %{}) do
     accounts
     |> Ecto.Changeset.cast(params, [:name, :currency, :value, :id])
-    |> Ecto.Changeset.validate_required([:name, :currency, :value, :id])
+    |> Ecto.Changeset.validate_required([:name, :currency, :value])
   end
 end

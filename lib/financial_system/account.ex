@@ -3,21 +3,11 @@ defmodule FinancialSystem.Account do
   This module is responsable for detemrinate the struct of accounts.
   """
 
-  alias FinancialSystem.{AccountState, Currency}
+  alias FinancialSystem.{Accounts.AccountsRepo, AccountState, Currency}
 
   @typedoc """
     Abstract account struct type.
   """
-  @type t :: %__MODULE__{
-          account_id: String.t(),
-          name: String.t(),
-          currency: String.t(),
-          value: integer()
-        }
-
-  @enforce_keys [:account_id, :name, :currency, :value]
-
-  defstruct [:account_id, :name, :currency, :value]
 
   defp currency_finder, do: Application.get_env(:financial_system, :currency_finder)
 
@@ -28,7 +18,7 @@ defmodule FinancialSystem.Account do
     FinancialSystem.create("Yashin Santos",  "EUR", "220")
   """
   @spec create(String.t() | any(), String.t() | any(), String.t() | any()) ::
-          {:ok, t()} | {:error, atom()}
+          {:ok, AccountsRepo.t()} | {:error, atom()}
   def create(name, currency, value)
       when is_binary(name) and is_binary(currency) and is_binary(value) do
     with {:ok, currency_upcase} <- currency_finder().currency_is_valid(currency),
@@ -57,19 +47,12 @@ defmodule FinancialSystem.Account do
     {:error, :invalid_value_type}
   end
 
-  def create(_, _, _), do: {:error, :invalid_arguments_type}
-
   defp new(name, currency, value) do
-    %__MODULE__{
-      account_id: create_account_id(),
+    %AccountsRepo{
       name: name,
       currency: currency,
       value: value
     }
-  end
-
-  defp create_account_id do
-    UUID.uuid4()
   end
 
   @doc """
@@ -77,7 +60,7 @@ defmodule FinancialSystem.Account do
 
   ## Examples
     {:ok, account} = FinancialSystem.create("Yashin Santos",  "EUR", "220")
-    
+
     FinancialSystem.Account.delete(account.id)
   """
   @spec delete(String.t()) :: {:ok | :error, atom()}
