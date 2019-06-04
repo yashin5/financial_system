@@ -3,7 +3,7 @@ defmodule FinancialSystem.Account do
   This module is responsable for detemrinate the struct of accounts.
   """
 
-  alias FinancialSystem.{Accounts.AccountsRepo, AccountState, Currency}
+  alias FinancialSystem.{Accounts.AccountsRepo, AccountOperations, Currency}
 
   @typedoc """
     Abstract account struct type.
@@ -28,7 +28,7 @@ defmodule FinancialSystem.Account do
          {:ok, account_created} <-
            name
            |> new(currency_upcase, value_in_integer)
-           |> AccountState.register_account() do
+           |> AccountOperations.register_account() do
       {:ok, account_created}
     end
   end
@@ -66,8 +66,8 @@ defmodule FinancialSystem.Account do
   """
   @callback delete(String.t()) :: {:ok | :error, atom()}
   def delete(account_id) when is_binary(account_id) do
-    with {:ok, _} <- AccountState.account_exist(account_id) do
-      AccountState.delete_account(account_id)
+    with {:ok, _} <- AccountOperations.account_exist(account_id) do
+      AccountOperations.delete_account(account_id)
     end
   end
 

@@ -1,10 +1,10 @@
-defmodule AccountStateTest do
+defmodule AccountOperationsTest do
   use ExUnit.Case, async: true
 
   import Mox
   setup :verify_on_exit!
 
-  doctest FinancialSystem.AccountState
+  doctest FinancialSystem.AccountOperations
 
   describe "register_account/1" do
     setup do
@@ -19,15 +19,15 @@ defmodule AccountStateTest do
           value: 100,
           id: UUID.uuid4()
         }
-        |> FinancialSystem.AccountState.register_account()
+        |> FinancialSystem.AccountOperations.register_account()
 
-      account_actual_state = FinancialSystem.AccountState.show(account.id)
+      account_actual_state = FinancialSystem.AccountOperations.show(account.id)
 
       assert account_actual_state == account
     end
 
     test "Not should be able to registry if the arg not be a %Account struct" do
-      {:error, message} = FinancialSystem.AccountState.register_account("error")
+      {:error, message} = FinancialSystem.AccountOperations.register_account("error")
 
       assert ^message = :invalid_arguments_type
     end
@@ -45,13 +45,13 @@ defmodule AccountStateTest do
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
-      {:ok, message} = FinancialSystem.AccountState.delete_account(account.id)
+      {:ok, message} = FinancialSystem.AccountOperations.delete_account(account.id)
 
       assert ^message = :account_deleted
     end
 
     test "Not should be able to delete if the id dont be in string type" do
-      {:error, message} = FinancialSystem.AccountState.delete_account(1)
+      {:error, message} = FinancialSystem.AccountOperations.delete_account(1)
 
       assert ^message = :invalid_account_id_type
     end
@@ -68,7 +68,7 @@ defmodule AccountStateTest do
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
-      actual_state = FinancialSystem.AccountState.show(account.id)
+      actual_state = FinancialSystem.AccountOperations.show(account.id)
 
       account_id_when_created = account.id
       actual_id = actual_state.id
@@ -89,9 +89,9 @@ defmodule AccountStateTest do
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
-      FinancialSystem.AccountState.withdraw(account.id, 1)
+      FinancialSystem.AccountOperations.withdraw(account.id, 1)
 
-      value = FinancialSystem.AccountState.show(account.id).value
+      value = FinancialSystem.AccountOperations.show(account.id).value
 
       assert value == 99
     end
@@ -109,9 +109,9 @@ defmodule AccountStateTest do
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
-      FinancialSystem.AccountState.deposit(account.id, 1)
+      FinancialSystem.AccountOperations.deposit(account.id, 1)
 
-      value = FinancialSystem.AccountState.show(account.id).value
+      value = FinancialSystem.AccountOperations.show(account.id).value
 
       assert value == 101
     end

@@ -3,7 +3,7 @@ defmodule FinancialSystem.FinancialOperations do
   This module is responsable to define the operations in this API
   """
 
-  alias FinancialSystem.{AccountState, Currency, FinHelper}
+  alias FinancialSystem.{AccountOperations, Currency, FinHelper}
 
   @behaviour FinancialSystem.Financial
 
@@ -19,11 +19,11 @@ defmodule FinancialSystem.FinancialOperations do
   """
   @impl true
   def show(account) when is_binary(account) do
-    with {:ok, _} <- AccountState.account_exist(account) do
+    with {:ok, _} <- AccountOperations.account_exist(account) do
       Currency.amount_do(
         :show,
-        AccountState.show(account).value,
-        AccountState.show(account).currency
+        AccountOperations.show(account).value,
+        AccountOperations.show(account).currency
       )
     end
   end
@@ -40,11 +40,11 @@ defmodule FinancialSystem.FinancialOperations do
   """
   @impl true
   def deposit(account_id, currency_from, value) when is_binary(account_id) and is_binary(value) do
-    with {:ok, _} <- AccountState.account_exist(account_id),
+    with {:ok, _} <- AccountOperations.account_exist(account_id),
          {:ok, _} <- currency_finder().currency_is_valid(currency_from),
          {:ok, value_in_integer} <-
-           Currency.convert(currency_from, AccountState.show(account_id).currency, value) do
-      {:ok, AccountState.deposit(account_id, value_in_integer)}
+           Currency.convert(currency_from, AccountOperations.show(account_id).currency, value) do
+      {:ok, AccountOperations.deposit(account_id, value_in_integer)}
     end
   end
 
@@ -75,12 +75,12 @@ defmodule FinancialSystem.FinancialOperations do
   """
   @impl true
   def withdraw(account_id, value) when is_binary(account_id) and is_binary(value) do
-    with {:ok, _} <- AccountState.account_exist(account_id),
+    with {:ok, _} <- AccountOperations.account_exist(account_id),
          {:ok, value_in_integer} <-
-           Currency.amount_do(:store, value, AccountState.show(account_id).currency),
+           Currency.amount_do(:store, value, AccountOperations.show(account_id).currency),
          {:ok, _} <- FinHelper.funds(account_id, value_in_integer) do
       {:ok,
-       AccountState.withdraw(
+       AccountOperations.withdraw(
          account_id,
          value_in_integer
        )}
@@ -111,7 +111,7 @@ defmodule FinancialSystem.FinancialOperations do
       when is_binary(account_from) and is_binary(account_to) and is_binary(value) do
     with {:ok, _} <- FinHelper.transfer_have_account_from(account_from, account_to),
          {:ok, withdraw_result} <- withdraw(account_from, value),
-         {:ok, _} <- deposit(account_to, AccountState.show(account_from).currency, value) do
+         {:ok, _} <- deposit(account_to, AccountOperations.show(account_from).currency, value) do
       {:ok, withdraw_result}
     end
   end
@@ -142,12 +142,12 @@ defmodule FinancialSystem.FinancialOperations do
   @impl true
   def split(account_from, split_list, value)
       when is_binary(account_from) and is_list(split_list) and is_binary(value) do
-    with {:ok, _} <- AccountState.account_exist(account_from),
+    with {:ok, _} <- AccountOperations.account_exist(account_from),
          {:ok, _} <- FinHelper.percent_ok(split_list),
          {:ok, _} <- FinHelper.transfer_have_account_from(account_from, split_list),
          {:ok, united_accounts} <- FinHelper.unite_equal_account_split(split_list),
          {:ok, value_in_integer} <-
-           Currency.amount_do(:store, value, AccountState.show(account_from).currency),
+           Currency.amount_do(:store, value, AccountOperations.show(account_from).currency),
          {:ok, _} <-
            FinHelper.funds(account_from, value_in_integer),
          {:ok, list_to_transfer} <-
@@ -160,7 +160,7 @@ defmodule FinancialSystem.FinancialOperations do
         )
       end)
 
-      {:ok, AccountState.show(account_from)}
+      {:ok, AccountOperations.show(account_from)}
     end
   end
 

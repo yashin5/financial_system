@@ -1,4 +1,4 @@
-defmodule FinancialSystem.AccountState do
+defmodule FinancialSystem.AccountOperations do
   @moduledoc """
   This module is responsable for keep and managing the accounts state.
   """
@@ -11,7 +11,7 @@ defmodule FinancialSystem.AccountState do
   ## Examples
     account_struct = %FinancialSystem.Account{ account_id: UUID.uuid4(), name: "Oliver Tsubasa", currency: "BRL", value: 100 }
 
-    FinancialSystem.AccountState.register_account(account_struct)
+    FinancialSystem.AccountOperations.register_account(account_struct)
   """
   def register_account(%AccountsRepo{
         name: name,
@@ -34,7 +34,7 @@ defmodule FinancialSystem.AccountState do
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountState.delete_account(account.id)
+    FinancialSystem.AccountOperations.delete_account(account.id)
   """
   def delete_account(account_id) when is_binary(account_id) do
     AccountsRepo
@@ -53,7 +53,7 @@ defmodule FinancialSystem.AccountState do
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountState.show(account.id)
+    FinancialSystem.AccountOperations.show(account.id)
   """
   @spec show(String.t()) :: AccountsRepo.t() | no_return() | atom()
   def show(account) when is_binary(account) do
@@ -67,7 +67,7 @@ defmodule FinancialSystem.AccountState do
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountState.account_exist(account.id)
+    FinancialSystem.AccountOperations.account_exist(account.id)
   """
   @spec account_exist(String.t()) :: {:ok, boolean()} | {:error, atom()}
   def account_exist(account_id) do
@@ -88,7 +88,7 @@ defmodule FinancialSystem.AccountState do
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountState.withdraw(account.id, 100)
+    FinancialSystem.AccountOperations.withdraw(account.id, 100)
   """
   @spec withdraw(String.t(), pos_integer()) :: AccountsRepo.t() | no_return()
   def withdraw(account, value) when is_binary(account) and is_integer(value) and value > 0 do
@@ -103,7 +103,7 @@ defmodule FinancialSystem.AccountState do
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountState.deposit(account.id, 100)
+    FinancialSystem.AccountOperations.deposit(account.id, 100)
   """
   @spec deposit(String.t(), integer()) :: AccountsRepo.t() | no_return()
   def deposit(account, value) when is_binary(account) and is_integer(value) and value > 0 do
