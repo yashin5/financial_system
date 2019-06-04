@@ -7,6 +7,10 @@ defmodule AccountStateTest do
   doctest FinancialSystem.AccountState
 
   describe "register_account/1" do
+    setup do
+      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+    end
+
     test "Should be able to registry a account into system" do
       {:ok, account} =
         %FinancialSystem.Accounts.AccountsRepo{
@@ -30,6 +34,10 @@ defmodule AccountStateTest do
   end
 
   describe "delete/1" do
+    setup do
+      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+    end
+
     test "Should be able to delete an account" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
@@ -50,6 +58,10 @@ defmodule AccountStateTest do
   end
 
   describe "show/1" do
+    setup do
+      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+    end
+
     test "Should be able to see the account state" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
@@ -66,6 +78,10 @@ defmodule AccountStateTest do
   end
 
   describe "withdraw/2" do
+    setup do
+      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+    end
+
     test "Should be able to subtract a value from account" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
@@ -82,6 +98,10 @@ defmodule AccountStateTest do
   end
 
   describe "deposit/2" do
+    setup do
+      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+    end
+
     test "Should be able to subtract a value from account" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}

@@ -7,6 +7,10 @@ defmodule FinancialOperationsTest do
   doctest FinancialSystem.FinancialOperations
 
   describe "show/1" do
+    setup do
+      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+    end
+
     test "Should be able to see the value in account" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
@@ -30,6 +34,8 @@ defmodule FinancialOperationsTest do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
+
+      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
@@ -101,6 +107,8 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
+      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
       on_exit(fn ->
@@ -155,6 +163,8 @@ defmodule FinancialOperationsTest do
       expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
         {:ok, String.upcase(currency)}
       end)
+
+      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
       {_, account2} = FinancialSystem.create("Oliver Tsubasa", "BRL", "2")
@@ -233,6 +243,8 @@ defmodule FinancialOperationsTest do
       expect(CurrencyMock, :currency_is_valid, 3, fn currency ->
         {:ok, String.upcase(currency)}
       end)
+
+      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
       {_, account2} = FinancialSystem.create("Oliver Tsubasa", "BRL", "2")

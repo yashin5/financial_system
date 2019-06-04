@@ -8,6 +8,8 @@ defmodule FinancialSystemTest do
 
   describe "create/3" do
     setup do
+      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+
       account_struct = %FinancialSystem.Accounts.AccountsRepo{
         id: "abc",
         name: "Oliver Tsubasa",
@@ -144,6 +146,10 @@ defmodule FinancialSystemTest do
   end
 
   describe "delete/1" do
+    setup do
+      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+    end
+
     test "Should be able to delete an account" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
