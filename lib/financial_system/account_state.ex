@@ -3,7 +3,7 @@ defmodule FinancialSystem.AccountState do
   This module is responsable for keep and managing the accounts state.
   """
 
-  alias FinancialSystem.{Account, Accounts.AccountsRepo, Repo}
+  alias FinancialSystem.{Accounts.AccountsRepo, Repo}
 
   @doc """
     Register the account in system.

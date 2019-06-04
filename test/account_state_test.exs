@@ -9,11 +9,11 @@ defmodule AccountStateTest do
   describe "register_account/1" do
     test "Should be able to registry a account into system" do
       {:ok, account} =
-        %FinancialSystem.Account{
+        %FinancialSystem.Accounts.AccountsRepo{
           name: "Yashin Santos",
           currency: "BRL",
           value: 100,
-          account_id: UUID.uuid4()
+          id: UUID.uuid4()
         }
         |> FinancialSystem.AccountState.register_account()
 

@@ -8,22 +8,22 @@ defmodule FinancialSystemTest do
 
   describe "create/3" do
     setup do
-      account_struct = %FinancialSystem.Account{
-        account_id: "abc",
+      account_struct = %FinancialSystem.Accounts.AccountsRepo{
+        id: "abc",
         name: "Oliver Tsubasa",
         currency: "BRL",
         value: 100
       }
 
-      account_struct2 = %FinancialSystem.Account{
-        account_id: "abd",
+      account_struct2 = %FinancialSystem.Accounts.AccountsRepo{
+        id: "abd",
         name: "Yashin Santos",
         currency: "BRL",
         value: 10
       }
 
-      account_struct3 = %FinancialSystem.Account{
-        account_id: "adb",
+      account_struct3 = %FinancialSystem.Accounts.AccountsRepo{
+        id: "adb",
         name: "Inu Yasha",
         currency: "BRL",
         value: 0
@@ -47,8 +47,8 @@ defmodule FinancialSystemTest do
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "0.10")
       account_data = FinancialSystem.AccountState.show(account.id)
 
-      account_simulate = %FinancialSystem.Account{
-        account_id: "abd",
+      account_simulate = %FinancialSystem.Accounts.AccountsRepo{
+        id: "abd",
         name: account_data.name,
         currency: account_data.currency,
         value: account_data.value
@@ -67,8 +67,8 @@ defmodule FinancialSystemTest do
       {_, account} = FinancialSystem.create("Oliver Tsubasa", "brl", "1")
       account_data = FinancialSystem.AccountState.show(account.id)
 
-      account_simulate = %FinancialSystem.Account{
-        account_id: "abc",
+      account_simulate = %FinancialSystem.Accounts.AccountsRepo{
+        id: "abc",
         name: account_data.name,
         currency: account_data.currency,
         value: account_data.value
@@ -88,8 +88,8 @@ defmodule FinancialSystemTest do
 
       account_data = FinancialSystem.AccountState.show(account.id)
 
-      account_simulate = %FinancialSystem.Account{
-        account_id: "adb",
+      account_simulate = %FinancialSystem.Accounts.AccountsRepo{
+        id: "adb",
         name: account_data.name,
         currency: account_data.currency,
         value: account_data.value
@@ -157,11 +157,6 @@ defmodule FinancialSystemTest do
     end
 
     test "Not should be able to delete if insert id different from type string" do
-      expect(CurrencyMock, :currency_is_valid, fn currency ->
-        {:ok, String.upcase(currency)}
-      end)
-
-      {_, account} = FinancialSystem.create("Oliver Tsubasa", "brl", "1")
       {:error, message} = FinancialSystem.delete(1.1)
 
       assert ^message = :invalid_account_id_type
