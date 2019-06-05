@@ -2,6 +2,7 @@ defmodule FinancialSystem.AccountOperations do
   @moduledoc """
   This module is responsable for keep and managing the accounts state.
   """
+  import Ecto.Query, only: [from: 2]
 
   alias FinancialSystem.{Accounts.AccountsRepo, Repo}
 
@@ -70,17 +71,17 @@ defmodule FinancialSystem.AccountOperations do
     FinancialSystem.AccountOperations.account_exist(account.id)
   """
   @spec account_exist(String.t()) :: {:ok, boolean()} | {:error, atom()}
-  def account_exist(account_id) do
+  def account_exist(account_id) when is_binary(account_id) do
     AccountsRepo
-    |> Repo.all()
-    |> Enum.map(fn accounts -> accounts.id == account_id end)
-    |> Enum.member?(true)
+    |> Repo.get(account_id)
     |> do_account_exist()
+  rescue
+    Ecto.Query.CastError -> {:error, :invalid_account_id_type}
   end
 
-  defp do_account_exist(true), do: {:ok, true}
+  defp do_account_exist(nil), do: {:error, :account_dont_exist}
 
-  defp do_account_exist(false), do: {:error, :account_dont_exist}
+  defp do_account_exist(account), do: {:ok, account}
 
   @doc """
     Subtracts value in deposit operations.
@@ -91,10 +92,16 @@ defmodule FinancialSystem.AccountOperations do
     FinancialSystem.AccountOperations.withdraw(account.id, 100)
   """
   @spec withdraw(String.t(), pos_integer()) :: AccountsRepo.t() | no_return()
-  def withdraw(account, value) when is_binary(account) and is_integer(value) and value > 0 do
-    operation = fn a, b -> a - b end
+  def withdraw(%AccountsRepo{id: id, name: _, currency: _, value: _} = account, value)
+      when is_integer(value) and value > 0 do
+    query =
+      from(u in "accounts",
+        where: u.id == type(^id, :binary_id),
+        select: u.value - type(^value, :integer)
+      )
+      |> FinancialSystem.Repo.all()
 
-    make_operation(account, value, operation)
+    make_operation(account, List.first(query))
   end
 
   @doc """
@@ -106,18 +113,23 @@ defmodule FinancialSystem.AccountOperations do
     FinancialSystem.AccountOperations.deposit(account.id, 100)
   """
   @spec deposit(String.t(), integer()) :: AccountsRepo.t() | no_return()
-  def deposit(account, value) when is_binary(account) and is_integer(value) and value > 0 do
-    operation = fn a, b -> a + b end
+  def deposit(%AccountsRepo{id: id, name: _, currency: _, value: _} = account, value)
+      when is_integer(value) and value > 0 do
+    query =
+      from(u in "accounts",
+        where: u.id == type(^id, :binary_id),
+        select: u.value + type(^value, :integer)
+      )
+      |> FinancialSystem.Repo.all()
 
-    make_operation(account, value, operation)
+    make_operation(account, List.first(query))
   end
 
-  defp make_operation(account, value, operation) do
+  defp make_operation(account, value) do
     account
-    |> show()
-    |> AccountsRepo.changeset(%{value: operation.(show(account).value, value)})
+    |> AccountsRepo.changeset(%{value: value})
     |> Repo.update()
 
-    show(account)
+    show(account.id)
   end
 end

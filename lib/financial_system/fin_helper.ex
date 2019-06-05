@@ -3,7 +3,7 @@ defmodule FinancialSystem.FinHelper do
   This module is responsable to help other modules with the financial operations.
   """
 
-  alias FinancialSystem.{AccountOperations, Currency, Split}
+  alias FinancialSystem.{Accounts.AccountsRepo, AccountOperations, Currency, Split}
 
   @doc """
     Verify if the account have funds for the operation.
@@ -14,12 +14,11 @@ defmodule FinancialSystem.FinHelper do
       FinancialSystem.FinHelper.funds(account.id, 220)
   """
   @spec funds(String.t(), integer()) :: {:ok, boolean()} | {:error, atom()}
-  def funds(account_id, value) when is_binary(account_id) and is_number(value) do
-    with {:ok, _} <- AccountOperations.account_exist(account_id) do
-      AccountOperations.show(account_id).value
-      |> Kernel.>=(value)
-      |> do_funds()
-    end
+  def funds(%AccountsRepo{id: _, name: _, currency: _, value: account_value}, value)
+      when is_number(value) do
+    account_value
+    |> Kernel.>=(value)
+    |> do_funds()
   end
 
   def funds(account_id, value) when not is_binary(account_id) and is_binary(value) do
