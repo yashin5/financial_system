@@ -70,7 +70,7 @@ defmodule FinancialSystem.AccountOperations do
 
     FinancialSystem.AccountOperations.account_exist(account.id)
   """
-  @spec account_exist(String.t()) :: {:ok, boolean()} | {:error, atom()}
+  @spec account_exist(String.t()) :: {:ok, AccountsRepo.t()} | {:error, atom()}
   def account_exist(account_id) when is_binary(account_id) do
     AccountsRepo
     |> Repo.get(account_id)
@@ -91,17 +91,16 @@ defmodule FinancialSystem.AccountOperations do
 
     FinancialSystem.AccountOperations.withdraw(account.id, 100)
   """
-  @spec withdraw(String.t(), pos_integer()) :: AccountsRepo.t() | no_return()
+  @spec withdraw(AccountsRepo.t(), pos_integer()) :: AccountsRepo.t() | no_return()
   def withdraw(%AccountsRepo{id: id, name: _, currency: _, value: _} = account, value)
       when is_integer(value) and value > 0 do
-    query =
-      from(u in "accounts",
-        where: u.id == type(^id, :binary_id),
-        select: u.value - type(^value, :integer)
-      )
-      |> FinancialSystem.Repo.all()
-
-    make_operation(account, List.first(query))
+    from(u in "accounts",
+      where: u.id == type(^id, :binary_id),
+      select: u.value - type(^value, :integer)
+    )
+    |> FinancialSystem.Repo.all()
+    |> List.first()
+    |> make_operation(account)
   end
 
   @doc """
@@ -112,20 +111,19 @@ defmodule FinancialSystem.AccountOperations do
 
     FinancialSystem.AccountOperations.deposit(account.id, 100)
   """
-  @spec deposit(String.t(), integer()) :: AccountsRepo.t() | no_return()
+  @spec deposit(AccountsRepo.t(), integer()) :: AccountsRepo.t() | no_return()
   def deposit(%AccountsRepo{id: id, name: _, currency: _, value: _} = account, value)
       when is_integer(value) and value > 0 do
-    query =
-      from(u in "accounts",
-        where: u.id == type(^id, :binary_id),
-        select: u.value + type(^value, :integer)
-      )
-      |> FinancialSystem.Repo.all()
-
-    make_operation(account, List.first(query))
+    from(u in "accounts",
+      where: u.id == type(^id, :binary_id),
+      select: u.value + type(^value, :integer)
+    )
+    |> FinancialSystem.Repo.all()
+    |> List.first()
+    |> make_operation(account)
   end
 
-  defp make_operation(account, value) do
+  defp make_operation(value, account) do
     account
     |> AccountsRepo.changeset(%{value: value})
     |> Repo.update()

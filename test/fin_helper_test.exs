@@ -19,7 +19,7 @@ defmodule FinHelperTest do
 
       {_, account} = FinancialSystem.create("Roberta Santos", "BRL", "20.0")
 
-      {:ok, [account_id: account.id]}
+      {:ok, [account_id: account]}
     end
 
     test "Should be able to verify if the account have de funds necessary for the transaction inserting a integer value",
@@ -35,13 +35,13 @@ defmodule FinHelperTest do
     test "Not should be able to verify when inserting a string in value", %{account_id: account} do
       {:error, message} = FinHelper.funds(account, "10")
 
-      assert ^message = :invalid_arguments_type
+      assert ^message = :invalid_account_id_type
     end
 
     test "Not should be able to verify when inserting a invalid account id" do
       {:error, message} = FinHelper.funds("account id", 10)
 
-      assert ^message = :account_dont_exist
+      assert ^message = :invalid_value_type
     end
   end
 
@@ -98,13 +98,13 @@ defmodule FinHelperTest do
     test "Not should be able to verify if insert a invalid account id", %{list: split_list} do
       {:error, message} = FinHelper.transfer_have_account_from("account id", split_list)
 
-      assert ^message = :account_dont_exist
+      assert ^message = :invalid_account_id_type
     end
 
     test "Not should be able to verify if insert a invalid account id_to", %{account_id: account} do
       {:error, message} = FinHelper.transfer_have_account_from(account, "split_list")
 
-      assert ^message = :account_dont_exist
+      assert ^message = :invalid_account_id_type
     end
   end
 

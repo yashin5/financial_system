@@ -66,8 +66,8 @@ defmodule FinancialSystem.Account do
   """
   @callback delete(String.t()) :: {:ok | :error, atom()}
   def delete(account_id) when is_binary(account_id) do
-    with {:ok, account} <- AccountOperations.account_exist(account_id) do
-      AccountOperations.delete_account(account)
+    with {:ok, _} <- AccountOperations.account_exist(account_id) do
+      AccountOperations.delete_account(account_id)
     end
   end
 

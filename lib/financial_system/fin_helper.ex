@@ -13,7 +13,7 @@ defmodule FinancialSystem.FinHelper do
 
       FinancialSystem.FinHelper.funds(account.id, 220)
   """
-  @spec funds(String.t(), integer()) :: {:ok, boolean()} | {:error, atom()}
+  @spec funds(AccountsRepo.t(), integer()) :: {:ok, boolean()} | {:error, atom()}
   def funds(%AccountsRepo{id: _, name: _, currency: _, value: account_value}, value)
       when is_number(value) do
     account_value

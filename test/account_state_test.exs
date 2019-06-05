@@ -89,7 +89,7 @@ defmodule AccountOperationsTest do
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
-      FinancialSystem.AccountOperations.withdraw(account.id, 1)
+      FinancialSystem.AccountOperations.withdraw(account, 1)
 
       value = FinancialSystem.AccountOperations.show(account.id).value
 
@@ -109,7 +109,7 @@ defmodule AccountOperationsTest do
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
-      FinancialSystem.AccountOperations.deposit(account.id, 1)
+      FinancialSystem.AccountOperations.deposit(account, 1)
 
       value = FinancialSystem.AccountOperations.show(account.id).value
 

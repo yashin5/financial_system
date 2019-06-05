@@ -25,7 +25,7 @@ defmodule FinancialOperationsTest do
     test "User dont should be able to see the value in account if pass a invalid account id" do
       {:error, message} = FinancialSystem.show("account")
 
-      assert ^message = :account_dont_exist
+      assert ^message = :invalid_account_id_type
     end
   end
 
@@ -73,7 +73,7 @@ defmodule FinancialOperationsTest do
     test "Not should be able to make the deposit inserting a invalid account id" do
       {:error, message} = FinancialSystem.deposit("account id", "brl", "1")
 
-      assert ^message = :account_dont_exist
+      assert ^message = :invalid_account_id_type
     end
 
     test "Not should be able to make the deposit inserting a invalid currency", %{
@@ -130,7 +130,7 @@ defmodule FinancialOperationsTest do
     test "Not should be able to make the withdraw inserting a invalid account id" do
       {:error, message} = FinancialSystem.withdraw("account id", "1")
 
-      assert ^message = :account_dont_exist
+      assert ^message = :invalid_account_id_type
     end
 
     test "Not should be able to make the withdraw inserting a value equal or less than 0", %{
@@ -199,7 +199,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} = FinancialSystem.transfer("1", "account id_from", account_id)
 
-      assert ^message = :account_dont_exist
+      assert ^message = :invalid_account_id_type
     end
 
     test "Not should be able to make the transfer inserting a invalid account_id_to", %{
@@ -207,7 +207,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} = FinancialSystem.transfer("1", account_id, "account id_to")
 
-      assert ^message = :account_dont_exist
+      assert ^message = :invalid_account_id_type
     end
 
     test "Not should be able to make the transfer inserting a number in integer type", %{
@@ -313,7 +313,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} = FinancialSystem.split("account id", split_list, "1")
 
-      assert ^message = :account_dont_exist
+      assert ^message = :invalid_account_id_type
     end
 
     test "Not should be able to make the transfer inserting a number in integer type", %{
