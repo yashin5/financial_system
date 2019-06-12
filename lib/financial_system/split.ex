@@ -3,12 +3,12 @@ defmodule FinancialSystem.Split do
   This module is responsable to define the struct for split transfers.
   """
 
-  alias FinancialSystem.{Accounts.AccountsRepo}
+  alias FinancialSystem.{Accounts.Account}
 
   @typedoc """
     Abstract split struct type.
   """
-  @type t :: %__MODULE__{account: AccountsRepo.t(), percent: number()}
+  @type t :: %__MODULE__{account: Account.t(), percent: number()}
 
   @enforce_keys [:account, :percent]
 

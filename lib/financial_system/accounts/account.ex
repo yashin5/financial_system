@@ -1,4 +1,4 @@
-defmodule FinancialSystem.Accounts.AccountsRepo do
+defmodule FinancialSystem.Accounts.Account do
   use Ecto.Schema
 
   @type t :: %__MODULE__{

@@ -10,21 +10,21 @@ defmodule FinancialSystemTest do
     setup do
       :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
 
-      account_struct = %FinancialSystem.Accounts.AccountsRepo{
+      account_struct = %FinancialSystem.Accounts.Account{
         id: "abc",
         name: "Oliver Tsubasa",
         currency: "BRL",
         value: 100
       }
 
-      account_struct2 = %FinancialSystem.Accounts.AccountsRepo{
+      account_struct2 = %FinancialSystem.Accounts.Account{
         id: "abd",
         name: "Yashin Santos",
         currency: "BRL",
         value: 10
       }
 
-      account_struct3 = %FinancialSystem.Accounts.AccountsRepo{
+      account_struct3 = %FinancialSystem.Accounts.Account{
         id: "adb",
         name: "Inu Yasha",
         currency: "BRL",
@@ -49,7 +49,7 @@ defmodule FinancialSystemTest do
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "0.10")
       account_data = FinancialSystem.AccountOperations.show(account.id)
 
-      account_simulate = %FinancialSystem.Accounts.AccountsRepo{
+      account_simulate = %FinancialSystem.Accounts.Account{
         id: "abd",
         name: account_data.name,
         currency: account_data.currency,
@@ -69,7 +69,7 @@ defmodule FinancialSystemTest do
       {_, account} = FinancialSystem.create("Oliver Tsubasa", "brl", "1")
       account_data = FinancialSystem.AccountOperations.show(account.id)
 
-      account_simulate = %FinancialSystem.Accounts.AccountsRepo{
+      account_simulate = %FinancialSystem.Accounts.Account{
         id: "abc",
         name: account_data.name,
         currency: account_data.currency,
@@ -90,7 +90,7 @@ defmodule FinancialSystemTest do
 
       account_data = FinancialSystem.AccountOperations.show(account.id)
 
-      account_simulate = %FinancialSystem.Accounts.AccountsRepo{
+      account_simulate = %FinancialSystem.Accounts.Account{
         id: "adb",
         name: account_data.name,
         currency: account_data.currency,

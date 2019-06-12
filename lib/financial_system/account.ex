@@ -3,7 +3,7 @@ defmodule FinancialSystem.Account do
   This module is responsable for detemrinate the struct of accounts.
   """
 
-  alias FinancialSystem.{Accounts.AccountsRepo, AccountOperations, Currency}
+  alias FinancialSystem.{Accounts.Account, AccountOperations, Currency}
 
   @typedoc """
     Abstract account struct type.
@@ -18,7 +18,7 @@ defmodule FinancialSystem.Account do
     FinancialSystem.create("Yashin Santos",  "EUR", "220")
   """
   @callback create(String.t() | any(), String.t() | any(), String.t() | any()) ::
-              {:ok, AccountsRepo.t()} | {:error, atom()}
+              {:ok, Account.t()} | {:error, atom()}
 
   def create(name, currency, value)
       when is_binary(name) and is_binary(currency) and is_binary(value) do
@@ -49,7 +49,7 @@ defmodule FinancialSystem.Account do
   end
 
   defp new(name, currency, value) do
-    %AccountsRepo{
+    %Account{
       name: name,
       currency: currency,
       value: value

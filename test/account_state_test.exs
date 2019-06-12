@@ -13,7 +13,7 @@ defmodule AccountOperationsTest do
 
     test "Should be able to registry a account into system" do
       {:ok, account} =
-        %FinancialSystem.Accounts.AccountsRepo{
+        %FinancialSystem.Accounts.Account{
           name: "Yashin Santos",
           currency: "BRL",
           value: 100,
