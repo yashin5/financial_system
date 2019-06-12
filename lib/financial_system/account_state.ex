@@ -4,7 +4,7 @@ defmodule FinancialSystem.AccountOperations do
   """
   import Ecto.Query, only: [from: 2]
 
-  alias FinancialSystem.{Accounts.Account, Repo}
+  alias FinancialSystem.{Accounts.Account, Accounts.Transaction, Repo}
 
   @doc """
     Register the account in system.
@@ -14,12 +14,8 @@ defmodule FinancialSystem.AccountOperations do
 
     FinancialSystem.AccountOperations.register_account(account_struct)
   """
-  def register_account(%Account{
-        name: name,
-        currency: currency,
-        value: value
-      }) do
-    %Account{name: name, currency: currency, value: value}
+  def register_account(%Account{} = account) do
+    account
     |> Account.changeset()
     |> Repo.insert()
     |> do_register_account()
@@ -91,9 +87,11 @@ defmodule FinancialSystem.AccountOperations do
 
     FinancialSystem.AccountOperations.withdraw(account.id, 100)
   """
-  @spec withdraw(Account.t(), pos_integer()) :: Account.t() | no_return()
-  def withdraw(%Account{id: id, name: _, currency: _, value: _} = account, value)
+  @spec withdraw(Account.t(), pos_integer(), String.t()) :: Account.t() | no_return()
+  def withdraw(%Account{id: id} = account, value, operation)
       when is_integer(value) and value > 0 do
+    save_transaction(account, value, operation)
+
     from(u in "accounts",
       where: u.id == type(^id, :binary_id),
       select: u.value - type(^value, :integer)
@@ -111,9 +109,11 @@ defmodule FinancialSystem.AccountOperations do
 
     FinancialSystem.AccountOperations.deposit(account.id, 100)
   """
-  @spec deposit(Account.t(), integer()) :: Account.t() | no_return()
-  def deposit(%Account{id: id, name: _, currency: _, value: _} = account, value)
+  @spec deposit(Account.t(), integer(), String.t()) :: Account.t() | no_return()
+  def deposit(%Account{id: id} = account, value, operation)
       when is_integer(value) and value > 0 do
+    save_transaction(account, value, operation)
+
     from(u in "accounts",
       where: u.id == type(^id, :binary_id),
       select: u.value + type(^value, :integer)
@@ -129,5 +129,23 @@ defmodule FinancialSystem.AccountOperations do
     |> Repo.update()
 
     show(account.id)
+  end
+
+  defp save_transaction(account, value, operation) do
+    query = Ecto.build_assoc(account, :transactions, %{value: value, operation: operation})
+
+    query
+    |> Transaction.changeset()
+    |> Repo.insert()
+  end
+
+  def show_financial_statement(id) when is_binary(id) do
+    query =
+      from(u in "transactions",
+        where: u.account_id == type(^id, :binary_id),
+        select: [:operation, :value, :inserted_at]
+      )
+
+    FinancialSystem.Repo.all(query)
   end
 end

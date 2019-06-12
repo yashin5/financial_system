@@ -14,7 +14,7 @@ defmodule FinancialSystem.FinHelper do
       FinancialSystem.FinHelper.funds(account.id, 220)
   """
   @spec funds(Account.t(), integer()) :: {:ok, boolean()} | {:error, atom()}
-  def funds(%Account{id: _, name: _, currency: _, value: account_value}, value)
+  def funds(%Account{value: account_value}, value)
       when is_number(value) do
     account_value
     |> Kernel.>=(value)
