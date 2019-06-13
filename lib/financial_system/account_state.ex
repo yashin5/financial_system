@@ -10,7 +10,7 @@ defmodule FinancialSystem.AccountOperations do
     Register the account in system.
 
   ## Examples
-    account_struct = %FinancialSystem.Account{ account_id: UUID.uuid4(), name: "Oliver Tsubasa", currency: "BRL", value: 100 }
+    account_struct = %FinancialSystem.Accounts.Account{name: "Oliver Tsubasa", currency: "BRL", value: 100 }
 
     FinancialSystem.AccountOperations.register_account(account_struct)
   """
@@ -85,7 +85,7 @@ defmodule FinancialSystem.AccountOperations do
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountOperations.withdraw(account.id, 100)
+    FinancialSystem.AccountOperations.withdraw(account, 100, "withdraw")
   """
   @spec withdraw(Account.t(), pos_integer(), String.t()) :: Account.t() | no_return()
   def withdraw(%Account{id: id} = account, value, operation)
@@ -110,7 +110,7 @@ defmodule FinancialSystem.AccountOperations do
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountOperations.deposit(account.id, 100)
+    FinancialSystem.AccountOperations.deposit(account, 100, "deposit")
   """
   @spec deposit(Account.t(), integer(), String.t()) :: Account.t() | no_return()
   def deposit(%Account{id: id} = account, value, operation)
@@ -130,9 +130,11 @@ defmodule FinancialSystem.AccountOperations do
   end
 
   defp make_operation(value, account) do
-    account
-    |> Account.changeset(%{value: value})
-    |> Repo.update()
+    Repo.transaction(fn ->
+      account
+      |> Account.changeset(%{value: value})
+      |> Repo.update!()
+    end)
 
     show(account.id)
   end
@@ -145,6 +147,17 @@ defmodule FinancialSystem.AccountOperations do
     |> Repo.insert()
   end
 
+  @doc """
+    Show the transactions from account.
+
+  ## Examples
+    {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+
+    FinancialSystem.deposit(account.id, "brl", "1")
+
+    FinancialSystem.AccountOperations.show_financial_statement(account.id)
+  """
+  @spec show_financial_statement(String.t()) :: Transaction.t() | no_return()
   def show_financial_statement(id) when is_binary(id) do
     query =
       from(u in "transactions",
