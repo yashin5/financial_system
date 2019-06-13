@@ -197,10 +197,12 @@ defmodule FinancialSystem.FinancialOperations do
     {:error, :invalid_arguments_type}
   end
 
+  @impl true
   def financial_statement(account_id) when is_binary(account_id) do
-    {:ok, AccountOperations.show_financial_statement(account_id)}
+    with {:ok, _} <- AccountOperations.account_exist(account_id) do
+      {:ok, AccountOperations.show_financial_statement(account_id)}
+    end
   end
 
-  @impl true
   def financial_statement(_), do: {:error, :invalid_account_id_type}
 end

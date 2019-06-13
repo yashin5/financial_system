@@ -337,4 +337,38 @@ defmodule FinancialOperationsTest do
       assert ^message = :invalid_value_type
     end
   end
+
+  describe "financial_statement/1" do
+    setup do
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
+    end
+
+    test "Should be able to see the transactioned values" do
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
+
+      FinancialSystem.deposit(account.id, "brl", "1")
+
+      {_, statement_struct} = FinancialSystem.financial_statement(account.id)
+
+      statement = statement_struct |> List.first()
+
+      assert %{operation: "deposit", value: 100} = statement
+    end
+
+    test "Should not be able inserting a invalid account id type" do
+      {_, message} = FinancialSystem.financial_statement(1)
+
+      assert ^message = :invalid_account_id_type
+    end
+
+    test "Should not be able inserting a invalid account id" do
+      {_, message} = FinancialSystem.financial_statement(UUID.uuid4())
+
+      assert ^message = :account_dont_exist
+    end
+  end
 end
