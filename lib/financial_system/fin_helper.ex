@@ -3,7 +3,7 @@ defmodule FinancialSystem.FinHelper do
   This module is responsable to help other modules with the financial operations.
   """
 
-  alias FinancialSystem.{Accounts.Account, AccountOperations, Currency, Split}
+  alias FinancialSystem.{AccountOperations, Accounts.Account, Currency, Split}
 
   @doc """
     Verify if the account have funds for the operation.

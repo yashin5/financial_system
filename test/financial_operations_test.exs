@@ -2,13 +2,16 @@ defmodule FinancialOperationsTest do
   use ExUnit.Case, async: true
 
   import Mox
+
+  alias Ecto.Adapters.SQL.Sandbox
+
   setup :verify_on_exit!
 
   doctest FinancialSystem.FinancialOperations
 
   describe "show/1" do
     setup do
-      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
     end
 
     test "Should be able to see the value in account" do
@@ -35,7 +38,7 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
@@ -107,7 +110,7 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
@@ -164,7 +167,7 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
       {_, account2} = FinancialSystem.create("Oliver Tsubasa", "BRL", "2")
@@ -244,7 +247,7 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
       {_, account2} = FinancialSystem.create("Oliver Tsubasa", "BRL", "2")

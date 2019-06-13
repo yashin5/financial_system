@@ -28,4 +28,7 @@ defmodule FinancialSystem do
 
   @impl Financial
   defdelegate split(account_from, split_list, value), to: FinancialOperations
+
+  @impl Financial
+  defdelegate financial_statement(account_id), to: FinancialOperations
 end

@@ -2,13 +2,17 @@ defmodule AccountOperationsTest do
   use ExUnit.Case, async: true
 
   import Mox
+
+  alias Ecto.Adapters.SQL.Sandbox
+  alias FinancialSystem.AccountOperations
+
   setup :verify_on_exit!
 
   doctest FinancialSystem.AccountOperations
 
   describe "register_account/1" do
     setup do
-      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
     end
 
     test "Should be able to registry a account into system" do
@@ -19,15 +23,15 @@ defmodule AccountOperationsTest do
           value: 100,
           id: UUID.uuid4()
         }
-        |> FinancialSystem.AccountOperations.register_account()
+        |> AccountOperations.register_account()
 
-      account_actual_state = FinancialSystem.AccountOperations.show(account.id)
+      account_actual_state = AccountOperations.show(account.id)
 
       assert account_actual_state == account
     end
 
     test "Not should be able to registry if the arg not be a %Account struct" do
-      {:error, message} = FinancialSystem.AccountOperations.register_account("error")
+      {:error, message} = AccountOperations.register_account("error")
 
       assert ^message = :invalid_arguments_type
     end
@@ -35,7 +39,7 @@ defmodule AccountOperationsTest do
 
   describe "delete/1" do
     setup do
-      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
     end
 
     test "Should be able to delete an account" do
@@ -45,13 +49,13 @@ defmodule AccountOperationsTest do
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
-      {:ok, message} = FinancialSystem.AccountOperations.delete_account(account.id)
+      {:ok, message} = AccountOperations.delete_account(account.id)
 
       assert ^message = :account_deleted
     end
 
     test "Not should be able to delete if the id dont be in string type" do
-      {:error, message} = FinancialSystem.AccountOperations.delete_account(1)
+      {:error, message} = AccountOperations.delete_account(1)
 
       assert ^message = :invalid_account_id_type
     end
@@ -59,7 +63,7 @@ defmodule AccountOperationsTest do
 
   describe "show/1" do
     setup do
-      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
     end
 
     test "Should be able to see the account state" do
@@ -68,7 +72,7 @@ defmodule AccountOperationsTest do
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
-      actual_state = FinancialSystem.AccountOperations.show(account.id)
+      actual_state = AccountOperations.show(account.id)
 
       account_id_when_created = account.id
       actual_id = actual_state.id
@@ -79,7 +83,7 @@ defmodule AccountOperationsTest do
 
   describe "withdraw/2" do
     setup do
-      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
     end
 
     test "Should be able to subtract a value from account" do
@@ -89,9 +93,9 @@ defmodule AccountOperationsTest do
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
-      FinancialSystem.AccountOperations.withdraw(account, 1, "withdraw")
+      AccountOperations.withdraw(account, 1, "withdraw")
 
-      value = FinancialSystem.AccountOperations.show(account.id).value
+      value = AccountOperations.show(account.id).value
 
       assert value == 99
     end
@@ -99,7 +103,7 @@ defmodule AccountOperationsTest do
 
   describe "deposit/2" do
     setup do
-      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
     end
 
     test "Should be able to subtract a value from account" do
@@ -109,9 +113,9 @@ defmodule AccountOperationsTest do
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
-      FinancialSystem.AccountOperations.deposit(account, 1, "deposit")
+      AccountOperations.deposit(account, 1, "deposit")
 
-      value = FinancialSystem.AccountOperations.show(account.id).value
+      value = AccountOperations.show(account.id).value
 
       assert value == 101
     end

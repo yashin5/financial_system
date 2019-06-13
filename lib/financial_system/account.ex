@@ -3,11 +3,7 @@ defmodule FinancialSystem.Account do
   This module is responsable for detemrinate the struct of accounts.
   """
 
-  alias FinancialSystem.{Accounts.Account, AccountOperations, Currency}
-
-  @typedoc """
-    Abstract account struct type.
-  """
+  alias FinancialSystem.{AccountOperations, Accounts.Account, Currency}
 
   defp currency_finder, do: Application.get_env(:financial_system, :currency_finder)
 

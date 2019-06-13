@@ -123,8 +123,9 @@ defmodule FinancialSystem.FinancialOperations do
   def transfer(value, account_from, account_to)
       when is_binary(account_from) and is_binary(account_to) and is_binary(value) do
     with {:ok, _} <- FinHelper.transfer_have_account_from(account_from, account_to),
-         {:ok, withdraw_result} <- withdraw(account_from, value),
-         {:ok, _} <- deposit(account_to, AccountOperations.show(account_from).currency, value) do
+         {:ok, withdraw_result} <- withdraw(account_from, value, "transfer >"),
+         {:ok, _} <-
+           deposit(account_to, AccountOperations.show(account_from).currency, value, "transfer <") do
       {:ok, withdraw_result}
     end
   end
@@ -200,5 +201,6 @@ defmodule FinancialSystem.FinancialOperations do
     {:ok, AccountOperations.show_financial_statement(account_id)}
   end
 
+  @impl true
   def financial_statement(_), do: {:error, :invalid_account_id_type}
 end

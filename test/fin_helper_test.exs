@@ -3,6 +3,7 @@ defmodule FinHelperTest do
 
   import Mox
 
+  alias Ecto.Adapters.SQL.Sandbox
   alias FinancialSystem.FinHelper
 
   setup :verify_on_exit!
@@ -15,7 +16,7 @@ defmodule FinHelperTest do
         {:ok, String.upcase(currency)}
       end)
 
-      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
 
       {_, account} = FinancialSystem.create("Roberta Santos", "BRL", "20.0")
 
@@ -51,7 +52,7 @@ defmodule FinHelperTest do
         {:ok, String.upcase(currency)}
       end)
 
-      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
       {_, account2} = FinancialSystem.create("Oliver Tsubasa", "BRL", "2")
@@ -114,7 +115,7 @@ defmodule FinHelperTest do
         {:ok, String.upcase(currency)}
       end)
 
-      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
       {_, account3} = FinancialSystem.create("Inu Yasha", "BRL", "5")
@@ -159,7 +160,7 @@ defmodule FinHelperTest do
         {:ok, String.upcase(currency)}
       end)
 
-      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 

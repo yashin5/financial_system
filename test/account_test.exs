@@ -2,13 +2,16 @@ defmodule FinancialSystemTest do
   use ExUnit.Case, async: true
 
   import Mox
+
+  alias Ecto.Adapters.SQL.Sandbox
+
   setup :verify_on_exit!
 
   doctest FinancialSystem.Account
 
   describe "create/3" do
     setup do
-      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
 
       account_struct = %FinancialSystem.Accounts.Account{
         id: "abc",
@@ -147,7 +150,7 @@ defmodule FinancialSystemTest do
 
   describe "delete/1" do
     setup do
-      :ok = Ecto.Adapters.SQL.Sandbox.checkout(FinancialSystem.Repo)
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
     end
 
     test "Should be able to delete an account" do

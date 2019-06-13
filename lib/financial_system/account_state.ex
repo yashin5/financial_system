@@ -92,10 +92,13 @@ defmodule FinancialSystem.AccountOperations do
       when is_integer(value) and value > 0 do
     save_transaction(account, value, operation)
 
-    from(u in "accounts",
-      where: u.id == type(^id, :binary_id),
-      select: u.value - type(^value, :integer)
-    )
+    query =
+      from(u in "accounts",
+        where: u.id == type(^id, :binary_id),
+        select: u.value - type(^value, :integer)
+      )
+
+    query
     |> FinancialSystem.Repo.all()
     |> List.first()
     |> make_operation(account)
@@ -114,10 +117,13 @@ defmodule FinancialSystem.AccountOperations do
       when is_integer(value) and value > 0 do
     save_transaction(account, value, operation)
 
-    from(u in "accounts",
-      where: u.id == type(^id, :binary_id),
-      select: u.value + type(^value, :integer)
-    )
+    query =
+      from(u in "accounts",
+        where: u.id == type(^id, :binary_id),
+        select: u.value + type(^value, :integer)
+      )
+
+    query
     |> FinancialSystem.Repo.all()
     |> List.first()
     |> make_operation(account)
