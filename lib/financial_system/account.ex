@@ -5,6 +5,7 @@ defmodule FinancialSystem.Account do
 
   alias FinancialSystem.{AccountOperations, Accounts.Account, Currency}
 
+
   defp currency_finder, do: Application.get_env(:financial_system, :currency_finder)
 
   @doc """

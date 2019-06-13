@@ -6,6 +6,7 @@ defmodule FinancialSystem do
   alias FinancialSystem.{Account, Financial, FinancialOperations}
 
   @behaviour FinancialSystem.Account
+
   @behaviour FinancialSystem.Financial
 
   @impl Account

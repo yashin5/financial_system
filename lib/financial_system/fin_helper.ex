@@ -13,12 +13,15 @@ defmodule FinancialSystem.FinHelper do
 
       FinancialSystem.FinHelper.funds(account.id, 220)
   """
+
   @spec funds(Account.t(), integer()) :: {:ok, boolean()} | {:error, atom()}
   def funds(%Account{value: account_value}, value)
       when is_number(value) do
     account_value
     |> Kernel.>=(value)
     |> do_funds()
+
+  
   end
 
   def funds(account_id, value) when not is_binary(account_id) and is_binary(value) do

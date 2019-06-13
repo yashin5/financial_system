@@ -23,4 +23,5 @@ defmodule FinancialSystem.Financial do
 
   @callback financial_statement(String.t()) ::
               {:ok, Transaction.t()} | {:error, atom()} | no_return()
+
 end
