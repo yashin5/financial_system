@@ -18,4 +18,6 @@ jobs:
       # specify any bash command here prefixed with `run: `
       - run: mix do local.hex --force, local.rebar --force
       - run: mix deps.get
+      - run: docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
+      - run: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
       - run: mix test
