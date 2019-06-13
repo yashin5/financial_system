@@ -16,18 +16,7 @@ jobs:
       - checkout
 
       # specify any bash command here prefixed with `run: `
-      - run:
-          name: Install Docker Compose
-          command: |
-            curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-            chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
-      - run:
-          name: Start container and verify it is working
-          command: |
-            set -x
-            docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
-            docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
       - run: mix do local.hex --force, local.rebar --force
       - run: mix deps.get
+      - run: docker-compose up
       - run: mix test
