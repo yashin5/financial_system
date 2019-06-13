@@ -20,10 +20,9 @@ jobs:
           name: Install Docker Compose
           command: |
             curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-            chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
-      - run: docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
-      - run: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+            set -x
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
+            docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
       - run: mix do local.hex --force, local.rebar --force
       - run: mix deps.get
       - run: mix test
