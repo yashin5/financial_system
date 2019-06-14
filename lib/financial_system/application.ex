@@ -5,7 +5,8 @@ defmodule FinancialSystem.Application do
 
   use Application
 
-  alias FinancialSystem.{Repo, Routes.IndexPlug}
+  alias FinancialSystem.Repo
+  alias Routes.IndexPlug
 
   def start(_type, _args) do
     import Supervisor.Spec

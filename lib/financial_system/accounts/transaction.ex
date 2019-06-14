@@ -25,5 +25,7 @@ defmodule FinancialSystem.Accounts.Transaction do
   def changeset(accounts, params \\ %{}) do
     accounts
     |> Ecto.Changeset.cast(params, [:id, :operation, :value])
+    |> Ecto.Changeset.validate_required([:operation, :value])
+    |> Ecto.Changeset.unique_constraint(:id)
   end
 end
