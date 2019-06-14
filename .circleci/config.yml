@@ -5,7 +5,13 @@ jobs:
     docker:
       # specify the version here
       - image: circleci/elixir:1.8
-
+      - image: circleci/postgres:11.1-alpine
+        environment:
+          MIX_ENV: dev
+          DB_NAME: account_repository_dev
+          DB_USER: ysantos
+          DB_PASSWORD: "@dmin123"
+          DB_HOST: db
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
@@ -18,5 +24,11 @@ jobs:
       # specify any bash command here prefixed with `run: `
       - run: mix do local.hex --force, local.rebar --force
       - run: mix deps.get
-      - run: docker-compose up
+      - run:
+          name: build docker-compose
+          command: docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
+      - run:
+          name: up docker compose
+	        command: docker-compose -f docker-compose.yml -f docker-compose.dev.yml run app sh
       - run: mix test
+      
