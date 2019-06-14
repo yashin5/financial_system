@@ -5,7 +5,6 @@ defmodule FinancialSystem.Account do
 
   alias FinancialSystem.{AccountOperations, Accounts.Account, Currency}
 
-
   defp currency_finder, do: Application.get_env(:financial_system, :currency_finder)
 
   @doc """
@@ -63,8 +62,8 @@ defmodule FinancialSystem.Account do
   """
   @callback delete(String.t()) :: {:ok | :error, atom()}
   def delete(account_id) when is_binary(account_id) do
-    with {:ok, _} <- AccountOperations.account_exist(account_id) do
-      AccountOperations.delete_account(account_id)
+    with {:ok, account} <- AccountOperations.account_exist(account_id) do
+      AccountOperations.delete_account(account)
     end
   end
 

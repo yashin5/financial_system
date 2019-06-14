@@ -20,15 +20,13 @@ defmodule FinancialSystem.FinHelper do
     account_value
     |> Kernel.>=(value)
     |> do_funds()
-
-  
   end
 
-  def funds(account_id, value) when not is_binary(account_id) and is_binary(value) do
-    {:error, :invalid_account_id_type}
+  def funds(_, value) when is_integer(value) do
+    {:error, :invalid_account_type}
   end
 
-  def funds(account_id, value) when is_binary(account_id) and not is_binary(value) do
+  def funds(%Account{}, value) when not is_integer(value) do
     {:error, :invalid_value_type}
   end
 

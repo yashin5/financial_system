@@ -49,7 +49,7 @@ defmodule AccountOperationsTest do
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
-      {:ok, message} = AccountOperations.delete_account(account.id)
+      {:ok, message} = AccountOperations.delete_account(account)
 
       assert ^message = :account_deleted
     end
@@ -57,7 +57,7 @@ defmodule AccountOperationsTest do
     test "Not should be able to delete if the id dont be in string type" do
       {:error, message} = AccountOperations.delete_account(1)
 
-      assert ^message = :invalid_account_id_type
+      assert ^message = :invalid_account_type
     end
   end
 

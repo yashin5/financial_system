@@ -1,4 +1,7 @@
 defmodule FinancialSystem.Accounts.Account do
+  @moduledoc """
+  Schema to table Accounts
+  """
   use Ecto.Schema
 
   alias FinancialSystem.Accounts.Transaction

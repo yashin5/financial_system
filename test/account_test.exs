@@ -172,9 +172,9 @@ defmodule FinancialSystemTest do
     end
 
     test "Not should be able to delete an inexistent account" do
-      {:error, message} = FinancialSystem.delete("account.ida")
+      {:error, message} = FinancialSystem.delete(UUID.uuid4())
 
-      assert ^message = :invalid_account_id_type
+      assert ^message = :account_dont_exist
     end
   end
 end

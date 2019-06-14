@@ -31,16 +31,15 @@ defmodule FinancialSystem.AccountOperations do
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountOperations.delete_account(account.id)
+    FinancialSystem.AccountOperations.delete_account(account)
   """
-  def delete_account(account_id) when is_binary(account_id) do
-    Account
-    |> Repo.get(account_id)
+  def delete_account(%Account{} = account) do
+    account
     |> Repo.delete()
     |> do_delete_account()
   end
 
-  def delete_account(_), do: {:error, :invalid_account_id_type}
+  def delete_account(_), do: {:error, :invalid_account_type}
 
   defp do_delete_account({:ok, _}), do: {:ok, :account_deleted}
 
