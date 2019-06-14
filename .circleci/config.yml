@@ -29,6 +29,6 @@ jobs:
           command: docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
       - run:
           name: up docker compose
-	        command: docker-compose -f docker-compose.yml -f docker-compose.dev.yml run app sh
+          command: docker-compose -f docker-compose.yml -f docker-compose.dev.yml run app sh
       - run: mix test
       
