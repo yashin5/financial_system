@@ -15,6 +15,9 @@ defmodule FinancialSystem.MixProject do
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test
+      ],
+      aliases: [
+        test: ["ecto.create", "ecto.migrate", "test"]
       ]
     ]
   end
@@ -40,7 +43,9 @@ defmodule FinancialSystem.MixProject do
       {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false},
       {:uuid, "~> 1.1"},
       {:mox, "~> 0.5.0", only: :test},
-      {:ecto, "~> 3.1"}
+      {:ecto, "~> 3.1"},
+      {:ecto_sql, "~> 3.1"},
+      {:postgrex, ">= 0.0.0"}
     ]
   end
 end

@@ -1,82 +1,91 @@
-defmodule AccountStateTest do
+defmodule AccountOperationsTest do
   use ExUnit.Case, async: true
 
   import Mox
+
+  alias Ecto.Adapters.SQL.Sandbox
+  alias FinancialSystem.AccountOperations
+
   setup :verify_on_exit!
 
-  doctest FinancialSystem.AccountState
+  doctest FinancialSystem.AccountOperations
 
-  describe "handle_call/1" do
-    test "Should be able to show a actual state" do
-      expect(CurrencyMock, :currency_is_valid, fn currency ->
-        {:ok, String.upcase(currency)}
-      end)
+  describe "register_account/1" do
+    setup do
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
+    end
 
-      {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
-      actual_state = GenServer.call(:register_account, :get_data)[account.account_id]
+    test "Should be able to registry a account into system" do
+      {:ok, account} =
+        %FinancialSystem.Accounts.Account{
+          name: "Yashin Santos",
+          currency: "BRL",
+          value: 100,
+          id: UUID.uuid4()
+        }
+        |> AccountOperations.register_account()
 
-      account_struct = %FinancialSystem.Account{
-        account_id: account.account_id,
-        name: "Yashin Santos",
-        currency: "BRL",
-        value: 100
-      }
+      account_actual_state = AccountOperations.show(account.id)
 
-      assert account_struct == actual_state
+      assert account_actual_state == account
+    end
+
+    test "Not should be able to registry if the arg not be a %Account struct" do
+      {:error, message} = AccountOperations.register_account("error")
+
+      assert ^message = :invalid_arguments_type
     end
   end
 
-  describe "handle_cast/2" do
+  describe "delete/1" do
     setup do
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
+    end
+
+    test "Should be able to delete an account" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
-      on_exit(fn ->
-        nil
-      end)
+      {:ok, message} = AccountOperations.delete_account(account.id)
 
-      {:ok, [account_id: account.account_id]}
+      assert ^message = :account_deleted
     end
 
-    test "Should be able to add a integer value to an account", %{account_id: account} do
-      GenServer.cast(:register_account, {:deposit, account, 1})
-      value = GenServer.call(:register_account, :get_data)[account].value
+    test "Not should be able to delete if the id dont be in string type" do
+      {:error, message} = AccountOperations.delete_account(1)
 
-      assert value == 101
-    end
-
-    test "Should be able to subtract a value to an account", %{account_id: account} do
-      GenServer.cast(:register_account, {:withdraw, account, 1})
-      value = GenServer.call(:register_account, :get_data)[account].value
-
-      assert value == 99
+      assert ^message = :invalid_account_id_type
     end
   end
 
   describe "show/1" do
+    setup do
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
+    end
+
     test "Should be able to see the account state" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
-      actual_state = FinancialSystem.AccountState.show(account.account_id)
+      actual_state = AccountOperations.show(account.id)
 
-      account_struct = %FinancialSystem.Account{
-        account_id: account.account_id,
-        name: account.name,
-        currency: account.currency,
-        value: account.value
-      }
+      account_id_when_created = account.id
+      actual_id = actual_state.id
 
-      assert actual_state == account_struct
+      assert actual_id == account_id_when_created
     end
   end
 
   describe "withdraw/2" do
+    setup do
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
+    end
+
     test "Should be able to subtract a value from account" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
@@ -84,15 +93,19 @@ defmodule AccountStateTest do
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
-      FinancialSystem.AccountState.withdraw(account.account_id, 1)
+      AccountOperations.withdraw(account, 1, "withdraw")
 
-      value = FinancialSystem.AccountState.show(account.account_id).value
+      value = AccountOperations.show(account.id).value
 
       assert value == 99
     end
   end
 
   describe "deposit/2" do
+    setup do
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
+    end
+
     test "Should be able to subtract a value from account" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
@@ -100,9 +113,9 @@ defmodule AccountStateTest do
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
-      FinancialSystem.AccountState.deposit(account.account_id, 1)
+      AccountOperations.deposit(account, 1, "deposit")
 
-      value = FinancialSystem.AccountState.show(account.account_id).value
+      value = AccountOperations.show(account.id).value
 
       assert value == 101
     end

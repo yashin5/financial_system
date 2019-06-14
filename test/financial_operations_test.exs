@@ -2,18 +2,25 @@ defmodule FinancialOperationsTest do
   use ExUnit.Case, async: true
 
   import Mox
+
+  alias Ecto.Adapters.SQL.Sandbox
+
   setup :verify_on_exit!
 
   doctest FinancialSystem.FinancialOperations
 
   describe "show/1" do
+    setup do
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
+    end
+
     test "Should be able to see the value in account" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
-      {_, account_value} = FinancialSystem.show(account.account_id)
+      {_, account_value} = FinancialSystem.show(account.id)
 
       assert account_value == "1.00"
     end
@@ -21,7 +28,7 @@ defmodule FinancialOperationsTest do
     test "User dont should be able to see the value in account if pass a invalid account id" do
       {:error, message} = FinancialSystem.show("account")
 
-      assert ^message = :account_dont_exist
+      assert ^message = :invalid_account_id_type
     end
   end
 
@@ -31,13 +38,15 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
+
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
       on_exit(fn ->
         nil
       end)
 
-      {:ok, [account: account.account_id]}
+      {:ok, [account: account.id]}
     end
 
     test "Should be able to insert a value number in string type", %{account: account} do
@@ -67,7 +76,7 @@ defmodule FinancialOperationsTest do
     test "Not should be able to make the deposit inserting a invalid account id" do
       {:error, message} = FinancialSystem.deposit("account id", "brl", "1")
 
-      assert ^message = :account_dont_exist
+      assert ^message = :invalid_account_id_type
     end
 
     test "Not should be able to make the deposit inserting a invalid currency", %{
@@ -101,13 +110,15 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
+
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
       on_exit(fn ->
         nil
       end)
 
-      {:ok, [account: account.account_id]}
+      {:ok, [account: account.id]}
     end
 
     test "Should be able to take a value of an account inserting a value number in string type",
@@ -122,7 +133,7 @@ defmodule FinancialOperationsTest do
     test "Not should be able to make the withdraw inserting a invalid account id" do
       {:error, message} = FinancialSystem.withdraw("account id", "1")
 
-      assert ^message = :account_dont_exist
+      assert ^message = :invalid_account_id_type
     end
 
     test "Not should be able to make the withdraw inserting a value equal or less than 0", %{
@@ -156,6 +167,8 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
+
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
       {_, account2} = FinancialSystem.create("Oliver Tsubasa", "BRL", "2")
 
@@ -163,7 +176,7 @@ defmodule FinancialOperationsTest do
         nil
       end)
 
-      {:ok, [account_id: account.account_id, account2_id: account2.account_id]}
+      {:ok, [account_id: account.id, account2_id: account2.id]}
     end
 
     test "Should be able to transfer value between accounts inserting a value number in string type",
@@ -189,7 +202,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} = FinancialSystem.transfer("1", "account id_from", account_id)
 
-      assert ^message = :account_dont_exist
+      assert ^message = :invalid_account_id_type
     end
 
     test "Not should be able to make the transfer inserting a invalid account_id_to", %{
@@ -197,7 +210,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} = FinancialSystem.transfer("1", account_id, "account id_to")
 
-      assert ^message = :account_dont_exist
+      assert ^message = :invalid_account_id_type
     end
 
     test "Not should be able to make the transfer inserting a number in integer type", %{
@@ -234,13 +247,15 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
+
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
       {_, account2} = FinancialSystem.create("Oliver Tsubasa", "BRL", "2")
       {_, account3} = FinancialSystem.create("Inu Yasha", "BRL", "5")
 
       list_to = [
-        %FinancialSystem.Split{account: account.account_id, percent: 20},
-        %FinancialSystem.Split{account: account3.account_id, percent: 80}
+        %FinancialSystem.Split{account: account.id, percent: 20},
+        %FinancialSystem.Split{account: account3.id, percent: 80}
       ]
 
       on_exit(fn ->
@@ -249,9 +264,9 @@ defmodule FinancialOperationsTest do
 
       {:ok,
        [
-         account_id: account.account_id,
-         account2_id: account2.account_id,
-         account3_id: account3.account_id,
+         account_id: account.id,
+         account2_id: account2.id,
+         account3_id: account3.id,
          list: list_to
        ]}
     end
@@ -301,7 +316,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} = FinancialSystem.split("account id", split_list, "1")
 
-      assert ^message = :account_dont_exist
+      assert ^message = :invalid_account_id_type
     end
 
     test "Not should be able to make the transfer inserting a number in integer type", %{
@@ -320,6 +335,40 @@ defmodule FinancialOperationsTest do
       {:error, message} = FinancialSystem.split(account, split_list, 1.0)
 
       assert ^message = :invalid_value_type
+    end
+  end
+
+  describe "financial_statement/1" do
+    setup do
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
+    end
+
+    test "Should be able to see the transactioned values" do
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
+
+      FinancialSystem.deposit(account.id, "brl", "1")
+
+      {_, statement_struct} = FinancialSystem.financial_statement(account.id)
+
+      statement = statement_struct |> List.first()
+
+      assert %{operation: "deposit", value: 100} = statement
+    end
+
+    test "Should not be able inserting a invalid account id type" do
+      {_, message} = FinancialSystem.financial_statement(1)
+
+      assert ^message = :invalid_account_id_type
+    end
+
+    test "Should not be able inserting a invalid account id" do
+      {_, message} = FinancialSystem.financial_statement(UUID.uuid4())
+
+      assert ^message = :account_dont_exist
     end
   end
 end

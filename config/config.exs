@@ -6,6 +6,14 @@ config :financial_system, file: "currency_rate.json"
 
 config :financial_system, :currency_finder, FinancialSystem.Currency.CurrencyImpl
 
+config :financial_system, FinancialSystem.Repo,
+  database: System.get_env("DB_NAME") || "account_repository_dev",
+  username: System.get_env("DB_USER") || "ysantos",
+  password: System.get_env("DB_PASSWORD") || "@dmin123",
+  hostname: System.get_env("DB_HOST") || "localhost"
+
+config :financial_system, ecto_repos: [FinancialSystem.Repo]
+
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
 # file won't be loaded nor affect the parent project. For this reason,
@@ -31,7 +39,4 @@ config :financial_system, :currency_finder, FinancialSystem.Currency.CurrencyImp
 # Configuration from the imported file will override the ones defined
 # here (which is why it is important to import them last).
 
-case Mix.env() do
-  :dev -> nil
-  _ -> import_config "#{Mix.env()}.exs"
-end
+import_config "#{Mix.env()}.exs"

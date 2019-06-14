@@ -3,21 +3,8 @@ defmodule FinancialSystem.Account do
   This module is responsable for detemrinate the struct of accounts.
   """
 
-  alias FinancialSystem.{AccountState, Currency}
+  alias FinancialSystem.{AccountOperations, Accounts.Account, Currency}
 
-  @typedoc """
-    Abstract account struct type.
-  """
-  @type t :: %__MODULE__{
-          account_id: String.t(),
-          name: String.t(),
-          currency: String.t(),
-          value: integer()
-        }
-
-  @enforce_keys [:account_id, :name, :currency, :value]
-
-  defstruct [:account_id, :name, :currency, :value]
 
   defp currency_finder, do: Application.get_env(:financial_system, :currency_finder)
 
@@ -27,8 +14,9 @@ defmodule FinancialSystem.Account do
   ## Examples
     FinancialSystem.create("Yashin Santos",  "EUR", "220")
   """
-  @spec create(String.t() | any(), String.t() | any(), String.t() | any()) ::
-          {:ok, t()} | {:error, atom()}
+  @callback create(String.t() | any(), String.t() | any(), String.t() | any()) ::
+              {:ok, Account.t()} | {:error, atom()}
+
   def create(name, currency, value)
       when is_binary(name) and is_binary(currency) and is_binary(value) do
     with {:ok, currency_upcase} <- currency_finder().currency_is_valid(currency),
@@ -37,7 +25,7 @@ defmodule FinancialSystem.Account do
          {:ok, account_created} <-
            name
            |> new(currency_upcase, value_in_integer)
-           |> AccountState.register_account() do
+           |> AccountOperations.register_account() do
       {:ok, account_created}
     end
   end
@@ -57,18 +45,28 @@ defmodule FinancialSystem.Account do
     {:error, :invalid_value_type}
   end
 
-  def create(_, _, _), do: {:error, :invalid_arguments_type}
-
   defp new(name, currency, value) do
-    %__MODULE__{
-      account_id: create_account_id(),
+    %Account{
       name: name,
       currency: currency,
       value: value
     }
   end
 
-  defp create_account_id do
-    UUID.uuid4()
+  @doc """
+    Delete a existent account.
+
+  ## Examples
+    {:ok, account} = FinancialSystem.create("Yashin Santos",  "EUR", "220")
+
+    FinancialSystem.Account.delete(account.id)
+  """
+  @callback delete(String.t()) :: {:ok | :error, atom()}
+  def delete(account_id) when is_binary(account_id) do
+    with {:ok, _} <- AccountOperations.account_exist(account_id) do
+      AccountOperations.delete_account(account_id)
+    end
   end
+
+  def delete(_), do: {:error, :invalid_account_id_type}
 end

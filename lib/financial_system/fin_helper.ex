@@ -3,7 +3,7 @@ defmodule FinancialSystem.FinHelper do
   This module is responsable to help other modules with the financial operations.
   """
 
-  alias FinancialSystem.{AccountState, Currency, Split}
+  alias FinancialSystem.{AccountOperations, Accounts.Account, Currency, Split}
 
   @doc """
     Verify if the account have funds for the operation.
@@ -11,15 +11,17 @@ defmodule FinancialSystem.FinHelper do
   ## Examples
       {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-      FinancialSystem.FinHelper.funds(account.account_id, 220)
+      FinancialSystem.FinHelper.funds(account.id, 220)
   """
-  @spec funds(String.t(), integer()) :: {:ok, boolean()} | {:error, atom()}
-  def funds(account_id, value) when is_binary(account_id) and is_number(value) do
-    with {:ok, _} <- AccountState.account_exist(account_id) do
-      AccountState.show(account_id).value
-      |> Kernel.>=(value)
-      |> do_funds()
-    end
+
+  @spec funds(Account.t(), integer()) :: {:ok, boolean()} | {:error, atom()}
+  def funds(%Account{value: account_value}, value)
+      when is_number(value) do
+    account_value
+    |> Kernel.>=(value)
+    |> do_funds()
+
+  
   end
 
   def funds(account_id, value) when not is_binary(account_id) and is_binary(value) do
@@ -44,15 +46,15 @@ defmodule FinancialSystem.FinHelper do
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
     {_, account2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
     {_, account3} = FinancialSystem.create("Mateus Mathias", "BRL", "100")
-    split_list = [%FinancialSystem.Split{account: account.account_id, percent: 80}, %FinancialSystem.Split{account: account3.account_id, percent: 20}]
+    split_list = [%FinancialSystem.Split{account: account.id, percent: 80}, %FinancialSystem.Split{account: account3.id, percent: 20}]
 
-    FinancialSystem.FinHelper.transfer_have_account_from(account2.account_id, split_list)
+    FinancialSystem.FinHelper.transfer_have_account_from(account2.id, split_list)
   """
   @spec transfer_have_account_from(String.t() | any(), list(Split.t()) | String.t() | any()) ::
           {:ok, boolean()} | {:error, atom()}
   def transfer_have_account_from(account_from, split_list)
       when is_binary(account_from) and is_list(split_list) do
-    with {:ok, _} <- AccountState.account_exist(account_from) do
+    with {:ok, _} <- AccountOperations.account_exist(account_from) do
       split_list
       |> Enum.map(&have_or_not(&1))
       |> Enum.member?(account_from)
@@ -67,12 +69,12 @@ defmodule FinancialSystem.FinHelper do
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
     {_, account2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
 
-    FinancialSystem.FinHelper.transfer_have_account_from(account2.account_id, account.account_id)
+    FinancialSystem.FinHelper.transfer_have_account_from(account2.id, account.id)
   """
   def transfer_have_account_from(account_from, account_to)
       when is_binary(account_from) and is_binary(account_to) do
-    with {:ok, _} <- AccountState.account_exist(account_from),
-         {:ok, _} <- AccountState.account_exist(account_to) do
+    with {:ok, _} <- AccountOperations.account_exist(account_from),
+         {:ok, _} <- AccountOperations.account_exist(account_to) do
       account_from
       |> Kernel.==(account_to)
       |> do_transfer_have_account_from()
@@ -106,7 +108,7 @@ defmodule FinancialSystem.FinHelper do
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
     {_, account3} = FinancialSystem.create("Mateus Mathias", "BRL", "100")
-    split_list = [%FinancialSystem.Split{account: account.account_id, percent: 80}, %FinancialSystem.Split{account: account3.account_id, percent: 20}]
+    split_list = [%FinancialSystem.Split{account: account.id, percent: 80}, %FinancialSystem.Split{account: account3.id, percent: 20}]
 
     FinancialSystem.FinHelper.percent_ok(split_list)
   """
@@ -131,7 +133,7 @@ defmodule FinancialSystem.FinHelper do
   ## Examples
     {_, account2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
     {_, account3} = FinancialSystem.create("Mateus Mathias", "BRL", "100")
-    split_list = [%FinancialSystem.Split{account: account2.account_id, percent: 80}, %FinancialSystem.Split{account: account2.account_id, percent: 20}]
+    split_list = [%FinancialSystem.Split{account: account2.id, percent: 80}, %FinancialSystem.Split{account: account2.id, percent: 20}]
 
     FinancialSystem.FinHelper.unite_equal_account_split(split_list)
   """
@@ -155,7 +157,7 @@ defmodule FinancialSystem.FinHelper do
   ## Examples
     {_, account2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
     {_, account3} = FinancialSystem.create("Mateus Mathias", "BRL", "100")
-    split_list = [%FinancialSystem.Split{account: account2.account_id, percent: 80}, %FinancialSystem.Split{account: account2.account_id, percent: 20}]
+    split_list = [%FinancialSystem.Split{account: account2.id, percent: 80}, %FinancialSystem.Split{account: account2.id, percent: 20}]
 
     FinancialSystem.FinHelper.division_of_values_to_make_split_transfer(split_list, 100)
   """

@@ -2,28 +2,33 @@ defmodule FinancialSystemTest do
   use ExUnit.Case, async: true
 
   import Mox
+
+  alias Ecto.Adapters.SQL.Sandbox
+
   setup :verify_on_exit!
 
   doctest FinancialSystem.Account
 
   describe "create/3" do
     setup do
-      account_struct = %FinancialSystem.Account{
-        account_id: "abc",
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
+
+      account_struct = %FinancialSystem.Accounts.Account{
+        id: "abc",
         name: "Oliver Tsubasa",
         currency: "BRL",
         value: 100
       }
 
-      account_struct2 = %FinancialSystem.Account{
-        account_id: "abd",
+      account_struct2 = %FinancialSystem.Accounts.Account{
+        id: "abd",
         name: "Yashin Santos",
         currency: "BRL",
         value: 10
       }
 
-      account_struct3 = %FinancialSystem.Account{
-        account_id: "adb",
+      account_struct3 = %FinancialSystem.Accounts.Account{
+        id: "adb",
         name: "Inu Yasha",
         currency: "BRL",
         value: 0
@@ -45,10 +50,10 @@ defmodule FinancialSystemTest do
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "0.10")
-      account_data = FinancialSystem.AccountState.show(account.account_id)
+      account_data = FinancialSystem.AccountOperations.show(account.id)
 
-      account_simulate = %FinancialSystem.Account{
-        account_id: "abd",
+      account_simulate = %FinancialSystem.Accounts.Account{
+        id: "abd",
         name: account_data.name,
         currency: account_data.currency,
         value: account_data.value
@@ -65,10 +70,10 @@ defmodule FinancialSystemTest do
       end)
 
       {_, account} = FinancialSystem.create("Oliver Tsubasa", "brl", "1")
-      account_data = FinancialSystem.AccountState.show(account.account_id)
+      account_data = FinancialSystem.AccountOperations.show(account.id)
 
-      account_simulate = %FinancialSystem.Account{
-        account_id: "abc",
+      account_simulate = %FinancialSystem.Accounts.Account{
+        id: "abc",
         name: account_data.name,
         currency: account_data.currency,
         value: account_data.value
@@ -86,10 +91,10 @@ defmodule FinancialSystemTest do
 
       {_, account} = FinancialSystem.create("Inu Yasha", "brl", "0")
 
-      account_data = FinancialSystem.AccountState.show(account.account_id)
+      account_data = FinancialSystem.AccountOperations.show(account.id)
 
-      account_simulate = %FinancialSystem.Account{
-        account_id: "adb",
+      account_simulate = %FinancialSystem.Accounts.Account{
+        id: "adb",
         name: account_data.name,
         currency: account_data.currency,
         value: account_data.value
@@ -140,6 +145,36 @@ defmodule FinancialSystemTest do
       {:error, message} = FinancialSystem.create("Oliver Tsubasa", "brll", "0")
 
       assert ^message = :currency_is_not_valid
+    end
+  end
+
+  describe "delete/1" do
+    setup do
+      :ok = Sandbox.checkout(FinancialSystem.Repo)
+    end
+
+    test "Should be able to delete an account" do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} = FinancialSystem.create("Oliver Tsubasa", "brl", "1")
+
+      {:ok, message} = FinancialSystem.delete(account.id)
+
+      assert ^message = :account_deleted
+    end
+
+    test "Not should be able to delete if insert id different from type string" do
+      {:error, message} = FinancialSystem.delete(1.1)
+
+      assert ^message = :invalid_account_id_type
+    end
+
+    test "Not should be able to delete an inexistent account" do
+      {:error, message} = FinancialSystem.delete("account.ida")
+
+      assert ^message = :invalid_account_id_type
     end
   end
 end
