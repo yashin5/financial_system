@@ -122,10 +122,11 @@ defmodule FinancialSystem.FinancialOperations do
   @impl true
   def transfer(value, account_from, account_to)
       when is_binary(account_from) and is_binary(account_to) and is_binary(value) do
-    with {:ok, _} <- FinHelper.transfer_have_account_from(account_from, account_to),
+    with {:ok, account_from_valided} <- AccountOperations.account_exist(account_from),
+         {:ok, _} <- FinHelper.transfer_have_account_from(account_from, account_to),
          {:ok, withdraw_result} <- withdraw(account_from, value, "transfer >"),
          {:ok, _} <-
-           deposit(account_to, AccountOperations.show(account_from).currency, value, "transfer <") do
+           deposit(account_to, account_from_valided.currency, value, "transfer <") do
       {:ok, withdraw_result}
     end
   end
@@ -174,7 +175,9 @@ defmodule FinancialSystem.FinancialOperations do
         )
       end)
 
-      {:ok, AccountOperations.show(account_from)}
+      {_, account_from_state} = AccountOperations.account_exist(account_from)
+
+      {:ok, account_from_state}
     end
   end
 
@@ -197,6 +200,16 @@ defmodule FinancialSystem.FinancialOperations do
     {:error, :invalid_arguments_type}
   end
 
+  @doc """
+    Show the financial statement from account.
+
+  ## Examples
+    {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
+
+    FinancialSystem.withdraw(account.id, "1")
+
+    FinancialSystem.financial_statement(account.id)
+  """
   @impl true
   def financial_statement(account_id) when is_binary(account_id) do
     with {:ok, _} <- AccountOperations.account_exist(account_id) do

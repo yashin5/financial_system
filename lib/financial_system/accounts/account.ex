@@ -13,6 +13,8 @@ defmodule FinancialSystem.Accounts.Account do
           value: integer()
         }
 
+  @derive {Jason.Encoder, only: [:id, :name, :currency, :value]}
+
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "accounts" do

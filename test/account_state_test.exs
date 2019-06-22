@@ -25,7 +25,7 @@ defmodule AccountOperationsTest do
         }
         |> AccountOperations.register_account()
 
-      account_actual_state = AccountOperations.show(account.id)
+      {_, account_actual_state} = AccountOperations.account_exist(account.id)
 
       assert account_actual_state == account
     end
@@ -72,7 +72,7 @@ defmodule AccountOperationsTest do
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
-      actual_state = AccountOperations.show(account.id)
+      {_, actual_state} = AccountOperations.account_exist(account.id)
 
       account_id_when_created = account.id
       actual_id = actual_state.id
@@ -95,7 +95,8 @@ defmodule AccountOperationsTest do
 
       AccountOperations.withdraw(account, 1, "withdraw")
 
-      value = AccountOperations.show(account.id).value
+      {_, account_state} = AccountOperations.account_exist(account.id)
+      value = account_state.value
 
       assert value == 99
     end
@@ -115,7 +116,8 @@ defmodule AccountOperationsTest do
 
       AccountOperations.deposit(account, 1, "deposit")
 
-      value = AccountOperations.show(account.id).value
+      {_, account_state} = AccountOperations.account_exist(account.id)
+      value = account_state.value
 
       assert value == 101
     end

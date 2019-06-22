@@ -7,7 +7,7 @@ services:
       DB_NAME: account_repository_test
       DB_USER: ysantos
       DB_PASSWORD: "@dmin123"
-      DB_HOST: db
+      DB_HOST: localhost
 
 
   db:

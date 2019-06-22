@@ -38,6 +38,7 @@ defmodule FinancialSystem.MixProject do
     [
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:poison, "~> 3.1"},
+      {:jason, "~> 1.1"},
       {:decimal, "~> 1.0"},
       {:excoveralls, "~> 0.10", only: :test},
       {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false},

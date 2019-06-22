@@ -13,7 +13,6 @@ defmodule AppRouter do
 
   post "/hello" do
     # Prints JSON POST body
-    IO.inspect(conn.body_params)
     send_resp(conn, 200, "Success!")
   end
 end

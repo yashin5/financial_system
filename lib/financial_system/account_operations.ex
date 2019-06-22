@@ -44,20 +44,6 @@ defmodule FinancialSystem.AccountOperations do
   defp do_delete_account({:ok, _}), do: {:ok, :account_deleted}
 
   @doc """
-    Show the state.
-
-  ## Examples
-    {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
-
-    FinancialSystem.AccountOperations.show(account.id)
-  """
-  @spec show(String.t()) :: Account.t() | no_return() | atom()
-  def show(account) when is_binary(account) do
-    Account
-    |> Repo.get(account)
-  end
-
-  @doc """
     Checks if the account exists.
 
   ## Examples
@@ -91,15 +77,8 @@ defmodule FinancialSystem.AccountOperations do
       when is_integer(value) and value > 0 do
     save_transaction(account, value, operation)
 
-    query =
-      from(u in "accounts",
-        where: u.id == type(^id, :binary_id),
-        select: u.value - type(^value, :integer)
-      )
-
-    query
-    |> FinancialSystem.Repo.all()
-    |> List.first()
+    id
+    |> calculate_balance(value * -1)
     |> make_operation(account)
   end
 
@@ -116,15 +95,8 @@ defmodule FinancialSystem.AccountOperations do
       when is_integer(value) and value > 0 do
     save_transaction(account, value, operation)
 
-    query =
-      from(u in "accounts",
-        where: u.id == type(^id, :binary_id),
-        select: u.value + type(^value, :integer)
-      )
-
-    query
-    |> FinancialSystem.Repo.all()
-    |> List.first()
+    id
+    |> calculate_balance(value)
     |> make_operation(account)
   end
 
@@ -132,10 +104,12 @@ defmodule FinancialSystem.AccountOperations do
     Repo.transaction(fn ->
       account
       |> Account.changeset(%{value: value})
-      |> Repo.update!()
+      |> Repo.update()
     end)
 
-    show(account.id)
+    {_, account_actual_state} = account_exist(account.id)
+
+    account_actual_state
   end
 
   defp save_transaction(account, value, operation) do
@@ -144,6 +118,17 @@ defmodule FinancialSystem.AccountOperations do
     query
     |> Transaction.changeset()
     |> Repo.insert()
+  end
+
+  defp calculate_balance(account_id, value) do
+    query =
+      from(u in Account,
+        where: u.id == type(^account_id, :binary_id),
+        select: u.value + type(^value, :integer),
+        limit: 1
+      )
+
+    Repo.one(query)
   end
 
   @doc """
@@ -157,11 +142,12 @@ defmodule FinancialSystem.AccountOperations do
     FinancialSystem.AccountOperations.show_financial_statement(account.id)
   """
   @spec show_financial_statement(String.t()) :: Transaction.t() | no_return()
-  def show_financial_statement(id) when is_binary(id) do
+  def show_financial_statement(id, order \\ :desc) when is_binary(id) do
     query =
       from(u in "transactions",
         where: u.account_id == type(^id, :binary_id),
-        select: [:operation, :value, :inserted_at]
+        select: [:operation, :value, :inserted_at],
+        order_by: [{^order, :inserted_at}]
       )
 
     FinancialSystem.Repo.all(query)
