@@ -40,7 +40,7 @@ defmodule FinancialSystem.FinancialOperations do
   """
   @impl true
   def deposit(account_id, currency_from, value) when is_binary(account_id) and is_binary(value) do
-    deposit(account_id, currency_from, value, "deposit")
+    sum_value(account_id, currency_from, value, "deposit")
   end
 
   def deposit(account_id, currency_from, value)
@@ -60,14 +60,14 @@ defmodule FinancialSystem.FinancialOperations do
 
   def deposit(_, _, _), do: {:error, :invalid_arguments_type}
 
-  defp deposit(account_id, currency_from, value, operation)
+  defp sum_value(account_id, currency_from, value, operation)
        when is_binary(operation) and operation in ["deposit", "transfer <"] and
               is_binary(account_id) and is_binary(value) do
     with {:ok, account} <- AccountOperations.account_exist(account_id),
          {:ok, _} <- currency_finder().currency_is_valid(currency_from),
          {:ok, value_in_integer} <-
            Currency.convert(currency_from, account.currency, value) do
-      {:ok, AccountOperations.deposit(account, value_in_integer, operation)}
+      {:ok, AccountOperations.sum_value_in_balance(account, value_in_integer, operation)}
     end
   end
 
@@ -81,7 +81,7 @@ defmodule FinancialSystem.FinancialOperations do
   """
   @impl true
   def withdraw(account_id, value) when is_binary(account_id) and is_binary(value) do
-    withdraw(account_id, value, "withdraw")
+    subtract_value(account_id, value, "withdraw")
   end
 
   def withdraw(account, value) when not is_binary(account) and is_binary(value) do
@@ -94,7 +94,7 @@ defmodule FinancialSystem.FinancialOperations do
 
   def withdraw(_, _), do: {:error, :invalid_arguments_type}
 
-  defp withdraw(account_id, value, operation)
+  defp subtract_value(account_id, value, operation)
        when is_binary(account_id) and is_binary(operation) and
               operation in ["withdraw", "transfer >"] and is_binary(value) do
     with {:ok, account} <- AccountOperations.account_exist(account_id),
@@ -102,7 +102,7 @@ defmodule FinancialSystem.FinancialOperations do
            Currency.amount_do(:store, value, account.currency),
          {:ok, _} <- FinHelper.funds(account, value_in_integer) do
       {:ok,
-       AccountOperations.withdraw(
+       AccountOperations.subtract_value_in_balance(
          account,
          value_in_integer,
          operation
@@ -124,9 +124,9 @@ defmodule FinancialSystem.FinancialOperations do
       when is_binary(account_from) and is_binary(account_to) and is_binary(value) do
     with {:ok, account_from_valided} <- AccountOperations.account_exist(account_from),
          {:ok, _} <- FinHelper.transfer_have_account_from(account_from, account_to),
-         {:ok, withdraw_result} <- withdraw(account_from, value, "transfer >"),
+         {:ok, withdraw_result} <- subtract_value(account_from, value, "transfer >"),
          {:ok, _} <-
-           deposit(account_to, account_from_valided.currency, value, "transfer <") do
+           sum_value(account_to, account_from_valided.currency, value, "transfer <") do
       {:ok, withdraw_result}
     end
   end

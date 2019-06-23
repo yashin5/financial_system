@@ -61,27 +61,7 @@ defmodule AccountOperationsTest do
     end
   end
 
-  describe "show/1" do
-    setup do
-      :ok = Sandbox.checkout(FinancialSystem.Repo)
-    end
-
-    test "Should be able to see the account state" do
-      expect(CurrencyMock, :currency_is_valid, fn currency ->
-        {:ok, String.upcase(currency)}
-      end)
-
-      {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
-      {_, actual_state} = AccountOperations.account_exist(account.id)
-
-      account_id_when_created = account.id
-      actual_id = actual_state.id
-
-      assert actual_id == account_id_when_created
-    end
-  end
-
-  describe "withdraw/2" do
+  describe "subtract_value_in_balance/3" do
     setup do
       :ok = Sandbox.checkout(FinancialSystem.Repo)
     end
@@ -93,7 +73,7 @@ defmodule AccountOperationsTest do
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
-      AccountOperations.withdraw(account, 1, "withdraw")
+      AccountOperations.subtract_value_in_balance(account, 1, "withdraw")
 
       {_, account_state} = AccountOperations.account_exist(account.id)
       value = account_state.value
@@ -102,7 +82,7 @@ defmodule AccountOperationsTest do
     end
   end
 
-  describe "deposit/2" do
+  describe "sum_value_in_balance/3" do
     setup do
       :ok = Sandbox.checkout(FinancialSystem.Repo)
     end
@@ -114,7 +94,7 @@ defmodule AccountOperationsTest do
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
-      AccountOperations.deposit(account, 1, "deposit")
+      AccountOperations.sum_value_in_balance(account, 1, "deposit")
 
       {_, account_state} = AccountOperations.account_exist(account.id)
       value = account_state.value

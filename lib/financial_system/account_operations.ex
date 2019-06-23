@@ -65,15 +65,16 @@ defmodule FinancialSystem.AccountOperations do
   defp do_account_exist(account), do: {:ok, account}
 
   @doc """
-    Subtracts value in deposit operations.
+    Subtracts value in  operations.
 
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountOperations.withdraw(account, 100, "withdraw")
+    FinancialSystem.AccountOperations.subtract_value_in_balance(account, 100, "withdraw")
   """
-  @spec withdraw(Account.t(), pos_integer(), String.t()) :: Account.t() | no_return()
-  def withdraw(%Account{id: id} = account, value, operation)
+  @spec subtract_value_in_balance(Account.t(), pos_integer(), String.t()) ::
+          Account.t() | no_return()
+  def subtract_value_in_balance(%Account{id: id} = account, value, operation)
       when is_integer(value) and value > 0 do
     save_transaction(account, value, operation)
 
@@ -83,15 +84,15 @@ defmodule FinancialSystem.AccountOperations do
   end
 
   @doc """
-    Sum value in deposit operations.
+    Sum value in operations.
 
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountOperations.deposit(account, 100, "deposit")
+    FinancialSystem.AccountOperations.sum_value_in_balance(account, 100, "deposit")
   """
-  @spec deposit(Account.t(), integer(), String.t()) :: Account.t() | no_return()
-  def deposit(%Account{id: id} = account, value, operation)
+  @spec sum_value_in_balance(Account.t(), integer(), String.t()) :: Account.t() | no_return()
+  def sum_value_in_balance(%Account{id: id} = account, value, operation)
       when is_integer(value) and value > 0 do
     save_transaction(account, value, operation)
 
