@@ -32,7 +32,8 @@ defmodule FinancialSystem.Accounts.AccountRepository do
   """
   def delete_account(%Account{} = account) do
     account
-    |> Repo.delete()
+    |> Account.changeset(%{active: false})
+    |> Repo.update()
     |> do_delete_account()
   end
 
@@ -52,12 +53,19 @@ defmodule FinancialSystem.Accounts.AccountRepository do
   def find_account(account_id) when is_binary(account_id) do
     Account
     |> Repo.get(account_id)
+    |> check_account_status()
     |> do_find_account()
   rescue
     Ecto.Query.CastError -> {:error, :invalid_account_id_type}
   end
 
+  defp check_account_status(%Account{active: true} = account), do: {account.active, account}
+
+  defp check_account_status(%Account{active: false}), do: nil
+
+  defp check_account_status(_), do: nil
+
   defp do_find_account(nil), do: {:error, :account_dont_exist}
 
-  defp do_find_account(account), do: {:ok, account}
+  defp do_find_account({true, account}), do: {:ok, account}
 end

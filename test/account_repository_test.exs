@@ -4,7 +4,7 @@ defmodule AccountRepositoryTest do
   import Mox
 
   alias Ecto.Adapters.SQL.Sandbox
-  alias FinancialSystem.{AccountOperations, Accounts.AccountRepository}
+  alias FinancialSystem.Accounts.AccountRepository
 
   setup :verify_on_exit!
 
@@ -18,6 +18,7 @@ defmodule AccountRepositoryTest do
     test "Should be able to registry a account into system" do
       {:ok, account} =
         %FinancialSystem.Accounts.Account{
+          active: true,
           name: "Yashin Santos",
           currency: "BRL",
           value: 100,
@@ -61,24 +62,23 @@ defmodule AccountRepositoryTest do
     end
   end
 
-  describe "subtract_value_in_balance/3" do
+  describe "find_account/1" do
     setup do
       :ok = Sandbox.checkout(FinancialSystem.Repo)
     end
 
-    test "Should be able to subtract a value from account" do
+    test "Should be able to verify if an account has deleted" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
-      AccountOperations.subtract_value_in_balance(account, 1, "withdraw")
+      {:ok, _} = AccountRepository.delete_account(account)
 
-      {_, account_state} = AccountOperations.find_account(account.id)
-      value = account_state.value
+      {:error, message} = AccountRepository.find_account(account.id)
 
-      assert value == 99
+      assert ^message = :account_dont_exist
     end
   end
 end

@@ -4,7 +4,6 @@ defmodule FinancialSystem.Account do
   """
 
   alias FinancialSystem.{
-    AccountOperations,
     Accounts.Account,
     Accounts.AccountRepository,
     Currency
@@ -51,6 +50,7 @@ defmodule FinancialSystem.Account do
 
   defp new(name, currency, value) do
     %Account{
+      active: true,
       name: name,
       currency: currency,
       value: value
@@ -67,7 +67,7 @@ defmodule FinancialSystem.Account do
   """
   @callback delete(String.t()) :: {:ok | :error, atom()}
   def delete(account_id) when is_binary(account_id) do
-    with {:ok, account} <- AccountOperations.find_account(account_id) do
+    with {:ok, account} <- AccountRepository.find_account(account_id) do
       AccountRepository.delete_account(account)
     end
   end

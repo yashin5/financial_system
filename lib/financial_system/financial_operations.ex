@@ -60,17 +60,6 @@ defmodule FinancialSystem.FinancialOperations do
 
   def deposit(_, _, _), do: {:error, :invalid_arguments_type}
 
-  defp sum_value(account_id, currency_from, value, operation)
-       when is_binary(operation) and operation in ["deposit", "transfer <"] and
-              is_binary(account_id) and is_binary(value) do
-    with {:ok, account} <- AccountRepository.find_account(account_id),
-         {:ok, _} <- currency_finder().currency_is_valid(currency_from),
-         {:ok, value_in_integer} <-
-           Currency.convert(currency_from, account.currency, value) do
-      {:ok, AccountOperations.sum_value_in_balance(account, value_in_integer, operation)}
-    end
-  end
-
   @doc """
     Takes out the value of an account.
 
@@ -93,22 +82,6 @@ defmodule FinancialSystem.FinancialOperations do
   end
 
   def withdraw(_, _), do: {:error, :invalid_arguments_type}
-
-  defp subtract_value(account_id, value, operation)
-       when is_binary(account_id) and is_binary(operation) and
-              operation in ["withdraw", "transfer >"] and is_binary(value) do
-    with {:ok, account} <- AccountRepository.find_account(account_id),
-         {:ok, value_in_integer} <-
-           Currency.amount_do(:store, value, account.currency),
-         {:ok, _} <- FinHelper.funds(account, value_in_integer) do
-      {:ok,
-       AccountOperations.subtract_value_in_balance(
-         account,
-         value_in_integer,
-         operation
-       )}
-    end
-  end
 
   @doc """
    Transfer of values ​​between accounts.
@@ -218,4 +191,31 @@ defmodule FinancialSystem.FinancialOperations do
   end
 
   def financial_statement(_), do: {:error, :invalid_account_id_type}
+
+  defp subtract_value(account_id, value, operation)
+       when is_binary(account_id) and is_binary(operation) and
+              operation in ["withdraw", "transfer >"] and is_binary(value) do
+    with {:ok, account} <- AccountRepository.find_account(account_id),
+         {:ok, value_in_integer} <-
+           Currency.amount_do(:store, value, account.currency),
+         {:ok, _} <- FinHelper.funds(account, value_in_integer) do
+      {:ok,
+       AccountOperations.subtract_value_in_balance(
+         account,
+         value_in_integer,
+         operation
+       )}
+    end
+  end
+
+  defp sum_value(account_id, currency_from, value, operation)
+       when is_binary(operation) and operation in ["deposit", "transfer <"] and
+              is_binary(account_id) and is_binary(value) do
+    with {:ok, account} <- AccountRepository.find_account(account_id),
+         {:ok, _} <- currency_finder().currency_is_valid(currency_from),
+         {:ok, value_in_integer} <-
+           Currency.convert(currency_from, account.currency, value) do
+      {:ok, AccountOperations.sum_value_in_balance(account, value_in_integer, operation)}
+    end
+  end
 end
