@@ -52,7 +52,7 @@ defmodule FinancialSystem.FinHelper do
           {:ok, boolean()} | {:error, atom()}
   def transfer_have_account_from(account_from, split_list)
       when is_binary(account_from) and is_list(split_list) do
-    with {:ok, _} <- AccountOperations.account_exist(account_from) do
+    with {:ok, _} <- AccountOperations.find_account(account_from) do
       split_list
       |> Enum.map(&have_or_not(&1))
       |> Enum.member?(account_from)
@@ -71,8 +71,8 @@ defmodule FinancialSystem.FinHelper do
   """
   def transfer_have_account_from(account_from, account_to)
       when is_binary(account_from) and is_binary(account_to) do
-    with {:ok, _} <- AccountOperations.account_exist(account_from),
-         {:ok, _} <- AccountOperations.account_exist(account_to) do
+    with {:ok, _} <- AccountOperations.find_account(account_from),
+         {:ok, _} <- AccountOperations.find_account(account_to) do
       account_from
       |> Kernel.==(account_to)
       |> do_transfer_have_account_from()

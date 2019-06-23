@@ -1,14 +1,14 @@
-defmodule AccountOperationsTest do
+defmodule AccountRepositoryTest do
   use ExUnit.Case, async: true
 
   import Mox
 
   alias Ecto.Adapters.SQL.Sandbox
-  alias FinancialSystem.AccountOperations
+  alias FinancialSystem.{AccountOperations, Accounts.AccountRepository}
 
   setup :verify_on_exit!
 
-  doctest FinancialSystem.AccountOperations
+  doctest FinancialSystem.Accounts.AccountRepository
 
   describe "register_account/1" do
     setup do
@@ -23,15 +23,15 @@ defmodule AccountOperationsTest do
           value: 100,
           id: UUID.uuid4()
         }
-        |> AccountOperations.register_account()
+        |> AccountRepository.register_account()
 
-      {_, account_actual_state} = AccountOperations.account_exist(account.id)
+      {_, account_actual_state} = AccountRepository.find_account(account.id)
 
       assert account_actual_state == account
     end
 
     test "Not should be able to registry if the arg not be a %Account struct" do
-      {:error, message} = AccountOperations.register_account("error")
+      {:error, message} = AccountRepository.register_account("error")
 
       assert ^message = :invalid_arguments_type
     end
@@ -49,13 +49,13 @@ defmodule AccountOperationsTest do
 
       {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
 
-      {:ok, message} = AccountOperations.delete_account(account)
+      {:ok, message} = AccountRepository.delete_account(account)
 
       assert ^message = :account_deleted
     end
 
     test "Not should be able to delete if the id dont be in string type" do
-      {:error, message} = AccountOperations.delete_account(1)
+      {:error, message} = AccountRepository.delete_account(1)
 
       assert ^message = :invalid_account_type
     end
@@ -75,31 +75,10 @@ defmodule AccountOperationsTest do
 
       AccountOperations.subtract_value_in_balance(account, 1, "withdraw")
 
-      {_, account_state} = AccountOperations.account_exist(account.id)
+      {_, account_state} = AccountOperations.find_account(account.id)
       value = account_state.value
 
       assert value == 99
-    end
-  end
-
-  describe "sum_value_in_balance/3" do
-    setup do
-      :ok = Sandbox.checkout(FinancialSystem.Repo)
-    end
-
-    test "Should be able to subtract a value from account" do
-      expect(CurrencyMock, :currency_is_valid, fn currency ->
-        {:ok, String.upcase(currency)}
-      end)
-
-      {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "1")
-
-      AccountOperations.sum_value_in_balance(account, 1, "deposit")
-
-      {_, account_state} = AccountOperations.account_exist(account.id)
-      value = account_state.value
-
-      assert value == 101
     end
   end
 end

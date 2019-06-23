@@ -12,7 +12,7 @@ defmodule FinancialSystem.AccountOperations do
   ## Examples
     account_struct = %FinancialSystem.Accounts.Account{name: "Oliver Tsubasa", currency: "BRL", value: 100 }
 
-    FinancialSystem.AccountOperations.register_account(account_struct)
+    FinancialSystem.AccountRepository.register_account(account_struct)
   """
   def register_account(%Account{} = account) do
     account
@@ -31,7 +31,7 @@ defmodule FinancialSystem.AccountOperations do
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountOperations.delete_account(account)
+    FinancialSystem.AccountRepository.delete_account(account)
   """
   def delete_account(%Account{} = account) do
     account
@@ -49,20 +49,20 @@ defmodule FinancialSystem.AccountOperations do
   ## Examples
     {_, account} = FinancialSystem.create("Yashin Santos", "EUR", "220")
 
-    FinancialSystem.AccountOperations.account_exist(account.id)
+    FinancialSystem.AccountOperations.find_account(account.id)
   """
-  @spec account_exist(String.t()) :: {:ok, Account.t()} | {:error, atom()}
-  def account_exist(account_id) when is_binary(account_id) do
+  @spec find_account(String.t()) :: {:ok, Account.t()} | {:error, atom()}
+  def find_account(account_id) when is_binary(account_id) do
     Account
     |> Repo.get(account_id)
-    |> do_account_exist()
+    |> do_find_account()
   rescue
     Ecto.Query.CastError -> {:error, :invalid_account_id_type}
   end
 
-  defp do_account_exist(nil), do: {:error, :account_dont_exist}
+  defp do_find_account(nil), do: {:error, :account_dont_exist}
 
-  defp do_account_exist(account), do: {:ok, account}
+  defp do_find_account(account), do: {:ok, account}
 
   @doc """
     Subtracts value in  operations.
@@ -108,7 +108,7 @@ defmodule FinancialSystem.AccountOperations do
       |> Repo.update()
     end)
 
-    {_, account_actual_state} = account_exist(account.id)
+    {_, account_actual_state} = find_account(account.id)
 
     account_actual_state
   end
