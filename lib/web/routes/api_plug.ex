@@ -1,4 +1,4 @@
-defmodule Routes.IndexPlug do
+defmodule Routes.APIPlug do
   use Plug.Router
 
   plug(:match)
@@ -69,9 +69,10 @@ defmodule Routes.IndexPlug do
     send_resp(conn, 200, "Transferências realizadas com sucesso!")
   end
 
-  put "/operations/financial_statement" do
-    FinancialSystem.financial_statement(conn.body_params["account_id"])
-
-    send_resp(conn, 200, "Extrato")
+  get "/operations/financial_statement" do
+    with {:ok, statement} = FinancialSystem.financial_statement(conn.query_params["account_id"]),
+         {:ok, response} <- Jason.encode(statement) do
+      send_resp(conn, 200, response)
+    end
   end
 end

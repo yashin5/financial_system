@@ -6,14 +6,14 @@ defmodule FinancialSystem.Application do
   use Application
 
   alias FinancialSystem.Repo
-  alias Routes.IndexPlug
+  alias Routes.APIPlug
 
   def start(_type, _args) do
     import Supervisor.Spec
 
     children = [
       worker(Repo, []),
-      {Plug.Cowboy, scheme: :http, plug: IndexPlug, options: [port: 8080]}
+      {Plug.Cowboy, scheme: :http, plug: APIPlug, options: [port: 8080]}
     ]
 
     opts = [strategy: :one_for_one, name: FinancialSystem.Supervisor]

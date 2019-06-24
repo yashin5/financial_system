@@ -12,7 +12,7 @@ defmodule FinancialSystem.Accounts.Transaction do
           value: integer()
         }
 
-  @derive {Jason.Encoder, only: [:id, :operation, :value]}
+  @derive {Jason.Encoder, except: [:__meta__]}
 
   @primary_key {:id, :binary_id, autogenerate: true}
 

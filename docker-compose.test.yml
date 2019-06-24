@@ -7,8 +7,11 @@ services:
       DB_NAME: account_repository_test
       DB_USER: ysantos
       DB_PASSWORD: "@dmin123"
-      DB_HOST: localhost
-
+      DB_HOST: db
+    volumes:
+      - .:/app
+      - /app/deps
+      - /app/_build
 
   db:
     environment:

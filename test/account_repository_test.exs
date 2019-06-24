@@ -1,9 +1,8 @@
-defmodule AccountRepositoryTest do
-  use ExUnit.Case, async: true
+defmodule FinancialSystem.AccountRepositoryTest do
+  use FinancialSystem.DataCase, async: true
 
   import Mox
 
-  alias Ecto.Adapters.SQL.Sandbox
   alias FinancialSystem.Accounts.AccountRepository
 
   setup :verify_on_exit!
@@ -11,10 +10,6 @@ defmodule AccountRepositoryTest do
   doctest FinancialSystem.Accounts.AccountRepository
 
   describe "register_account/1" do
-    setup do
-      :ok = Sandbox.checkout(FinancialSystem.Repo)
-    end
-
     test "Should be able to registry a account into system" do
       {:ok, account} =
         %FinancialSystem.Accounts.Account{
@@ -39,10 +34,6 @@ defmodule AccountRepositoryTest do
   end
 
   describe "delete/1" do
-    setup do
-      :ok = Sandbox.checkout(FinancialSystem.Repo)
-    end
-
     test "Should be able to delete an account" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
@@ -63,10 +54,6 @@ defmodule AccountRepositoryTest do
   end
 
   describe "find_account/1" do
-    setup do
-      :ok = Sandbox.checkout(FinancialSystem.Repo)
-    end
-
     test "Should be able to verify if an account has deleted" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
