@@ -1,4 +1,4 @@
-defmodule Routes.APIPlug do
+defmodule FinancialSystemWeb.Routes.APIPlug do
   use Plug.Router
 
   plug(:match)
@@ -11,7 +11,7 @@ defmodule Routes.APIPlug do
 
   plug(:dispatch)
 
-  post "/accounts/create" do
+  post "/accounts" do
     {_, account} =
       FinancialSystem.create(
         conn.body_params["name"],
@@ -24,8 +24,8 @@ defmodule Routes.APIPlug do
     send_resp(conn, 200, account_json)
   end
 
-  delete "/delete" do
-    FinancialSystem.delete(conn.body_params["account_id"])
+  delete "accounts/:id" do
+    FinancialSystem.delete(id)
 
     send_resp(conn, 200, "Conta deletada com sucesso!")
   end
