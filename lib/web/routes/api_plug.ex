@@ -1,17 +1,37 @@
 defmodule FinancialSystemWeb.Routes.APIPlug do
   use Plug.Router
 
-  alias FinancialSystemWeb.Routes.Endpoints.DepositEndpoint
+  alias FinancialSystemWeb.Routes.Endpoints.{
+    CreateEndpoint,
+    DeleteEndpoint,
+    DepositEndpoint,
+    FinancialStatementEndpoint,
+    SplitEndpoint,
+    TransferEndpoint,
+    WithdrawEndpoint
+  }
 
   plug(:match)
 
   plug(Plug.Parsers,
-    parsers: [:json],
-    pass: ["application/json"],
+    parsers: [:urlencoded, :json],
+    pass: ["application/json", "application/x-www-form-urlencoded"],
     json_decoder: Jason
   )
 
   plug(:dispatch)
+
+  post "/accounts/create" do
+    response = CreateEndpoint.init(conn.body_params)
+
+    send_resp(conn, 200, response)
+  end
+
+  delete "/accounts/:id" do
+    response = DeleteEndpoint.init(id)
+
+    send_resp(conn, 200, response)
+  end
 
   post "/operations/deposit" do
     response = DepositEndpoint.init(conn.body_params)
@@ -20,65 +40,26 @@ defmodule FinancialSystemWeb.Routes.APIPlug do
   end
 
   post "/operations/withdraw" do
-    {:ok, withdraw_succsess} =
-      FinancialSystem.withdraw(
-        conn.body_params["account_id"],
-        conn.body_params["value"]
-      )
-
-    response =
-      %{
-        account_id: withdraw_succsess.id,
-        response_status: 200,
-        new_balance: withdraw_succsess.value
-      }
-      |> Jason.encode!()
+    response = WithdrawEndpoint.init(conn.body_params)
 
     send_resp(conn, 200, response)
   end
 
-  put "/operations/transfer" do
-    {:ok, transfer_succsess} =
-      FinancialSystem.transfer(
-        conn.body_params["account_id_from"],
-        conn.body_params["account_to_from"],
-        conn.body_params["value"]
-      )
-
-    response =
-      %{
-        account_id: transfer_succsess.id,
-        response_status: 200,
-        new_balance: transfer_succsess.value
-      }
-      |> Jason.encode!()
+  post "/operations/transfer" do
+    response = TransferEndpoint.init(conn.body_params)
 
     send_resp(conn, 200, response)
   end
 
   post "/operations/split" do
-    {:ok, split_succsess} =
-      FinancialSystem.split(
-        conn.body_params["account_id_from"],
-        conn.body_params["split_list"],
-        conn.body_params["value"]
-      )
-
-    response =
-      %{
-        account_id: split_succsess.id,
-        response_status: 200,
-        new_balance: split_succsess.value
-      }
-      |> Jason.encode!()
+    response = SplitEndpoint.init(conn.body_params)
 
     send_resp(conn, 200, response)
   end
 
-  get "/operations/financial_statement" do
-    with {:ok, statement} = FinancialSystem.financial_statement(conn.query_params["account_id"]),
-         {:ok, response} <- Jason.encode(statement) do
-      send_resp(conn, 200, response)
-    end
+  post "/operations/financial_statement" do
+    response = FinancialStatementEndpoint.init(conn.body_params)
+
+    send_resp(conn, 200, response)
   end
 end
