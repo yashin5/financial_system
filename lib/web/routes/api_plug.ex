@@ -1,6 +1,8 @@
 defmodule FinancialSystemWeb.Routes.APIPlug do
   use Plug.Router
 
+  alias FinancialSystemWeb.Routes.Endpoints.DepositEndpoint
+
   plug(:match)
 
   plug(Plug.Parsers,
@@ -11,62 +13,66 @@ defmodule FinancialSystemWeb.Routes.APIPlug do
 
   plug(:dispatch)
 
-  post "/accounts" do
-    {_, account} =
-      FinancialSystem.create(
-        conn.body_params["name"],
-        conn.body_params["currency"],
-        conn.body_params["value"]
-      )
-
-    account_json = Jason.encode!(account)
-
-    send_resp(conn, 200, account_json)
-  end
-
-  delete "accounts/:id" do
-    FinancialSystem.delete(id)
-
-    send_resp(conn, 200, "Conta deletada com sucesso!")
-  end
-
   post "/operations/deposit" do
-    FinancialSystem.deposit(
-      conn.body_params["account_id"],
-      conn.body_params["currency"],
-      conn.body_params["value"]
-    )
+    response = DepositEndpoint.init(conn.body_params)
 
-    send_resp(conn, 200, "Depósito realizado com sucesso!")
+    send_resp(conn, 200, response)
   end
 
   post "/operations/withdraw" do
-    FinancialSystem.withdraw(
-      conn.body_params["account_id"],
-      conn.body_params["value"]
-    )
+    {:ok, withdraw_succsess} =
+      FinancialSystem.withdraw(
+        conn.body_params["account_id"],
+        conn.body_params["value"]
+      )
 
-    send_resp(conn, 200, "Saque realizado com sucesso!")
+    response =
+      %{
+        account_id: withdraw_succsess.id,
+        response_status: 200,
+        new_balance: withdraw_succsess.value
+      }
+      |> Jason.encode!()
+
+    send_resp(conn, 200, response)
   end
 
   put "/operations/transfer" do
-    FinancialSystem.transfer(
-      conn.body_params["account_id_from"],
-      conn.body_params["account_to_from"],
-      conn.body_params["value"]
-    )
+    {:ok, transfer_succsess} =
+      FinancialSystem.transfer(
+        conn.body_params["account_id_from"],
+        conn.body_params["account_to_from"],
+        conn.body_params["value"]
+      )
 
-    send_resp(conn, 200, "Transferência realizada com sucesso!")
+    response =
+      %{
+        account_id: transfer_succsess.id,
+        response_status: 200,
+        new_balance: transfer_succsess.value
+      }
+      |> Jason.encode!()
+
+    send_resp(conn, 200, response)
   end
 
-  put "/operations/split" do
-    FinancialSystem.split(
-      conn.body_params["account_id_from"],
-      conn.body_params["split_list"],
-      conn.body_params["value"]
-    )
+  post "/operations/split" do
+    {:ok, split_succsess} =
+      FinancialSystem.split(
+        conn.body_params["account_id_from"],
+        conn.body_params["split_list"],
+        conn.body_params["value"]
+      )
 
-    send_resp(conn, 200, "Transferências realizadas com sucesso!")
+    response =
+      %{
+        account_id: split_succsess.id,
+        response_status: 200,
+        new_balance: split_succsess.value
+      }
+      |> Jason.encode!()
+
+    send_resp(conn, 200, response)
   end
 
   get "/operations/financial_statement" do

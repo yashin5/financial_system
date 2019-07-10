@@ -2,21 +2,27 @@ defmodule FinancialSystemWeb.Routes.AccountsPlug do
   use Plug.Router
 
   post "/accounts/create" do
-    {_, account} =
+    {_, create_succsess} =
       FinancialSystem.create(
         conn.body_params["name"],
         conn.body_params["currency"],
         conn.body_params["value"]
       )
 
-    account_json = Jason.encode!(account)
+    response =
+      %{
+        account: create_succsess,
+        response_status: 200
+      }
+      |> Jason.encode!()
 
-    send_resp(conn, 200, account_json)
+    send_resp(conn, 200, response)
   end
 
   delete "accounts/:id" do
-    FinancialSystem.delete(id)
+    {:ok, delete_succsess} = FinancialSystem.delete(id)
+    response = %{msg: delete_succsess, response_status: 200} |> Jason.encode!()
 
-    send_resp(conn, 200, "Conta deletada com sucesso!")
+    send_resp(conn, 200, response)
   end
 end
