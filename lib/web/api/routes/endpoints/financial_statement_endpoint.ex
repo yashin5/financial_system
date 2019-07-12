@@ -1,8 +1,7 @@
-defmodule FinancialSystemWeb.Routes.Endpoints.FinancialStatementEndpoint do
+defmodule FinancialSystemWeb.API.Routes.Endpoints.FinancialStatementEndpoint do
   def init(param) do
     FinancialSystem.financial_statement(param["account_id"])
     |> handle(param["account_id"])
-    |> Jason.encode!()
   end
 
   def handle({:ok, response}, account_id) do

@@ -1,8 +1,7 @@
-defmodule FinancialSystemWeb.Routes.Endpoints.DeleteEndpoint do
+defmodule FinancialSystemWeb.API.Routes.Endpoints.DeleteEndpoint do
   def init(param) do
     FinancialSystem.delete(param)
     |> handle()
-    |> Jason.encode!()
   end
 
   def handle({:ok, response}) do

@@ -1,11 +1,10 @@
-defmodule FinancialSystemWeb.Routes.Endpoints.WithdrawEndpoint do
+defmodule FinancialSystemWeb.API.Routes.Endpoints.WithdrawEndpoint do
   def init(param) do
     FinancialSystem.withdraw(
       param["account_id"],
       param["value"]
     )
     |> handle()
-    |> Jason.encode!()
   end
 
   defp handle({:ok, response}) do

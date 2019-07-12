@@ -1,18 +1,18 @@
-defmodule FinancialSystemWeb.Routes.Endpoints.CreateEndpoint do
+defmodule FinancialSystemWeb.API.Routes.Endpoints.DepositEndpoint do
   def init(param) do
-    FinancialSystem.create(
-      param["name"],
+    FinancialSystem.deposit(
+      param["account_id"],
       param["currency"],
       param["value"]
     )
     |> handle()
-    |> Jason.encode!()
   end
 
   def handle({:ok, response}) do
     %{
-      account: response,
-      response_status: 201
+      account_id: response.id,
+      response_status: 201,
+      new_balance: response.value
     }
   end
 

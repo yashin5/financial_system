@@ -1,12 +1,11 @@
-defmodule FinancialSystemWeb.Routes.Endpoints.SplitEndpoint do
+defmodule FinancialSystemWeb.API.Routes.Endpoints.TransferEndpoint do
   def init(param) do
-    FinancialSystem.split(
-      param["account_id_from"],
-      param["split_list"],
-      param["value"]
+    FinancialSystem.transfer(
+      param["value"],
+      param["account_from"],
+      param["account_to"]
     )
     |> handle()
-    |> Jason.encode!()
   end
 
   def handle({:ok, response}) do

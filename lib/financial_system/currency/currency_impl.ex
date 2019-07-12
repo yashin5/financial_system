@@ -12,7 +12,7 @@ defmodule FinancialSystem.Currency.CurrencyImpl do
     |> do_load_from_config()
   end
 
-  defp do_load_from_config({:ok, body}), do: Poison.decode!(body)
+  defp do_load_from_config({:ok, body}), do: Jason.decode!(body)
 
   defp do_load_from_config({:error, reason}), do: reason
 
