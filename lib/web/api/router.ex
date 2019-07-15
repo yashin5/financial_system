@@ -22,7 +22,7 @@ defmodule FinancialSystemWeb.API.Router do
   plug(:dispatch)
 
   post "/accounts" do
-    response = CreateEndpoint.init(conn.body_params)
+    response = CreateEndpoint.init(conn)
 
     send_resp(conn, response.response_status, Jason.encode!(response))
   end

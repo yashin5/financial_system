@@ -1,11 +1,15 @@
 defmodule FinancialSystemWeb.API.Routes.Endpoints.CreateEndpoint do
-  def init(param) do
+  def init(%{req_headers: [{"content-type", "application/json"}]} = param) do
     FinancialSystem.create(
-      param["name"],
-      param["currency"],
-      param["value"]
+      param.body_params["name"],
+      param.body_params["currency"],
+      param.body_params["value"]
     )
     |> handle()
+  end
+
+  def init(%{req_headers: _}) do
+    %{response_status: 400, msg: :invalid_header}
   end
 
   def handle({:ok, response}) do

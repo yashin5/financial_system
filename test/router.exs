@@ -22,13 +22,36 @@ defmodule FinancialSystem.ApiTest do
         |> put_req_header("content-type", "application/json")
         |> Router.call(@opts)
 
+      IO.inspect(conn)
+
       assert conn.state == :sent
       assert conn.status == 201
     end
 
-    # test "when params are valid, should return 200" do
-    #   params = %{}
-    #   response = conn(:post, "/accounts", params)
-    # end
+    test "when params is not valid, should return 406" do
+      params = %{name: "raissa", value: 100, currency: "brl"}
+
+      conn =
+        :post
+        |> conn("/accounts", Jason.encode!(params))
+        |> put_req_header("content-type", "application/json")
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 406
+    end
+
+    test "when header is not valid, should return 400" do
+      params = %{name: "raissa", value: "100", currency: "brl"}
+
+      conn =
+        :post
+        |> conn("/accounts", Jason.encode!(params))
+        |> put_req_header("content-type", "application/x-www-form-urlencoded")
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 400
+    end
   end
 end
