@@ -1,11 +1,15 @@
 defmodule FinancialSystemWeb.API.Routes.Endpoints.TransferEndpoint do
-  def init(param) do
+  def init(%{req_headers: [{"content-type", "application/json"}]} = param) do
     FinancialSystem.transfer(
-      param["value"],
-      param["account_from"],
-      param["account_to"]
+      param.body_params["value"],
+      param.body_params["account_from"],
+      param.body_params["account_to"]
     )
     |> handle()
+  end
+
+  def init(%{req_headers: _}) do
+    %{response_status: 400, msg: :invalid_header}
   end
 
   def handle({:ok, response}) do

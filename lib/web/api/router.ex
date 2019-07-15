@@ -30,7 +30,8 @@ defmodule FinancialSystemWeb.API.Router do
   delete "/accounts/:id" do
     response = DeleteEndpoint.init(id)
 
-    send_resp(conn, 200, response)
+    send_resp(conn, response.response_status, Jason.encode!(response))
+
   end
 
   post "/operations/deposit" do
@@ -40,13 +41,13 @@ defmodule FinancialSystemWeb.API.Router do
   end
 
   post "/operations/withdraw" do
-    response = WithdrawEndpoint.init(conn.body_params)
+    response = WithdrawEndpoint.init(conn)
 
     send_resp(conn, response.response_status, Jason.encode!(response))
   end
 
   post "/operations/transfer" do
-    response = TransferEndpoint.init(conn.body_params)
+    response = TransferEndpoint.init(conn)
 
     send_resp(conn, response.response_status, Jason.encode!(response))
   end

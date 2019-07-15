@@ -1,10 +1,14 @@
 defmodule FinancialSystemWeb.API.Routes.Endpoints.WithdrawEndpoint do
-  def init(param) do
+  def init(%{req_headers: [{"content-type", "application/json"}]} = param) do
     FinancialSystem.withdraw(
-      param["account_id"],
-      param["value"]
+      param.body_params["account_id"],
+      param.body_params["value"]
     )
     |> handle()
+  end
+
+  def init(%{req_headers: _}) do
+    %{response_status: 400, msg: :invalid_header}
   end
 
   defp handle({:ok, response}) do
