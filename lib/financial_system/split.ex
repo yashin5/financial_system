@@ -10,6 +10,8 @@ defmodule FinancialSystem.Split do
   """
   @type t :: %__MODULE__{account: Account.t(), percent: number()}
 
+  @derive {Jason.Encoder, only: [:account, :percent]}
+
   @enforce_keys [:account, :percent]
 
   defstruct [:account, :percent]

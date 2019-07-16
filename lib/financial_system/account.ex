@@ -3,8 +3,11 @@ defmodule FinancialSystem.Account do
   This module is responsable for detemrinate the struct of accounts.
   """
 
-  alias FinancialSystem.{AccountOperations, Accounts.Account, Currency}
-
+  alias FinancialSystem.{
+    Accounts.Account,
+    Accounts.AccountRepository,
+    Currency
+  }
 
   defp currency_finder, do: Application.get_env(:financial_system, :currency_finder)
 
@@ -25,7 +28,7 @@ defmodule FinancialSystem.Account do
          {:ok, account_created} <-
            name
            |> new(currency_upcase, value_in_integer)
-           |> AccountOperations.register_account() do
+           |> AccountRepository.register_account() do
       {:ok, account_created}
     end
   end
@@ -47,6 +50,7 @@ defmodule FinancialSystem.Account do
 
   defp new(name, currency, value) do
     %Account{
+      active: true,
       name: name,
       currency: currency,
       value: value
@@ -63,8 +67,8 @@ defmodule FinancialSystem.Account do
   """
   @callback delete(String.t()) :: {:ok | :error, atom()}
   def delete(account_id) when is_binary(account_id) do
-    with {:ok, _} <- AccountOperations.account_exist(account_id) do
-      AccountOperations.delete_account(account_id)
+    with {:ok, account} <- AccountRepository.find_account(account_id) do
+      AccountRepository.delete_account(account)
     end
   end
 

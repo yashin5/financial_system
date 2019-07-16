@@ -1,4 +1,7 @@
 defmodule FinancialSystem.Accounts.Transaction do
+  @moduledoc """
+  Schema to table Transactions
+  """
   use Ecto.Schema
 
   alias FinancialSystem.Accounts.Account
@@ -8,6 +11,8 @@ defmodule FinancialSystem.Accounts.Transaction do
           operation: String.t(),
           value: integer()
         }
+
+  @derive {Jason.Encoder, except: [:__meta__]}
 
   @primary_key {:id, :binary_id, autogenerate: true}
 
@@ -22,5 +27,7 @@ defmodule FinancialSystem.Accounts.Transaction do
   def changeset(accounts, params \\ %{}) do
     accounts
     |> Ecto.Changeset.cast(params, [:id, :operation, :value])
+    |> Ecto.Changeset.validate_required([:operation, :value])
+    |> Ecto.Changeset.unique_constraint(:id)
   end
 end

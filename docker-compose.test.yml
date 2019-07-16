@@ -8,7 +8,10 @@ services:
       DB_USER: ysantos
       DB_PASSWORD: "@dmin123"
       DB_HOST: db
-
+    volumes:
+      - .:/app
+      - /app/deps
+      - /app/_build
 
   db:
     environment:
