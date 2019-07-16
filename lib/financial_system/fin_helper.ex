@@ -3,16 +3,12 @@ defmodule FinancialSystem.FinHelper do
   This module is responsable to help other modules with the financial operations.
   """
 
-<<<<<<< HEAD
-  alias FinancialSystem.{AccountOperations, Accounts.Account, Currency, Split}
-=======
   alias FinancialSystem.{
     Accounts.Account,
     Accounts.AccountRepository,
     Currency,
     Split
   }
->>>>>>> api/updates
 
   @doc """
     Verify if the account have funds for the operation.
@@ -29,11 +25,6 @@ defmodule FinancialSystem.FinHelper do
     account_value
     |> Kernel.>=(value)
     |> do_funds()
-<<<<<<< HEAD
-
-  
-=======
->>>>>>> api/updates
   end
 
   def funds(_, value) when is_integer(value) do
@@ -66,11 +57,7 @@ defmodule FinancialSystem.FinHelper do
           {:ok, boolean()} | {:error, atom()}
   def transfer_have_account_from(account_from, split_list)
       when is_binary(account_from) and is_list(split_list) do
-<<<<<<< HEAD
-    with {:ok, _} <- AccountOperations.account_exist(account_from) do
-=======
     with {:ok, _} <- AccountRepository.find_account(account_from) do
->>>>>>> api/updates
       split_list
       |> Enum.map(&have_or_not(&1))
       |> Enum.member?(account_from)
@@ -89,13 +76,8 @@ defmodule FinancialSystem.FinHelper do
   """
   def transfer_have_account_from(account_from, account_to)
       when is_binary(account_from) and is_binary(account_to) do
-<<<<<<< HEAD
-    with {:ok, _} <- AccountOperations.account_exist(account_from),
-         {:ok, _} <- AccountOperations.account_exist(account_to) do
-=======
     with {:ok, _} <- AccountRepository.find_account(account_from),
          {:ok, _} <- AccountRepository.find_account(account_to) do
->>>>>>> api/updates
       account_from
       |> Kernel.==(account_to)
       |> do_transfer_have_account_from()
