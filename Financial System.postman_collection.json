@@ -1,0 +1,38 @@
+{
+	"info": {
+		"_postman_id": "757568e8-327e-49f3-a67f-c2cd2a9773ac",
+		"name": "Financial System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Account",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"raissa\", \"currency\":\"brl\", \"value\":\"1\"}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/accounts/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"accounts",
+						"create"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

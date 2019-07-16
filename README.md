@@ -19,7 +19,7 @@ This app makes you able to create accounts to make financial operations like you
 
 ##### This system was build with Elixir using ```mix new ``` end:
 - [Elixir](https://github.com/elixir-lang/elixir) (v1.8.1)
-- [Poison](https://github.com/devinus/poison) (To parse the HTTP Json response)
+- [Jason](https://github.com/michalmuskala/jason) (To parse the HTTP Json response)
 - [Decimal](https://github.com/ericmj/decimal) (To precision arithmetic)
 - [UUID](https://github.com/zyro/elixir-uuid) (To generate ID to accounts)
 - [MOX](https://github.com/plataformatec/mox) (To mocking tests)

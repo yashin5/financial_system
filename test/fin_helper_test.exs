@@ -36,13 +36,21 @@ defmodule FinHelperTest do
     test "Not should be able to verify when inserting a string in value", %{account_id: account} do
       {:error, message} = FinHelper.funds(account, "10")
 
+<<<<<<< HEAD
       assert ^message = :invalid_account_id_type
+=======
+      assert ^message = :invalid_value_type
+>>>>>>> api/updates
     end
 
     test "Not should be able to verify when inserting a invalid account id" do
       {:error, message} = FinHelper.funds("account id", 10)
 
+<<<<<<< HEAD
       assert ^message = :invalid_value_type
+=======
+      assert ^message = :invalid_account_type
+>>>>>>> api/updates
     end
   end
 

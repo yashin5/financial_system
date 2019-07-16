@@ -7,6 +7,13 @@ services:
       context: .
     depends_on:
       - db
+<<<<<<< HEAD
+=======
+    volumes:
+      - .:/app
+      - /app/deps
+      - /app/_build
+>>>>>>> api/updates
 
   db:
     image: postgres:11.1-alpine
