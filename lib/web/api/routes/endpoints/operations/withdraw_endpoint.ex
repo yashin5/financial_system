@@ -1,4 +1,5 @@
-defmodule FinancialSystemWeb.API.Routes.Endpoints.WithdrawEndpoint do
+defmodule FinancialSystemWeb.API.Routes.Endpoints.Operations.WithdrawEndpoint do
+  @spec init(map()) :: %{response_status: 201, account_id: String.t()}
   def init(%{req_headers: [{"content-type", "application/json"}]} = param) do
     FinancialSystem.withdraw(
       param.body_params["account_id"],

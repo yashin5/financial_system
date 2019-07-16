@@ -84,7 +84,7 @@ defmodule FinancialSystem.AccountOperations do
 
     FinancialSystem.AccountOperations.show_financial_statement(account.id)
   """
-  @spec show_financial_statement(String.t()) :: Transaction.t() | no_return()
+  @spec show_financial_statement(String.t()) :: list(Transaction.t())
   def show_financial_statement(id, order \\ :desc) when is_binary(id) do
     query =
       from(u in "transactions",

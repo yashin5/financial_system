@@ -1,4 +1,4 @@
-defmodule FinancialSystemWeb.API.Routes.Endpoints.DeleteEndpoint do
+defmodule FinancialSystemWeb.API.Routes.Endpoints.Accounts.DeleteEndpoint do
   def init(param) do
     FinancialSystem.delete(param)
     |> handle()

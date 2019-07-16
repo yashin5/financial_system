@@ -115,7 +115,7 @@ defmodule FinancialSystem.ApiTest do
 
   describe "POST /operations/deposit" do
     test "when params are valid, should return 200" do
-      expect(CurrencyMock, :currency_is_valid, fn currency ->
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
@@ -126,7 +126,7 @@ defmodule FinancialSystem.ApiTest do
       #   assert response == true
       conn =
         :post
-        |> conn("/operations/withdraw", Jason.encode!(params))
+        |> conn("/operations/deposit", Jason.encode!(params))
         |> put_req_header("content-type", "application/json")
         |> Router.call(@opts)
 
@@ -145,7 +145,7 @@ defmodule FinancialSystem.ApiTest do
 
       conn =
         :post
-        |> conn("/operations/withdraw", Jason.encode!(params))
+        |> conn("/operations/deposit", Jason.encode!(params))
         |> put_req_header("content-type", "application/json")
         |> Router.call(@opts)
 
@@ -164,7 +164,7 @@ defmodule FinancialSystem.ApiTest do
 
       conn =
         :post
-        |> conn("/operations/withdraw", Jason.encode!(params))
+        |> conn("/operations/deposit", Jason.encode!(params))
         |> put_req_header("content-type", "application/x-www-form-urlencoded")
         |> Router.call(@opts)
 
@@ -263,6 +263,120 @@ defmodule FinancialSystem.ApiTest do
         :delete
         |> conn("/accounts/" <> "234")
         |> put_req_header("content-type", "application/json")
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 406
+    end
+  end
+
+  describe "POST /operations/split" do
+    test "when params are valid, should return 200" do
+      expect(CurrencyMock, :currency_is_valid, 5, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "100")
+      {_, account2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
+      {_, account3} = FinancialSystem.create("Mateus Mathias", "BRL", "100")
+
+      split_list = [
+        %{account: account.id, percent: 50},
+        %{account: account3.id, percent: 50}
+      ]
+
+      params = %{account_id_from: account2.id, split_list: split_list, value: "100"}
+
+      #   assert response == true
+      conn =
+        :post
+        |> conn("/operations/split", Jason.encode!(params))
+        |> put_req_header("content-type", "application/json")
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 201
+    end
+
+    test "when params is not valid, should return 406" do
+      expect(CurrencyMock, :currency_is_valid, 3, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "100")
+      {_, account2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
+      {_, account3} = FinancialSystem.create("Mateus Mathias", "BRL", "100")
+
+      split_list = [
+        %{account: account.id, percent: 50},
+        %{account: account3.id, percent: 50}
+      ]
+
+      params = %{account_id_from: account2.id, split_list: split_list, value: 100}
+
+      conn =
+        :post
+        |> conn("/operations/split", Jason.encode!(params))
+        |> put_req_header("content-type", "application/json")
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 406
+    end
+
+    test "when header is not valid, should return 400" do
+      expect(CurrencyMock, :currency_is_valid, 3, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "100")
+      {_, account2} = FinancialSystem.create("Antonio Marcos", "BRL", "100")
+      {_, account3} = FinancialSystem.create("Mateus Mathias", "BRL", "100")
+
+      split_list = [
+        %{account: account.id, percent: 50},
+        %{account: account3.id, percent: 50}
+      ]
+
+      params = %{account_id_from: account2.id, split_list: split_list, value: "100"}
+
+      conn =
+        :post
+        |> conn("/operations/split", Jason.encode!(params))
+        |> put_req_header("content-type", "application/x-www-form-urlencoded")
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 400
+    end
+  end
+
+  describe "GET /operations/financial_statement" do
+    test "when params are valid, should return 200" do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} = FinancialSystem.create("raissa", "brl", "100")
+      params = account.id
+      #   assert response == true
+      conn =
+        :get
+        |> conn("/operations/financial_statement/" <> params)
+        |> put_req_header("content-type", "application/x-www-form-urlencoded")
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 200
+    end
+
+    test "when account does not exist, should return 404" do
+      params = UUID.uuid4()
+      #   assert response == true
+      conn =
+        :get
+        |> conn("/operations/financial_statement/" <> params)
+        |> put_req_header("content-type", "application/x-www-form-urlencoded")
         |> Router.call(@opts)
 
       assert conn.state == :sent

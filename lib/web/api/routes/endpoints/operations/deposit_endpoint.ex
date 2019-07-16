@@ -1,7 +1,7 @@
-defmodule FinancialSystemWeb.API.Routes.Endpoints.CreateEndpoint do
+defmodule FinancialSystemWeb.API.Routes.Endpoints.Operations.DepositEndpoint do
   def init(%{req_headers: [{"content-type", "application/json"}]} = param) do
-    FinancialSystem.create(
-      param.body_params["name"],
+    FinancialSystem.deposit(
+      param.body_params["account_id"],
       param.body_params["currency"],
       param.body_params["value"]
     )
@@ -14,8 +14,9 @@ defmodule FinancialSystemWeb.API.Routes.Endpoints.CreateEndpoint do
 
   def handle({:ok, response}) do
     %{
-      account: response,
-      response_status: 201
+      account_id: response.id,
+      response_status: 201,
+      new_balance: response.value
     }
   end
 

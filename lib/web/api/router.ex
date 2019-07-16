@@ -1,9 +1,9 @@
 defmodule FinancialSystemWeb.API.Router do
   use Plug.Router
 
-  alias FinancialSystemWeb.API.Routes.Endpoints.{
-    CreateEndpoint,
-    DeleteEndpoint,
+  alias FinancialSystemWeb.API.Routes.Endpoints.Accounts.{CreateEndpoint, DeleteEndpoint}
+
+  alias FinancialSystemWeb.API.Routes.Endpoints.Operations.{
     DepositEndpoint,
     FinancialStatementEndpoint,
     SplitEndpoint,
@@ -31,13 +31,12 @@ defmodule FinancialSystemWeb.API.Router do
     response = DeleteEndpoint.init(id)
 
     send_resp(conn, response.response_status, Jason.encode!(response))
-
   end
 
   post "/operations/deposit" do
-    response = DepositEndpoint.init(conn.body_params)
+    response = DepositEndpoint.init(conn)
 
-    send_resp(conn, 200, response)
+    send_resp(conn, response.response_status, Jason.encode!(response))
   end
 
   post "/operations/withdraw" do
@@ -53,13 +52,13 @@ defmodule FinancialSystemWeb.API.Router do
   end
 
   post "/operations/split" do
-    response = SplitEndpoint.init(conn.body_params)
+    response = SplitEndpoint.init(conn)
 
     send_resp(conn, response.response_status, Jason.encode!(response))
   end
 
-  get "/operations/financial_statement" do
-    response = FinancialStatementEndpoint.init(conn.body_params)
+  get "/operations/financial_statement/:id" do
+    response = FinancialStatementEndpoint.init(id)
 
     send_resp(conn, response.response_status, Jason.encode!(response))
   end

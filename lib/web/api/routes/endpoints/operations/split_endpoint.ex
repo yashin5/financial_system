@@ -1,9 +1,14 @@
-defmodule FinancialSystemWeb.API.Routes.Endpoints.TransferEndpoint do
+defmodule FinancialSystemWeb.API.Routes.Endpoints.Operations.SplitEndpoint do
   def init(%{req_headers: [{"content-type", "application/json"}]} = param) do
-    FinancialSystem.transfer(
-      param.body_params["value"],
-      param.body_params["account_from"],
-      param.body_params["account_to"]
+    split_list =
+      Enum.map(param.body_params["split_list"], fn item ->
+        %FinancialSystem.Split{account: item["account"], percent: item["percent"]}
+      end)
+
+    FinancialSystem.split(
+      param.body_params["account_id_from"],
+      split_list,
+      param.body_params["value"]
     )
     |> handle()
   end
