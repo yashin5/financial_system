@@ -5,10 +5,8 @@ defmodule FinancialSystem.Web.API.Routes.Endpoints.Operations.WithdrawEndpoint d
           %{response_status: 201, account_id: String.t()}
           | %{msg: atom(), response_status: pos_integer()}
   def init(%{req_headers: [{"content-type", "application/json"}]} = param) do
-    FinancialSystem.withdraw(
-      param.body_params["account_id"],
-      param.body_params["value"]
-    )
+    param.body_params["account_id"]
+    |> FinancialSystem.withdraw(param.body_params["value"])
     |> ErrorResponses.handle_error()
     |> handle_response()
   end

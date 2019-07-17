@@ -5,15 +5,14 @@ defmodule FinancialSystem.Web.API.Routes.Endpoints.Operations.SplitEndpoint do
           %{response_status: 201, account_id: String.t(), new_balance: pos_integer()}
           | %{msg: atom(), response_status: pos_integer()}
 
-
   def init(%{req_headers: [{"content-type", "application/json"}]} = param) do
     split_list =
       Enum.map(param.body_params["split_list"], fn item ->
         %FinancialSystem.Split{account: item["account"], percent: item["percent"]}
       end)
 
-    FinancialSystem.split(
-      param.body_params["account_id_from"],
+    param.body_params["account_id_from"]
+    |> FinancialSystem.split(
       split_list,
       param.body_params["value"]
     )

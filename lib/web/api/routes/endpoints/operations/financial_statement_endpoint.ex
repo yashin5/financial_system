@@ -10,9 +10,9 @@ defmodule FinancialSystem.Web.API.Routes.Endpoints.Operations.FinancialStatement
           }
           | %{msg: atom(), response_status: pos_integer()}
 
-
   def init(id) do
-    FinancialSystem.financial_statement(id)
+    id
+    |> FinancialSystem.financial_statement()
     |> ErrorResponses.handle_error()
     |> handle_response(id)
   end

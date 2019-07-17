@@ -5,10 +5,9 @@ defmodule FinancialSystem.Web.API.Routes.Endpoints.Operations.DepositEndpoint do
           %{account_id: String.t(), response_status: 201, new_balance: pos_integer()}
           | %{msg: atom(), response_status: pos_integer()}
 
-
   def init(%{req_headers: [{"content-type", "application/json"}]} = param) do
-    FinancialSystem.deposit(
-      param.body_params["account_id"],
+    param.body_params["account_id"]
+    |> FinancialSystem.deposit(
       param.body_params["currency"],
       param.body_params["value"]
     )

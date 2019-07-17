@@ -5,10 +5,9 @@ defmodule FinancialSystem.Web.API.Routes.Endpoints.Operations.TransferEndpoint d
           %{response_status: 201, account_id: String.t(), new_balance: pos_integer()}
           | %{msg: atom(), response_status: pos_integer()}
 
-
   def init(%{req_headers: [{"content-type", "application/json"}]} = param) do
-    FinancialSystem.transfer(
-      param.body_params["value"],
+    param.body_params["value"]
+    |> FinancialSystem.transfer(
       param.body_params["account_from"],
       param.body_params["account_to"]
     )

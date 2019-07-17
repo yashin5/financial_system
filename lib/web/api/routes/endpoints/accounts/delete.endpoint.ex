@@ -3,7 +3,8 @@ defmodule FinancialSystem.Web.API.Routes.Endpoints.Accounts.DeleteEndpoint do
 
   @spec init(String.t()) :: %{msg: atom(), response_status: pos_integer}
   def init(param) do
-    FinancialSystem.delete(param)
+    param
+    |> FinancialSystem.delete()
     |> ErrorResponses.handle_error()
     |> handle_response()
   end

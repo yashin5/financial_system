@@ -323,7 +323,6 @@ defmodule FinancialSystem.ApiTest do
     end
 
     test "when params are valid but the action cannot  be taken, should return 422" do
-
       params = UUID.uuid4()
       #   assert response == true
       conn =

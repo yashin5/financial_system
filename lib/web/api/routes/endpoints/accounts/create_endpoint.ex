@@ -7,8 +7,8 @@ defmodule FinancialSystem.Web.API.Routes.Endpoints.Accounts.CreateEndpoint do
           %{account: Account.t(), response_status: 201}
           | %{msg: atom(), response_status: pos_integer()}
   def init(%{req_headers: [{"content-type", "application/json"}]} = param) do
-    FinancialSystem.create(
-      param.body_params["name"],
+    param.body_params["name"]
+    |> FinancialSystem.create(
       param.body_params["currency"],
       param.body_params["value"]
     )
