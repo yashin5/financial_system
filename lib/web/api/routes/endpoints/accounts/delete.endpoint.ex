@@ -1,15 +1,18 @@
-defmodule FinancialSystemWeb.API.Routes.Endpoints.Accounts.DeleteEndpoint do
+defmodule FinancialSystem.Web.API.Routes.Endpoints.Accounts.DeleteEndpoint do
+  alias FinancialSystem.Web.Api.Routes.Endpoints.ErrorResponses
+
   def init(param) do
     FinancialSystem.delete(param)
-    |> handle()
+    |> ErrorResponses.handle_error()
+    |> handle_response()
   end
 
-  def handle({:ok, response}) do
+  def handle_response({:ok, response}) do
     %{
       msg: response,
       response_status: 201
     }
   end
 
-  def handle({:error, response}), do: %{response_status: 406, msg: response}
+  def handle_response(response), do: response
 end

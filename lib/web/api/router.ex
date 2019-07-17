@@ -1,9 +1,9 @@
-defmodule FinancialSystemWeb.API.Router do
+defmodule FinancialSystem.Web.API.Router do
   use Plug.Router
 
-  alias FinancialSystemWeb.API.Routes.Endpoints.Accounts.{CreateEndpoint, DeleteEndpoint}
+  alias FinancialSystem.Web.API.Routes.Endpoints.Accounts.{CreateEndpoint, DeleteEndpoint}
 
-  alias FinancialSystemWeb.API.Routes.Endpoints.Operations.{
+  alias FinancialSystem.Web.API.Routes.Endpoints.Operations.{
     DepositEndpoint,
     FinancialStatementEndpoint,
     SplitEndpoint,

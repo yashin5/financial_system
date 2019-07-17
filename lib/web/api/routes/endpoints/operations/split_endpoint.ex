@@ -1,4 +1,6 @@
-defmodule FinancialSystemWeb.API.Routes.Endpoints.Operations.SplitEndpoint do
+defmodule FinancialSystem.Web.API.Routes.Endpoints.Operations.SplitEndpoint do
+  alias FinancialSystem.Web.Api.Routes.Endpoints.ErrorResponses
+
   def init(%{req_headers: [{"content-type", "application/json"}]} = param) do
     split_list =
       Enum.map(param.body_params["split_list"], fn item ->
@@ -10,14 +12,15 @@ defmodule FinancialSystemWeb.API.Routes.Endpoints.Operations.SplitEndpoint do
       split_list,
       param.body_params["value"]
     )
-    |> handle()
+    |> ErrorResponses.handle_error()
+    |> handle_response()
   end
 
   def init(%{req_headers: _}) do
     %{response_status: 400, msg: :invalid_header}
   end
 
-  def handle({:ok, response}) do
+  def handle_response({:ok, response}) do
     %{
       account_id: response.id,
       response_status: 201,
@@ -25,5 +28,5 @@ defmodule FinancialSystemWeb.API.Routes.Endpoints.Operations.SplitEndpoint do
     }
   end
 
-  def handle({:error, response}), do: %{response_status: 406, msg: response}
+  def handle_response(response), do: response
 end

@@ -3,7 +3,7 @@ defmodule FinancialSystem.ApiTest do
   import Mox
   setup :verify_on_exit!
 
-  alias FinancialSystemWeb.API.Router
+  alias FinancialSystem.Web.API.Router
 
   @opts Router.init([])
 

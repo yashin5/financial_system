@@ -6,7 +6,7 @@ defmodule FinancialSystem.Application do
   use Application
 
   alias FinancialSystem.Repo
-  alias FinancialSystemWeb.API.Router
+  alias FinancialSystem.Web.API.Router
 
   def start(_type, _args) do
     import Supervisor.Spec
