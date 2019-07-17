@@ -51,6 +51,23 @@ defmodule FinancialSystem.ApiTest do
       assert conn.state == :sent
       assert conn.status == 400
     end
+
+    test "when params are valid but the action cannot  be taken, should return 422" do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      params = %{name: "raissa", value: "100", currency: "bbrl"}
+
+      conn =
+        :post
+        |> conn("/accounts", Jason.encode!(params))
+        |> put_req_header("content-type", "application/json")
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 422
+    end
   end
 
   describe "POST /operations/withdraw" do
@@ -111,6 +128,19 @@ defmodule FinancialSystem.ApiTest do
       assert conn.state == :sent
       assert conn.status == 400
     end
+
+    test "when params are valid but the action cannot  be taken, should return 422" do
+      params = %{account_id: UUID.uuid4(), value: "100"}
+
+      conn =
+        :post
+        |> conn("/operations/withdraw", Jason.encode!(params))
+        |> put_req_header("content-type", "application/json")
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 422
+    end
   end
 
   describe "POST /operations/deposit" do
@@ -132,6 +162,19 @@ defmodule FinancialSystem.ApiTest do
 
       assert conn.state == :sent
       assert conn.status == 201
+    end
+
+    test "when params are valid but the action cannot  be taken, should return 422" do
+      params = %{account_id: UUID.uuid4(), currency: "brl", value: "100"}
+
+      conn =
+        :post
+        |> conn("/operations/deposit", Jason.encode!(params))
+        |> put_req_header("content-type", "application/json")
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 422
     end
 
     test "when params is not valid, should return 406" do
@@ -196,6 +239,27 @@ defmodule FinancialSystem.ApiTest do
       assert conn.status == 201
     end
 
+    test "when params are valid but the action cannot  be taken, should return 422" do
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} = FinancialSystem.create("raissa", "brl", "0")
+
+      {_, account2} = FinancialSystem.create("yashin", "brl", "100")
+
+      params = %{account_from: account.id, account_to: account2.id, value: "100"}
+
+      conn =
+        :post
+        |> conn("/operations/transfer", Jason.encode!(params))
+        |> put_req_header("content-type", "application/json")
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 422
+    end
+
     test "when params is not valid, should return 406" do
       expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
         {:ok, String.upcase(currency)}
@@ -258,6 +322,20 @@ defmodule FinancialSystem.ApiTest do
       assert conn.status == 201
     end
 
+    test "when params are valid but the action cannot  be taken, should return 422" do
+
+      params = UUID.uuid4()
+      #   assert response == true
+      conn =
+        :delete
+        |> conn("/accounts/" <> params)
+        |> put_req_header("content-type", "application/x-www-form-urlencoded")
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 422
+    end
+
     test "when params is not valid, should return 406" do
       conn =
         :delete
@@ -296,6 +374,32 @@ defmodule FinancialSystem.ApiTest do
 
       assert conn.state == :sent
       assert conn.status == 201
+    end
+
+    test "when params are valid but the action cannot  be taken, should return 422" do
+      expect(CurrencyMock, :currency_is_valid, 3, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} = FinancialSystem.create("Yashin Santos", "BRL", "100")
+      {_, account2} = FinancialSystem.create("Antonio Marcos", "BRL", "0")
+      {_, account3} = FinancialSystem.create("Mateus Mathias", "BRL", "100")
+
+      split_list = [
+        %{account: account.id, percent: 50},
+        %{account: account3.id, percent: 50}
+      ]
+
+      params = %{account_id_from: account2.id, split_list: split_list, value: "100"}
+
+      conn =
+        :post
+        |> conn("/operations/split", Jason.encode!(params))
+        |> put_req_header("content-type", "application/json")
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 422
     end
 
     test "when params is not valid, should return 406" do
@@ -370,6 +474,19 @@ defmodule FinancialSystem.ApiTest do
       assert conn.status == 200
     end
 
+    test "when params are valid but the action cannot  be taken, should return 422" do
+      params = UUID.uuid4()
+
+      conn =
+        :get
+        |> conn("/operations/financial_statement/" <> params)
+        |> put_req_header("content-type", "application/x-www-form-urlencoded")
+        |> Router.call(@opts)
+
+      assert conn.state == :sent
+      assert conn.status == 422
+    end
+
     test "when account does not exist, should return 404" do
       params = UUID.uuid4()
       #   assert response == true
@@ -380,7 +497,7 @@ defmodule FinancialSystem.ApiTest do
         |> Router.call(@opts)
 
       assert conn.state == :sent
-      assert conn.status == 406
+      assert conn.status == 422
     end
   end
 end
