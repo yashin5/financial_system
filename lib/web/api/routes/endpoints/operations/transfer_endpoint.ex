@@ -1,6 +1,11 @@
 defmodule FinancialSystem.Web.API.Routes.Endpoints.Operations.TransferEndpoint do
   alias FinancialSystem.Web.Api.Routes.Endpoints.ErrorResponses
 
+  @spec init(map) ::
+          %{response_status: 201, account_id: String.t(), new_balance: pos_integer()}
+          | %{msg: atom(), response_status: pos_integer()}
+
+
   def init(%{req_headers: [{"content-type", "application/json"}]} = param) do
     FinancialSystem.transfer(
       param.body_params["value"],
@@ -15,7 +20,7 @@ defmodule FinancialSystem.Web.API.Routes.Endpoints.Operations.TransferEndpoint d
     %{response_status: 400, msg: :invalid_header}
   end
 
-  def handle_response({:ok, response}) do
+  defp handle_response({:ok, response}) do
     %{
       account_id: response.id,
       response_status: 201,
@@ -23,5 +28,5 @@ defmodule FinancialSystem.Web.API.Routes.Endpoints.Operations.TransferEndpoint d
     }
   end
 
-  def handle_response(response), do: response
+  defp handle_response(response), do: response
 end

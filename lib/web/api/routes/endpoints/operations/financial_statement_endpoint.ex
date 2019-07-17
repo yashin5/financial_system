@@ -6,23 +6,18 @@ defmodule FinancialSystem.Web.API.Routes.Endpoints.Operations.FinancialStatement
           %{
             account_id: String.t(),
             response_status: 200,
-            transactions: Transaction.t()
+            transactions: list(Transaction.t())
           }
-          | %{response_status: 406, msg: String.t()}
+          | %{msg: atom(), response_status: pos_integer()}
+
+
   def init(id) do
     FinancialSystem.financial_statement(id)
     |> ErrorResponses.handle_error()
     |> handle_response(id)
   end
 
-  @spec handle_response({:ok, Transaction.t()}, String.t()) ::
-          %{
-            account_id: String.t(),
-            response_status: 200,
-            transactions: Transaction.t()
-          }
-          | %{response_status: 406, msg: String.t()}
-  def handle_response({:ok, response}, account_id) do
+  defp handle_response({:ok, response}, account_id) do
     %{
       account_id: account_id,
       response_status: 200,
@@ -30,5 +25,5 @@ defmodule FinancialSystem.Web.API.Routes.Endpoints.Operations.FinancialStatement
     }
   end
 
-  def handle_response(response, _), do: response
+  defp handle_response(response, _), do: response
 end

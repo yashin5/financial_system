@@ -1,4 +1,6 @@
 defmodule FinancialSystem.Web.Api.Routes.Endpoints.ErrorResponses do
+  @spec handle_error({:error, atom()}) ::
+          %{response_status: pos_integer, msg: atom()} | {:ok, any()}
   def handle_error({:error, :invalid_account_id_type}) do
     %{response_status: 406, msg: :invalid_account_id_type}
   end
