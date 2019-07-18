@@ -1,4 +1,8 @@
 defmodule FinancialSystem.Web.API.Router do
+  @moduledoc """
+  This module is responsable to create the match in paths and call the recurse methods.
+  """
+
   use Plug.Router
 
   alias FinancialSystem.Web.API.Routes.Endpoints.Accounts.{CreateEndpoint, DeleteEndpoint}

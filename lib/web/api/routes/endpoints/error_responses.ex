@@ -1,32 +1,36 @@
 defmodule FinancialSystem.Web.Api.Routes.Endpoints.ErrorResponses do
+  @moduledoc """
+  This module is responsable to handle the errors and make the correct response to each one
+  """
+
   @spec handle_error({:error, atom()}) ::
           %{response_status: pos_integer, msg: atom()} | {:ok, any()}
   def handle_error({:error, :invalid_account_id_type}) do
-    %{response_status: 406, msg: :invalid_account_id_type}
+    %{response_status: 400, msg: :invalid_account_id_type}
   end
 
   def handle_error({:error, :invalid_value_type}) do
-    %{response_status: 406, msg: :invalid_value_type}
+    %{response_status: 400, msg: :invalid_value_type}
   end
 
   def handle_error({:error, :invalid_currency_type}) do
-    %{response_status: 406, msg: :invalid_currency_type}
+    %{response_status: 400, msg: :invalid_currency_type}
   end
 
   def handle_error({:error, :invalid_arguments_type}) do
-    %{response_status: 406, msg: :invalid_arguments_type}
+    %{response_status: 400, msg: :invalid_arguments_type}
   end
 
   def handle_error({:error, :invalid_split_list_type}) do
-    %{response_status: 406, msg: :invalid_split_list_type}
+    %{response_status: 400, msg: :invalid_split_list_type}
   end
 
   def handle_error({:error, :invalid_value_less_than_0}) do
-    %{response_status: 406, msg: :invalid_value_less_than_0}
+    %{response_status: 400, msg: :invalid_value_less_than_0}
   end
 
   def handle_error({:error, :invalid_operation_type}) do
-    %{response_status: 406, msg: :invalid_operation_type}
+    %{response_status: 400, msg: :invalid_operation_type}
   end
 
   def handle_error({:error, :do_not_have_funds}) do
@@ -38,7 +42,7 @@ defmodule FinancialSystem.Web.Api.Routes.Endpoints.ErrorResponses do
   end
 
   def handle_error({:error, :invalid_type_to_compare}) do
-    %{response_status: 406, msg: :invalid_type_to_compare}
+    %{response_status: 400, msg: :invalid_type_to_compare}
   end
 
   def handle_error({:error, :invalid_total_percent}) do
@@ -51,6 +55,10 @@ defmodule FinancialSystem.Web.Api.Routes.Endpoints.ErrorResponses do
 
   def handle_error({:error, :currency_is_not_valid}) do
     %{response_status: 422, msg: :currency_is_not_valid}
+  end
+
+  def handle_error({:error, _}) do
+    %{response_status: 422, msg: :undefined_error}
   end
 
   def handle_error(response), do: response

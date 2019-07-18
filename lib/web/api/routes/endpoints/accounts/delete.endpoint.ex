@@ -1,4 +1,8 @@
 defmodule FinancialSystem.Web.API.Routes.Endpoints.Accounts.DeleteEndpoint do
+  @moduledoc """
+  This module is responsable to handle the response and call the delete function.
+  """
+
   alias FinancialSystem.Web.Api.Routes.Endpoints.ErrorResponses
 
   @spec init(String.t()) :: %{msg: atom(), response_status: pos_integer}

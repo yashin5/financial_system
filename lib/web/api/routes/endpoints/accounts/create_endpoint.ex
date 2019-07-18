@@ -1,4 +1,8 @@
 defmodule FinancialSystem.Web.API.Routes.Endpoints.Accounts.CreateEndpoint do
+  @moduledoc """
+  This module is responsable to handle the response and call the create function.
+  """
+
   alias FinancialSystem.Accounts.Account
 
   alias FinancialSystem.Web.Api.Routes.Endpoints.ErrorResponses
