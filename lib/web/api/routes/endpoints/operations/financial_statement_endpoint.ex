@@ -1,4 +1,8 @@
 defmodule FinancialSystem.Web.API.Routes.Endpoints.Operations.FinancialStatementEndpoint do
+  @moduledoc """
+  This module is responsable to handle the response and call the financial_statement function.
+  """
+
   alias FinancialSystem.Accounts.Transaction
   alias FinancialSystem.Web.Api.Routes.Endpoints.ErrorResponses
 

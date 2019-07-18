@@ -1,4 +1,8 @@
 defmodule FinancialSystem.Web.API.Routes.Endpoints.Operations.SplitEndpoint do
+  @moduledoc """
+  This module is responsable to handle the response and call the split function.
+  """
+
   alias FinancialSystem.Web.Api.Routes.Endpoints.ErrorResponses
 
   @spec init(map) ::

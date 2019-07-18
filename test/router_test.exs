@@ -26,7 +26,7 @@ defmodule FinancialSystem.ApiTest do
       assert conn.status == 201
     end
 
-    test "when params is not valid, should return 406" do
+    test "when params is not valid, should return 400" do
       params = %{name: "raissa", value: 100, currency: "brl"}
 
       conn =
@@ -36,7 +36,7 @@ defmodule FinancialSystem.ApiTest do
         |> Router.call(@opts)
 
       assert conn.state == :sent
-      assert conn.status == 406
+      assert conn.status == 400
     end
 
     test "when header is not valid, should return 400" do
@@ -91,7 +91,7 @@ defmodule FinancialSystem.ApiTest do
       assert conn.status == 201
     end
 
-    test "when params is not valid, should return 406" do
+    test "when params is not valid, should return 400" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -107,7 +107,7 @@ defmodule FinancialSystem.ApiTest do
         |> Router.call(@opts)
 
       assert conn.state == :sent
-      assert conn.status == 406
+      assert conn.status == 400
     end
 
     test "when header is not valid, should return 400" do
@@ -177,7 +177,7 @@ defmodule FinancialSystem.ApiTest do
       assert conn.status == 422
     end
 
-    test "when params is not valid, should return 406" do
+    test "when params is not valid, should return 400" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -193,7 +193,7 @@ defmodule FinancialSystem.ApiTest do
         |> Router.call(@opts)
 
       assert conn.state == :sent
-      assert conn.status == 406
+      assert conn.status == 400
     end
 
     test "when header is not valid, should return 400" do
@@ -260,7 +260,7 @@ defmodule FinancialSystem.ApiTest do
       assert conn.status == 422
     end
 
-    test "when params is not valid, should return 406" do
+    test "when params is not valid, should return 400" do
       expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -278,7 +278,7 @@ defmodule FinancialSystem.ApiTest do
         |> Router.call(@opts)
 
       assert conn.state == :sent
-      assert conn.status == 406
+      assert conn.status == 400
     end
 
     test "when header is not valid, should return 400" do
@@ -335,7 +335,7 @@ defmodule FinancialSystem.ApiTest do
       assert conn.status == 422
     end
 
-    test "when params is not valid, should return 406" do
+    test "when params is not valid, should return 400" do
       conn =
         :delete
         |> conn("/accounts/" <> "234")
@@ -343,7 +343,7 @@ defmodule FinancialSystem.ApiTest do
         |> Router.call(@opts)
 
       assert conn.state == :sent
-      assert conn.status == 406
+      assert conn.status == 400
     end
   end
 
@@ -401,7 +401,7 @@ defmodule FinancialSystem.ApiTest do
       assert conn.status == 422
     end
 
-    test "when params is not valid, should return 406" do
+    test "when params is not valid, should return 400" do
       expect(CurrencyMock, :currency_is_valid, 3, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -424,7 +424,7 @@ defmodule FinancialSystem.ApiTest do
         |> Router.call(@opts)
 
       assert conn.state == :sent
-      assert conn.status == 406
+      assert conn.status == 400
     end
 
     test "when header is not valid, should return 400" do

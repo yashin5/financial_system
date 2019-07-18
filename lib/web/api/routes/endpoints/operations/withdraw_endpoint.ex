@@ -1,4 +1,8 @@
 defmodule FinancialSystem.Web.API.Routes.Endpoints.Operations.WithdrawEndpoint do
+  @moduledoc """
+  This module is responsable to handle the response and call the withdraw function.
+  """
+
   alias FinancialSystem.Web.Api.Routes.Endpoints.ErrorResponses
 
   @spec init(map()) ::
