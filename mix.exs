@@ -3,10 +3,8 @@ defmodule FinancialSystem.MixProject do
 
   def project do
     [
-      app: :financial_system,
+      apps_path: "apps",
       version: "0.1.0",
-      elixir: "~> 1.8",
-      elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       test_coverage: [tool: ExCoveralls],
@@ -22,31 +20,17 @@ defmodule FinancialSystem.MixProject do
     ]
   end
 
-  defp elixirc_paths(:test), do: ["lib", "test/support", "test"]
-  defp elixirc_paths(_), do: ["lib"]
-
-  # Run "mix help compile.app" to learn about applications.
-  def application do
-    [
-      mod: {FinancialSystem.Application, []},
-      extra_applications: [:logger, :jason]
-    ]
-  end
-
-  # Run "mix help deps" to learn about dependencies.
+  # Dependencies listed here are available only for this
+  # project and cannot be accessed from applications inside
+  # the apps folder.
+  #
+  # Run "mix help deps" for examples and options.
   defp deps do
     [
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:jason, "~> 1.1"},
-      {:decimal, "~> 1.0"},
       {:excoveralls, "~> 0.10", only: :test},
-      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false},
-      {:uuid, "~> 1.1"},
-      {:mox, "~> 0.5.0", only: :test},
-      {:ecto, "~> 3.1"},
-      {:ecto_sql, "~> 3.1"},
-      {:postgrex, ">= 0.0.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:dialyxir, "~> 1.0.0-rc.6", only: [:dev], runtime: false}
     ]
   end
 end

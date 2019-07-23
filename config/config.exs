@@ -2,17 +2,17 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
-config :financial_system, file: "currency_rate.json"
+config :core, file: "/currency_rate.json"
 
-config :financial_system, :currency_finder, FinancialSystem.Currency.CurrencyImpl
+config :core, :currency_finder, FinancialSystem.Core.Currency.CurrencyImpl
 
-config :financial_system, FinancialSystem.Repo,
+config :core, FinancialSystem.Core.Repo,
   database: System.get_env("DB_NAME") || "account_repository_dev",
   username: System.get_env("DB_USER") || "ysantos",
   password: System.get_env("DB_PASSWORD") || "@dmin123",
   hostname: System.get_env("DB_HOST") || "localhost"
 
-config :financial_system, ecto_repos: [FinancialSystem.Repo]
+config :core, ecto_repos: [FinancialSystem.Core.Repo]
 
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
