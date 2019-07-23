@@ -22,12 +22,12 @@ defmodule FinHelperTest do
 
     test "Should be able to verify if the account have de funds necessary for the transaction inserting a integer value",
          %{account_id: account} do
-      assert {:ok, true} = FinancialSystem.Core.FinHelper.funds(account, 10)
+      assert {:ok, true} = FinHelper.funds(account, 10)
     end
 
     test "Should be able to verify if the account have de funds necessary for the transaction inserting a float value",
          %{account_id: account} do
-      assert {:ok, true} = FinancialSystem.Core.FinHelper.funds(account, 20.0)
+      assert {:ok, true} = FinHelper.funds(account, 20.0)
     end
 
     test "Not should be able to verify when inserting a string in value", %{account_id: account} do

@@ -41,3 +41,4 @@ defmodule Core.MixProject do
     ]
   end
 end
+# {:web, in_umbrella: true}

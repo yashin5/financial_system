@@ -7,9 +7,9 @@ defmodule FinancialSystem.Core.Currency.CurrencyImpl do
   alias FinancialSystem.Core.Currency.CurrencyBehaviour
 
   defp load_from_config do
-    priv_dir = :code.priv_dir(:core)
-
-    Path.join(priv_dir, get_currency_path())
+    :core
+    |> :code.priv_dir()
+    |> Path.join(get_currency_path())
     |> File.read()
     |> do_load_from_config()
   end

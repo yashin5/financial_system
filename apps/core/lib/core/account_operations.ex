@@ -98,6 +98,6 @@ defmodule FinancialSystem.Core.AccountOperations do
         order_by: [{^order, :inserted_at}]
       )
 
-    FinancialSystem.Core.Repo.all(query)
+    Repo.all(query)
   end
 end
