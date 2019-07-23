@@ -36,9 +36,7 @@ defmodule Core.MixProject do
       {:mox, "~> 0.5.0", only: :test},
       {:ecto, "~> 3.1"},
       {:ecto_sql, "~> 3.1"},
-      {:postgrex, ">= 0.0.0"},
-
+      {:postgrex, ">= 0.0.0"}
     ]
   end
 end
-# {:web, in_umbrella: true}
