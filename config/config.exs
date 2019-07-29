@@ -14,6 +14,19 @@ config :core, FinancialSystem.Core.Repo,
 
 config :core, ecto_repos: [FinancialSystem.Core.Repo]
 
+config :api, ApiWeb.Endpoint,
+  url: [host: "localhost"],
+  secret_key_base: "aPUV/iswxDaO5NRbuHdywNgWqz1cJM7GlovB1fc6QO6PQIS/nWYHZZ4w4WMQjs1k",
+  render_errors: [view: ApiWeb.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: Api.PubSub, adapter: Phoenix.PubSub.PG2]
+
+  # Configures Elixir's Logger
+config :logger, :console,
+format: "$time $metadata[$level] $message\n",
+metadata: [:request_id]
+
+# Use Jason for JSON parsing in Phoenix
+config :phoenix, :json_library, Jason
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
 # file won't be loaded nor affect the parent project. For this reason,
