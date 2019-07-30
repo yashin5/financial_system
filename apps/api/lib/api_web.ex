@@ -22,7 +22,6 @@ defmodule ApiWeb do
       use Phoenix.Controller, namespace: ApiWeb
 
       import Plug.Conn
-      import ApiWeb.Gettext
       alias ApiWeb.Router.Helpers, as: Routes
     end
   end
@@ -39,8 +38,6 @@ defmodule ApiWeb do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML
 
-      import ApiWeb.ErrorHelpers
-      import ApiWeb.Gettext
       alias ApiWeb.Router.Helpers, as: Routes
     end
   end
@@ -56,7 +53,6 @@ defmodule ApiWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import ApiWeb.Gettext
     end
   end
 
