@@ -5,6 +5,12 @@ defmodule ApiWeb.AccountsController do
     {_, response} =
       params["name"] |> FinancialSystem.Core.create(params["currency"], params["value"])
 
-    render(conn, "create.json", account: response)
+    render(conn, "create.json", create: response)
+  end
+
+  def delete(conn, params) do
+    {_, response} = FinancialSystem.Core.delete(params["id"])
+
+    render(conn, "delete.json", delete: response)
   end
 end
