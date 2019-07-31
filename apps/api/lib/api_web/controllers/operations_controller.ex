@@ -24,8 +24,8 @@ defmodule ApiWeb.OperationsController do
 
   def transfer(conn, %{
         "value" => value,
-        "account_id_from" => account_id_from,
-        "account_id_to" => account_id_to
+        "account_from" => account_id_from,
+        "account_to" => account_id_to
       }) do
     with {:ok, response} <- Core.transfer(value, account_id_from, account_id_to) do
       conn
