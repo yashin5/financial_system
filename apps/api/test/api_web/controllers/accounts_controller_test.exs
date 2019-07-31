@@ -1,5 +1,5 @@
 defmodule ApiWeb.AccountsControllerTest do
-  use ApiWeb.ConnCase
+  use ApiWeb.ConnCase, async: true
 
   import Mox
 
