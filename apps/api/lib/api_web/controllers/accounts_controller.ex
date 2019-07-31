@@ -1,16 +1,19 @@
 defmodule ApiWeb.AccountsController do
   use ApiWeb, :controller
 
-  def create(conn, params) do
-    {_, response} =
-      params["name"] |> FinancialSystem.Core.create(params["currency"], params["value"])
-
-    render(conn, "create.json", create: response)
+  def create(conn, %{"name" => name, "currency" => currency, "value" => value}) do
+    with {:ok, response} <- FinancialSystem.Core.create(name, currency, value) do
+      conn
+      |> put_status(:created)
+      |> render("create.json", create: response)
+    end
   end
 
-  def delete(conn, params) do
-    {_, response} = FinancialSystem.Core.delete(params["id"])
-
-    render(conn, "delete.json", delete: response)
+  def delete(conn, %{"id" => id}) do
+    with {:ok, response} <- FinancialSystem.Core.delete(id) do
+      conn
+      |> put_status(:created)
+      |> render("delete.json", delete: response)
+    end
   end
 end

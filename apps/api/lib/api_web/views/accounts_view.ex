@@ -3,15 +3,13 @@ defmodule ApiWeb.AccountsView do
 
   def render("create.json", %{create: response}) do
     %{
-      account: response,
-      response_status: 201
+      account: response
     }
   end
 
   def render("delete.json", %{delete: response}) do
     %{
-      msg: response,
-      response_status: 201
+      msg: response
     }
   end
 end

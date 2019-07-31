@@ -7,8 +7,7 @@ config :api, ApiWeb.Endpoint,
   check_origin: false,
   watchers: []
 
-
-  config :api, ApiWeb.Endpoint,
+config :api, ApiWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
