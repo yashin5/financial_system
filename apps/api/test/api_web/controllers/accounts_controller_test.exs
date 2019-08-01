@@ -8,7 +8,7 @@ defmodule ApiWeb.AccountsControllerTest do
   setup :verify_on_exit!
 
   describe "POST /api/accounts" do
-    test "POST /", %{conn: conn} do
+    test "when params are valid, should return 200" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -16,7 +16,7 @@ defmodule ApiWeb.AccountsControllerTest do
       params = %{name: "Yashin", currency: "brl", value: "100"}
 
       response =
-        conn
+        build_conn()
         |> put_req_header("content-type", "application/json")
         |> post("/api/accounts", params)
         |> json_response(201)
@@ -32,10 +32,24 @@ defmodule ApiWeb.AccountsControllerTest do
 
       assert response == expected
     end
+
+    test "when params is not valid, should return 400" do
+      params = %{name: "Yashin", currency: "brl", value: 100}
+
+      response =
+        build_conn()
+        |> put_req_header("content-type", "application/json")
+        |> post("/api/accounts", params)
+        |> json_response(400)
+
+      expected = %{"error" => "invalid_value_type"}
+
+      assert response == expected
+    end
   end
 
   describe "DELETE /api/accounts/:id" do
-    test "DELETE /", %{conn: conn} do
+    test "when params are valid, should return 200" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -43,11 +57,40 @@ defmodule ApiWeb.AccountsControllerTest do
       {_, account} = Core.create("Yashin", "brl", "100")
 
       response =
-        conn
+        build_conn()
+        |> put_req_header("content-type", "application/x-www-form-urlencoded")
         |> delete("/api/accounts/" <> account.id)
         |> json_response(201)
 
       expected = %{"msg" => "account_deleted"}
+
+      assert response == expected
+    end
+
+    test "when params is not valid, should return 400" do
+      params = "234"
+
+      response =
+        build_conn()
+        |> put_req_header("content-type", "application/x-www-form-urlencoded")
+        |> delete("/api/accounts/" <> params)
+        |> json_response(400)
+
+      expected = %{"error" => "invalid_account_id_type"}
+
+      assert response == expected
+    end
+
+    test "when params are valid but the action cannot  be taken, should return 422" do
+      params = UUID.uuid4()
+
+      response =
+        build_conn()
+        |> put_req_header("content-type", "application/x-www-form-urlencoded")
+        |> delete("/api/accounts/" <> params)
+        |> json_response(422)
+
+      expected = %{"error" => "account_dont_exist"}
 
       assert response == expected
     end
