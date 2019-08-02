@@ -1,7 +1,11 @@
 use Mix.Config
 
-config :financial_system, :currency_finder, CurrencyMock
+config :core, :currency_finder, CurrencyMock
+
+config :api, ApiWeb.Endpoint,
+  http: [port: 4002],
+  server: false
 
 config :logger, level: :info
 
-config :financial_system, FinancialSystem.Repo, pool: Ecto.Adapters.SQL.Sandbox
+config :core, FinancialSystem.Core.Repo, pool: Ecto.Adapters.SQL.Sandbox

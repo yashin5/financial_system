@@ -2,18 +2,31 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
-config :financial_system, file: "currency_rate.json"
+config :core, file: "/currency_rate.json"
 
-config :financial_system, :currency_finder, FinancialSystem.Currency.CurrencyImpl
+config :core, :currency_finder, FinancialSystem.Core.Currency.CurrencyImpl
 
-config :financial_system, FinancialSystem.Repo,
+config :core, FinancialSystem.Core.Repo,
   database: System.get_env("DB_NAME") || "account_repository_dev",
   username: System.get_env("DB_USER") || "ysantos",
   password: System.get_env("DB_PASSWORD") || "@dmin123",
   hostname: System.get_env("DB_HOST") || "localhost"
 
-config :financial_system, ecto_repos: [FinancialSystem.Repo]
+config :core, ecto_repos: [FinancialSystem.Core.Repo]
 
+config :api, ApiWeb.Endpoint,
+  url: [host: "localhost"],
+  secret_key_base: "aPUV/iswxDaO5NRbuHdywNgWqz1cJM7GlovB1fc6QO6PQIS/nWYHZZ4w4WMQjs1k",
+  render_errors: [view: ApiWeb.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: Api.PubSub, adapter: Phoenix.PubSub.PG2]
+
+# Configures Elixir's Logger
+config :logger, :console,
+  format: "$time $metadata[$level] $message\n",
+  metadata: [:request_id]
+
+# Use Jason for JSON parsing in Phoenix
+config :phoenix, :json_library, Jason
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
 # file won't be loaded nor affect the parent project. For this reason,
