@@ -3,6 +3,7 @@ defmodule ApiWeb.OperationsController do
 
   alias FinancialSystem.Core
   alias FinancialSystem.Core.Split
+  @moduledoc false
 
   action_fallback(ApiWeb.FallbackController)
 

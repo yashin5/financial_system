@@ -1,7 +1,6 @@
 defmodule ApiWeb.FallbackController do
-  @moduledoc """
-  Handler the error responses
-  """
+  @moduledoc false
+
 
   use ApiWeb, :controller
 
@@ -33,25 +32,11 @@ defmodule ApiWeb.FallbackController do
     |> render("error.json", %{error: :invalid_arguments_type})
   end
 
-  def call(conn, {:error, :invalid_split_list_type}) do
-    conn
-    |> put_status(:bad_request)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :invalid_split_list_type})
-  end
-
   def call(conn, {:error, :invalid_value_less_than_0}) do
     conn
     |> put_status(:bad_request)
     |> put_view(ApiWeb.ErrorView)
     |> render("error.json", %{error: :invalid_value_less_than_0})
-  end
-
-  def call(conn, {:error, :invalid_operation_type}) do
-    conn
-    |> put_status(:bad_request)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :invalid_operation_type})
   end
 
   def call(conn, {:error, :do_not_have_funds}) do

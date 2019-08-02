@@ -294,7 +294,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       response =
         build_conn()
-        |> put_req_header("content-type", "application/x-www-form-urlencoded")
+        |> put_req_header("content-type", "application/json")
         |> get("/api/operations/financial_statement/" <> account.id)
         |> json_response(201)
 

@@ -23,6 +23,8 @@ defmodule ApiWeb.ConnCase do
       alias ApiWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
+      @moduletag :capture_log
+
       @endpoint ApiWeb.Endpoint
     end
   end

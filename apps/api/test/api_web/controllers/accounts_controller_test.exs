@@ -8,7 +8,7 @@ defmodule ApiWeb.AccountsControllerTest do
   setup :verify_on_exit!
 
   describe "POST /api/accounts" do
-    test "when params are valid, should return 200" do
+    test "when params are valid, should return 201" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -58,7 +58,7 @@ defmodule ApiWeb.AccountsControllerTest do
 
       response =
         build_conn()
-        |> put_req_header("content-type", "application/x-www-form-urlencoded")
+        |> put_req_header("content-type", "application/json")
         |> delete("/api/accounts/" <> account.id)
         |> json_response(201)
 
@@ -72,7 +72,7 @@ defmodule ApiWeb.AccountsControllerTest do
 
       response =
         build_conn()
-        |> put_req_header("content-type", "application/x-www-form-urlencoded")
+        |> put_req_header("content-type", "application/json")
         |> delete("/api/accounts/" <> params)
         |> json_response(400)
 
@@ -86,7 +86,7 @@ defmodule ApiWeb.AccountsControllerTest do
 
       response =
         build_conn()
-        |> put_req_header("content-type", "application/x-www-form-urlencoded")
+        |> put_req_header("content-type", "application/json")
         |> delete("/api/accounts/" <> params)
         |> json_response(422)
 

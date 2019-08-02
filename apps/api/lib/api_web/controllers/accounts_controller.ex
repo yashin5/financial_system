@@ -1,4 +1,6 @@
 defmodule ApiWeb.AccountsController do
+  @moduledoc false
+
   use ApiWeb, :controller
 
   action_fallback(ApiWeb.FallbackController)
@@ -10,7 +12,6 @@ defmodule ApiWeb.AccountsController do
       }) do
     with {:ok, response} <- FinancialSystem.Core.create(name, currency, value) do
       conn
-      |> IO.inspect()
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
       |> render("create.json", create: response)
