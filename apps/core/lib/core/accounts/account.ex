@@ -5,6 +5,7 @@ defmodule FinancialSystem.Core.Accounts.Account do
   use Ecto.Schema
 
   alias FinancialSystem.Core.Accounts.Transaction
+  alias FinancialSystem.Core.Users.User
 
   @type t :: %__MODULE__{
           id: String.t(),
@@ -22,6 +23,8 @@ defmodule FinancialSystem.Core.Accounts.Account do
     field(:name, :string)
     field(:currency, :string)
     field(:value, :integer)
+
+    belongs_to(:user, User)
     has_many(:transactions, Transaction, foreign_key: :account_id)
 
     timestamps()

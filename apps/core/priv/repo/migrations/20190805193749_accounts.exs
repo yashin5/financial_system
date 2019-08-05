@@ -10,6 +10,8 @@ defmodule FinancialSystem.Repo.Migrations.Accounts do
       add(:currency, :string)
       add(:value, :integer)
 
+      add(:user_id, references(:users, type: :uuid), null: false)
+
       timestamps()
     end
   end
