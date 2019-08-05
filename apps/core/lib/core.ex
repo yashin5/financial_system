@@ -10,7 +10,7 @@ defmodule FinancialSystem.Core do
   @behaviour FinancialSystem.Core.Financial
 
   @impl Account
-  defdelegate create(name, currency, value), to: Account
+  defdelegate create(name, currency, value, email, password), to: Account
 
   @impl Account
   defdelegate delete(account_id), to: Account

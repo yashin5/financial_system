@@ -1,7 +1,7 @@
 defmodule FinancialSystem.Core.Accounts.AccountRepository do
   @moduledoc false
 
-  alias FinancialSystem.Core.{Accounts.Account, Repo}
+  alias FinancialSystem.Core.{Accounts.Account, Repo, Users.User}
 
   @doc """
     Register the account in system.
@@ -11,8 +11,10 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
 
     FinancialSystem.Core.AccountRepository.register_account(account_struct)
   """
-  def register_account(%Account{} = account) do
-    account
+  def register_account(%Account{} = account, %User{} = user) do
+    query = Ecto.build_assoc(user, :account, account)
+
+    query
     |> Account.changeset()
     |> Repo.insert()
     |> do_register_account()

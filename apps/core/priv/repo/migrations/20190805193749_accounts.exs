@@ -6,7 +6,6 @@ defmodule FinancialSystem.Repo.Migrations.Accounts do
       add(:id, :uuid, primary_key: true)
       add(:active, :boolean)
       add(:account_id, :uuid)
-      add(:name, :string)
       add(:currency, :string)
       add(:value, :integer)
 
