@@ -42,17 +42,17 @@ defmodule FinancialSystem.Core.Account do
     end
   end
 
-  def create(name, currency, value)
+  def create(name, currency, value, _email, _password)
       when not is_binary(name) and is_binary(currency) and is_binary(value) do
     {:error, :invalid_name}
   end
 
-  def create(name, currency, value)
+  def create(name, currency, value, _email, _password)
       when is_binary(name) and not is_binary(currency) and is_binary(value) do
     {:error, :invalid_currency_type}
   end
 
-  def create(name, currency, value)
+  def create(name, currency, value, _email, _password)
       when is_binary(name) and is_binary(currency) and not is_binary(value) do
     {:error, :invalid_value_type}
   end

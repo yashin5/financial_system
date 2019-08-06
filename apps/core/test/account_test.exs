@@ -13,24 +13,25 @@ defmodule FinancialSystem.CoreTest do
     setup do
       account_struct = %FinancialSystem.Core.Accounts.Account{
         id: "abc",
-        name: "Oliver Tsubasa",
         currency: "BRL",
         value: 100
       }
 
       account_struct2 = %FinancialSystem.Core.Accounts.Account{
         id: "abd",
-        name: "Yashin Santos",
         currency: "BRL",
         value: 10
       }
 
       account_struct3 = %FinancialSystem.Core.Accounts.Account{
         id: "adb",
-        name: "Inu Yasha",
         currency: "BRL",
         value: 0
       }
+
+      on_exit(fn ->
+        nil
+      end)
 
       {:ok,
        [
@@ -47,12 +48,13 @@ defmodule FinancialSystem.CoreTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "0.10")
+      {_, account} =
+        FinancialSystem.Core.create("Yashin Santos", "BRL", "0.10", "test@gmail.com", "f1aA678@")
+
       {_, account_data} = AccountRepository.find_account(account.id)
 
       account_simulate = %FinancialSystem.Core.Accounts.Account{
         id: "abd",
-        name: account_data.name,
         currency: account_data.currency,
         value: account_data.value
       }
@@ -67,12 +69,13 @@ defmodule FinancialSystem.CoreTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Oliver Tsubasa", "brl", "1")
+      {_, account} =
+        FinancialSystem.Core.create("Oliver Tsubasa", "brl", "1", "test@gmail.com", "f1aA678@")
+
       {_, account_data} = AccountRepository.find_account(account.id)
 
       account_simulate = %FinancialSystem.Core.Accounts.Account{
         id: "abc",
-        name: account_data.name,
         currency: account_data.currency,
         value: account_data.value
       }
@@ -87,13 +90,13 @@ defmodule FinancialSystem.CoreTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Inu Yasha", "brl", "0")
+      {_, account} =
+        FinancialSystem.Core.create("Inu Yasha", "brl", "0", "test@gmail.com", "f1aA678@")
 
       {_, account_data} = AccountRepository.find_account(account.id)
 
       account_simulate = %FinancialSystem.Core.Accounts.Account{
         id: "adb",
-        name: account_data.name,
         currency: account_data.currency,
         value: account_data.value
       }
@@ -102,7 +105,8 @@ defmodule FinancialSystem.CoreTest do
     end
 
     test "Not should be able to create a account with a name is not a string" do
-      {:error, message} = FinancialSystem.Core.create(1, "brll", "0")
+      {:error, message} =
+        FinancialSystem.Core.create(1, "brll", "0", "test@gmail.com", "f1aA678@")
 
       assert ^message = :invalid_name
     end
@@ -112,25 +116,28 @@ defmodule FinancialSystem.CoreTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {:error, message} = FinancialSystem.Core.create("Oliver Tsubasa", "brl", "-1")
+      {:error, message} =
+        FinancialSystem.Core.create("Oliver Tsubasa", "brl", "-1", "test@gmail.com", "f1aA678@")
 
       assert ^message = :invalid_value_less_than_0
     end
 
     test "Not should be able to create a account with a value in integer format" do
-      {:error, message} = FinancialSystem.Core.create("Oliver Tsubasa", "brl", 10)
+      {:error, message} =
+        FinancialSystem.Core.create("Oliver Tsubasa", "brl", 10, "test@gmail.com", "f1aA678@")
 
       assert ^message = :invalid_value_type
     end
 
     test "Not should be able to create a account without a name" do
-      {:error, message} = FinancialSystem.Core.create("", "BRL", 10)
+      {:error, message} = FinancialSystem.Core.create("", "BRL", 10, "test@gmail.com", "f1aA678@")
 
       assert ^message = :invalid_value_type
     end
 
     test "Not should be able to create a account with a value in float format" do
-      {:error, message} = FinancialSystem.Core.create("Oliver Tsubasa", "brl", 10.0)
+      {:error, message} =
+        FinancialSystem.Core.create("Oliver Tsubasa", "brl", 10.0, "test@gmail.com", "f1aA678@")
 
       assert ^message = :invalid_value_type
     end
@@ -140,7 +147,8 @@ defmodule FinancialSystem.CoreTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {:error, message} = FinancialSystem.Core.create("Oliver Tsubasa", "brll", "0")
+      {:error, message} =
+        FinancialSystem.Core.create("Oliver Tsubasa", "brll", "0", "test@gmail.com", "f1aA678@")
 
       assert ^message = :currency_is_not_valid
     end
@@ -152,7 +160,8 @@ defmodule FinancialSystem.CoreTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Oliver Tsubasa", "brl", "1")
+      {_, account} =
+        FinancialSystem.Core.create("Oliver Tsubasa", "brl", "1", "test@gmail.com", "f1aA678@")
 
       {:ok, message} = FinancialSystem.Core.delete(account.id)
 

@@ -13,7 +13,6 @@ defmodule AccountOperationsTest do
     test "Should be able to registry a account into system" do
       {:ok, account} =
         %FinancialSystem.Core.Accounts.Account{
-          name: "Yashin Santos",
           currency: "BRL",
           value: 100,
           id: UUID.uuid4()
@@ -38,7 +37,8 @@ defmodule AccountOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "1")
+      {_, account} =
+        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
 
       {:ok, message} = AccountRepository.delete_account(account)
 
@@ -58,7 +58,8 @@ defmodule AccountOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "1")
+      {_, account} =
+        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
 
       AccountOperations.subtract_value_in_balance(account, 1, "withdraw")
 
@@ -75,7 +76,8 @@ defmodule AccountOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "1")
+      {_, account} =
+        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
 
       AccountOperations.sum_value_in_balance(account, 1, "deposit")
 

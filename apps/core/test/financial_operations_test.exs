@@ -13,7 +13,9 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "1")
+      {_, account} =
+        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
+
       {_, account_value} = FinancialSystem.Core.show(account.id)
 
       assert account_value == "1.00"
@@ -32,7 +34,8 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "1")
+      {_, account} =
+        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
 
       on_exit(fn ->
         nil
@@ -102,7 +105,8 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "1")
+      {_, account} =
+        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
 
       on_exit(fn ->
         nil
@@ -157,8 +161,11 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "1")
-      {_, account2} = FinancialSystem.Core.create("Oliver Tsubasa", "BRL", "2")
+      {_, account} =
+        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
+
+      {_, account2} =
+        FinancialSystem.Core.create("Oliver Tsubasa", "BRL", "2", "test@outlook.com", "f1aA678@")
 
       on_exit(fn ->
         nil
@@ -235,9 +242,14 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "1")
-      {_, account2} = FinancialSystem.Core.create("Oliver Tsubasa", "BRL", "2")
-      {_, account3} = FinancialSystem.Core.create("Inu Yasha", "BRL", "5")
+      {_, account} =
+        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@outlook.com", "f1aA678@")
+
+      {_, account2} =
+        FinancialSystem.Core.create("Oliver Tsubasa", "BRL", "2", "test@gmail.com", "f1aA678@")
+
+      {_, account3} =
+        FinancialSystem.Core.create("Inu Yasha", "BRL", "5", "test@yahoo.com", "f1aA678@")
 
       list_to = [
         %FinancialSystem.Core.Split{account: account.id, percent: 20},
@@ -330,7 +342,8 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "1")
+      {_, account} =
+        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
 
       FinancialSystem.Core.deposit(account.id, "brl", "1")
 
