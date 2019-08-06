@@ -14,7 +14,7 @@ defmodule FinancialOperationsTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmaxxil.com", "f1aA678@")
 
       {_, account_value} = FinancialSystem.Core.show(account.id)
 
@@ -35,7 +35,7 @@ defmodule FinancialOperationsTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmqweail.com", "f1aA678@")
 
       on_exit(fn ->
         nil
@@ -106,7 +106,7 @@ defmodule FinancialOperationsTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmssail.com", "f1aA678@")
 
       on_exit(fn ->
         nil
@@ -162,10 +162,16 @@ defmodule FinancialOperationsTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmaddil.com", "f1aA678@")
 
       {_, account2} =
-        FinancialSystem.Core.create("Oliver Tsubasa", "BRL", "2", "test@outlook.com", "f1aA678@")
+        FinancialSystem.Core.create(
+          "Oliver Tsubasa",
+          "BRL",
+          "2",
+          "test@oufftlook.com",
+          "f1aA678@"
+        )
 
       on_exit(fn ->
         nil
@@ -243,13 +249,13 @@ defmodule FinancialOperationsTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@outlook.com", "f1aA678@")
+        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@outlqqook.com", "f1aA678@")
 
       {_, account2} =
-        FinancialSystem.Core.create("Oliver Tsubasa", "BRL", "2", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create("Oliver Tsubasa", "BRL", "2", "test@wwgmail.com", "f1aA678@")
 
       {_, account3} =
-        FinancialSystem.Core.create("Inu Yasha", "BRL", "5", "test@yahoo.com", "f1aA678@")
+        FinancialSystem.Core.create("Inu Yasha", "BRL", "5", "test@yaheeoo.com", "f1aA678@")
 
       list_to = [
         %FinancialSystem.Core.Split{account: account.id, percent: 20},
@@ -343,7 +349,7 @@ defmodule FinancialOperationsTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@asd.com", "f1aA678@")
 
       FinancialSystem.Core.deposit(account.id, "brl", "1")
 

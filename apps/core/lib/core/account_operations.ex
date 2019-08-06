@@ -49,11 +49,9 @@ defmodule FinancialSystem.Core.AccountOperations do
   end
 
   defp make_operation(value, account) do
-    Repo.transaction(fn ->
-      account
-      |> Account.changeset(%{value: value})
-      |> Repo.update()
-    end)
+    account
+    |> Account.changeset(%{value: value})
+    |> Repo.update()
 
     {_, account_actual_state} = AccountRepository.find_account(account.id)
 

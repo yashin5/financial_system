@@ -1,5 +1,5 @@
 defmodule FinHelperTest do
-  use FinancialSystem.Core.DataCase, async: false
+  use FinancialSystem.Core.DataCase, async: true
 
   import Mox
 
