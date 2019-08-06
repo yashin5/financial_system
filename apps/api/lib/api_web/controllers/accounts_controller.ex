@@ -8,9 +8,11 @@ defmodule ApiWeb.AccountsController do
   def create(conn, %{
         "name" => name,
         "currency" => currency,
-        "value" => value
+        "value" => value,
+        "email" => email,
+        "password" => password
       }) do
-    with {:ok, response} <- FinancialSystem.Core.create(name, currency, value) do
+    with {:ok, response} <- FinancialSystem.Core.create(name, currency, value, email, password) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")

@@ -13,7 +13,13 @@ defmodule ApiWeb.AccountsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      params = %{name: "Yashin", currency: "brl", value: "100"}
+      params = %{
+        name: "Yashin",
+        currency: "brl",
+        value: "100",
+        email: "yashin@gmail.com",
+        password: "fp3@naDSsjh2"
+      }
 
       response =
         build_conn()
@@ -25,7 +31,6 @@ defmodule ApiWeb.AccountsControllerTest do
         "account" => %{
           "currency" => "BRL",
           "id" => response["account"]["id"],
-          "name" => "Yashin",
           "value" => 10000
         }
       }
@@ -34,7 +39,13 @@ defmodule ApiWeb.AccountsControllerTest do
     end
 
     test "when params is not valid, should return 400" do
-      params = %{name: "Yashin", currency: "brl", value: 100}
+      params = %{
+        name: "Yashin",
+        currency: "brl",
+        value: 100,
+        email: "yashin@gmail.com",
+        password: "Fp3@nasjh2"
+      }
 
       response =
         build_conn()
@@ -54,7 +65,7 @@ defmodule ApiWeb.AccountsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = Core.create("Yashin", "brl", "100")
+      {_, account} = Core.create("Yashin", "brl", "100", "yashin@gmail.com", "fp3@naDSsjh2")
 
       response =
         build_conn()
