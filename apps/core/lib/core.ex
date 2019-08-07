@@ -3,11 +3,13 @@ defmodule FinancialSystem.Core do
   This module is responsable to implement the financial operations.
   """
 
-  alias FinancialSystem.Core.{Account, Financial, FinancialOperations}
+  alias FinancialSystem.Core.{Account, Financial, FinancialOperations, Users.UserRepository}
 
   @behaviour FinancialSystem.Core.Account
 
   @behaviour FinancialSystem.Core.Financial
+
+  defdelegate login(email, password), to: UserRepository, as: :authenticate
 
   @impl Account
   defdelegate create(name, currency, value, email, password), to: Account

@@ -49,7 +49,7 @@ defmodule FinancialSystem.Core.Users.User do
   end
 
   def put_hash(%{valid?: true, changes: %{password: pass}} = changeset) do
-    change(changeset, %{password_hash: pass, password: nil})
+    change(changeset, %{password_hash: Argon2.hash_pwd_salt(pass), password: nil})
   end
 
   def put_hash(changeset), do: changeset
