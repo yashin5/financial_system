@@ -18,6 +18,7 @@ defmodule FinancialSystem.Core.Users.UserRepository do
     %{name: name, email: email, password: password}
   end
 
+  @callback authenticate(String.t(), String.t()) :: boolean()
   def authenticate(email, password) do
     with {_, user} <- get_user(email) do
       Argon2.verify_pass(password, user.password_hash)

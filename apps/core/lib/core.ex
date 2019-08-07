@@ -9,7 +9,10 @@ defmodule FinancialSystem.Core do
 
   @behaviour FinancialSystem.Core.Financial
 
-  defdelegate login(email, password), to: UserRepository, as: :authenticate
+  @behaviour FinancialSystem.Core.Users.UserRepository
+
+  @impl UserRepository
+  defdelegate authenticate(email, password), to: UserRepository, as: :authenticate
 
   @impl Account
   defdelegate create(name, currency, value, email, password), to: Account
