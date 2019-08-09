@@ -4,6 +4,7 @@ defmodule FinancialSystem.Core.Users.User do
   import Ecto.Changeset
 
   alias FinancialSystem.Core.Accounts.Account
+  alias FinancialSystem.Core.Tokens.Token
 
   @email_regex ~r/@/
   @password_regex ~r/^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/
@@ -15,7 +16,10 @@ defmodule FinancialSystem.Core.Users.User do
     field(:name, :string)
     field(:password, :string, virtual: true)
     field(:password_hash, :string)
+
     has_one(:account, Account)
+    has_many(:tokens, Token)
+
 
     timestamps()
   end
