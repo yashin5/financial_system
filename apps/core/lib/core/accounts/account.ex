@@ -4,6 +4,8 @@ defmodule FinancialSystem.Core.Accounts.Account do
   """
   use Ecto.Schema
 
+  import Ecto.Changeset
+
   alias FinancialSystem.Core.Accounts.Transaction
   alias FinancialSystem.Core.Users.User
 
@@ -30,8 +32,8 @@ defmodule FinancialSystem.Core.Accounts.Account do
 
   def changeset(accounts, params \\ %{}) do
     accounts
-    |> Ecto.Changeset.cast(params, [:active, :currency, :value, :id])
-    |> Ecto.Changeset.validate_required([:currency, :value])
-    |> Ecto.Changeset.unique_constraint(:id)
+    |> cast(params, [:active, :currency, :value, :id])
+    |> validate_required([:currency, :value])
+    |> unique_constraint(:id)
   end
 end

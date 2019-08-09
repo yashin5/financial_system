@@ -4,6 +4,9 @@ defmodule FinancialSystem.Core.Tokens.Token do
   """
   use Ecto.Schema
 
+  import Ecto.Changeset
+
+
   alias FinancialSystem.Core.Users.User
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -18,7 +21,7 @@ defmodule FinancialSystem.Core.Tokens.Token do
 
   def changeset(accounts, params \\ %{}) do
     accounts
-    |> Ecto.Changeset.cast(params, [:token, :user_id])
-    |> Ecto.Changeset.unique_constraint(:id)
+    |> cast(params, [:token, :user_id])
+    |> unique_constraint(:id)
   end
 end
