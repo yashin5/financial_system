@@ -16,19 +16,19 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
   end
 
   defp new_token do
+    length = 2000
+
     token =
-       %{token: :crypto.strong_rand_bytes(64)
+       %{token: :crypto.strong_rand_bytes(length)
       |> Base.encode64
-      |> binary_part(0, 64)}
+      |> binary_part(0, length)}
 
     {:ok, token}
   end
 
-  # def get_tokens() do
-  #  query = from(u in "tokens",
-  #   where: u.account_id == type(^id, :binary_id),
-  #   select: [:operation, :value, :inserted_at],
-  #   order_by: [{^order, :inserted_at}]
-  # )
-  # end
+  def get_tokens(id) do
+    Token
+    |> Repo.all(user_id: id)
+
+  end
 end

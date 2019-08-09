@@ -25,9 +25,9 @@ defmodule FinancialSystem.Core.Users.UserRepository do
     end
   end
 
-  def get_user(email) do
+  def get_user(id) do
     User
-    |> Repo.get_by(email: email)
+    |> Repo.get(id)
     |> do_get_user()
   rescue
     Ecto.Query.CastError -> {:error, :invalid_email_type}
