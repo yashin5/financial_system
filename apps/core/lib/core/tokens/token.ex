@@ -6,7 +6,6 @@ defmodule FinancialSystem.Core.Tokens.Token do
 
   import Ecto.Changeset
 
-
   alias FinancialSystem.Core.Users.User
 
   @primary_key {:id, :binary_id, autogenerate: true}
@@ -19,9 +18,17 @@ defmodule FinancialSystem.Core.Tokens.Token do
     timestamps()
   end
 
-  def changeset(accounts, params \\ %{}) do
+  def changeset_insert(accounts, params \\ %{}) do
     accounts
     |> cast(params, [:token, :user_id])
+    |> validate_required([:token, :user_id])
+    |> unique_constraint(:id)
+  end
+
+  def changeset_update(accounts, params \\ %{}) do
+    accounts
+    |> cast(params, [:updated_at])
+    |> validate_required([:updated_at])
     |> unique_constraint(:id)
   end
 end

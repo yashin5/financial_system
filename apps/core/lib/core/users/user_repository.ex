@@ -1,6 +1,7 @@
 defmodule FinancialSystem.Core.Users.UserRepository do
-  alias FinancialSystem.Core.Users.User
   alias FinancialSystem.Core.Repo
+  alias FinancialSystem.Core.Tokens.TokenRepository
+  alias FinancialSystem.Core.Users.User
 
   def new_user(name, email, password) do
     name
@@ -20,9 +21,22 @@ defmodule FinancialSystem.Core.Users.UserRepository do
 
   @callback authenticate(String.t(), String.t()) :: boolean()
   def authenticate(email, password) do
-    with {_, user} <- get_user(email) do
+    with {:ok, user} <- get_user(:auth, email) do
       Argon2.verify_pass(password, user.password_hash)
+      |> do_authenticate(user.id)
     end
+  end
+
+  defp do_authenticate(true, user_id), do: TokenRepository.generate_token(user_id)
+
+  defp do_authenticate(_, _), do: {:error, :invalid_email_or_password}
+
+  defp get_user(:auth, email) do
+    User
+    |> Repo.get_by(email: email)
+    |> do_get_user()
+  rescue
+    Ecto.Query.CastError -> {:error, :invalid_email_type}
   end
 
   def get_user(id) do
@@ -30,7 +44,7 @@ defmodule FinancialSystem.Core.Users.UserRepository do
     |> Repo.get(id)
     |> do_get_user()
   rescue
-    Ecto.Query.CastError -> {:error, :invalid_email_type}
+    Ecto.Query.CastError -> {:error, :invalid_id_type}
   end
 
   defp do_get_user(nil), do: {:error, :user_dont_exist}
