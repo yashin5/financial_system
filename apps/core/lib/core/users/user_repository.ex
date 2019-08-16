@@ -31,7 +31,7 @@ defmodule FinancialSystem.Core.Users.UserRepository do
 
   defp do_authenticate(_, _), do: {:error, :invalid_email_or_password}
 
-  defp get_user(:auth, email) do
+  def get_user(:auth, email) do
     User
     |> Repo.get_by(email: email)
     |> do_get_user()

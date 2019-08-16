@@ -11,7 +11,7 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = Core.create("Yashin", "brl", "100", "yashin@gmail.com", "fp3@naDSsjh2")
+      {_, account} = Core.create("Yashin", "brl", "100", "asd@gmail.com", "fp3@naDSsjh2")
 
       params = %{account_id: account.id, value: "100"}
 
@@ -34,7 +34,7 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = Core.create("raissa", "brl", "100", "yashin@gmail.com", "fp3@naDSsjh2")
+      {_, account} = Core.create("raissa", "brl", "100", "asdf@gmail.com", "fp3@naDSsjh2")
 
       params = %{account_id: account.id, value: 100}
 
@@ -70,7 +70,7 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = Core.create("Yashin", "brl", "100", "yashin@gmail.com", "fp3@naDSsjh2")
+      {_, account} = Core.create("Yashin", "brl", "100", "asdfg@gmail.com", "fp3@naDSsjh2")
 
       params = %{account_id: account.id, currency: "brl", value: "100"}
 
@@ -107,7 +107,7 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = Core.create("raissa", "brl", "100", "yashin@gmail.com", "fp3@naDSsjh2")
+      {_, account} = Core.create("raissa", "brl", "100", "asdfgh@gmail.com", "fp3@naDSsjh2")
 
       params = %{account_id: account.id, currency: "brl", value: 100}
 
@@ -129,7 +129,7 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = Core.create("raissa", "brl", "100", "yashin@gmail.com", "fp3@naDSsjh2")
+      {_, account} = Core.create("raissa", "brl", "100", "asdfghh@gmail.com", "fp3@naDSsjh2")
 
       {_, account2} = Core.create("yashin", "brl", "100", "yashin@outlook.com", "fp3@naDSsjh2")
 
@@ -154,9 +154,9 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = Core.create("raissa", "brl", "0", "yashin@gmail.com", "fp3@naDSsjh2")
+      {_, account} = Core.create("raissa", "brl", "0", "aaaa@gmail.com", "fp3@naDSsjh2")
 
-      {_, account2} = Core.create("yashin", "brl", "100", "yashin@outloil.com", "fp3@naDSsjh2")
+      {_, account2} = Core.create("yashin", "brl", "100", "ssss@outloil.com", "fp3@naDSsjh2")
 
       params = %{account_from: account.id, account_to: account2.id, value: "100"}
 
@@ -176,9 +176,9 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = Core.create("raissa", "brl", "100", "yashin@gmail.com", "fp3@naDSsjh2")
+      {_, account} = Core.create("raissa", "brl", "100", "dddd@gmail.com", "fp3@naDSsjh2")
 
-      {_, account2} = Core.create("yashin", "brl", "100", "yashin@outlook.com", "fp3@naDSsjh2")
+      {_, account2} = Core.create("yashin", "brl", "100", "fffff@outlook.com", "fp3@naDSsjh2")
 
       params = %{account_from: account.id, account_to: account2.id, value: 100}
 
@@ -204,7 +204,7 @@ defmodule ApiWeb.OperationsControllerTest do
         Core.create("Yashin Santos", "BRL", "100", "yashin@outlook.com", "fp3@naDSsjh2")
 
       {_, account2} =
-        Core.create("Antonio Marcos", "BRL", "100", "yashin@gmail.com", "fp3@naDSsjh2")
+        Core.create("Antonio Marcos", "BRL", "100", "gggg@gmail.com", "fp3@naDSsjh2")
 
       {_, account3} =
         Core.create("Mateus Mathias", "BRL", "100", "yashin@yahoo.com", "fp3@naDSsjh2")
@@ -235,14 +235,12 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
-        Core.create("Yashin Santos", "BRL", "100", "yashin@gmail.com", "fp3@naDSsjh2")
+      {_, account} = Core.create("Yashin Santos", "BRL", "100", "hhhh@gmail.com", "fp3@naDSsjh2")
 
-      {_, account2} =
-        Core.create("Antonio Marcos", "BRL", "0", "yashin@yahoo.com", "fp3@naDSsjh2")
+      {_, account2} = Core.create("Antonio Marcos", "BRL", "0", "qqq@yahoo.com", "fp3@naDSsjh2")
 
       {_, account3} =
-        Core.create("Mateus Mathias", "BRL", "100", "yashin@outlook.com", "fp3@naDSsjh2")
+        Core.create("Mateus Mathias", "BRL", "100", "www@outlook.com", "fp3@naDSsjh2")
 
       split_list = [
         %{account: account.id, percent: 50},
@@ -267,14 +265,12 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
-        Core.create("Yashin Santos", "BRL", "100", "yashin@gmail.com", "fp3@naDSsjh2")
+      {_, account} = Core.create("Yashin Santos", "BRL", "100", "eee@gmail.com", "fp3@naDSsjh2")
 
-      {_, account2} =
-        Core.create("Antonio Marcos", "BRL", "100", "yashin@yahoo.com", "fp3@naDSsjh2")
+      {_, account2} = Core.create("Antonio Marcos", "BRL", "100", "rrr@yahoo.com", "fp3@naDSsjh2")
 
       {_, account3} =
-        Core.create("Mateus Mathias", "BRL", "100", "yashin@outlook.com", "fp3@naDSsjh2")
+        Core.create("Mateus Mathias", "BRL", "100", "qqq@outlook.com", "fp3@naDSsjh2")
 
       split_list = [
         %{account: account.id, percent: 50},
@@ -301,7 +297,7 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = Core.create("Yashin", "brl", "100", "yashin@gmail.com", "fp3@naDSsjh2")
+      {_, account} = Core.create("Yashin", "brl", "100", "qwqw@gmail.com", "fp3@naDSsjh2")
       Core.withdraw(account.id, "10")
 
       response =

@@ -17,7 +17,7 @@ defmodule ApiWeb.AccountsControllerTest do
         name: "Yashin",
         currency: "brl",
         value: "100",
-        email: "yashin@gmail.com",
+        email: "yaxxxxxshin@gmail.com",
         password: "fp3@naDSsjh2"
       }
 
@@ -43,7 +43,7 @@ defmodule ApiWeb.AccountsControllerTest do
         name: "Yashin",
         currency: "brl",
         value: 100,
-        email: "yashin@gmail.com",
+        email: "yashvvvvin@gmail.com",
         password: "Fp3@nasjh2"
       }
 
@@ -65,7 +65,8 @@ defmodule ApiWeb.AccountsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = Core.create("Yashin", "brl", "100", "yashin@gmail.com", "fp3@naDSsjh2")
+      {_, account} =
+        Core.create("Yashin", "brl", "100", "yashfffffffin@gmail.com", "fp3@naDSsjh2")
 
       response =
         build_conn()
