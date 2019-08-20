@@ -20,12 +20,14 @@ defmodule FinancialSystem.Core.Users.UserRepository do
   end
 
   @callback authenticate(String.t(), String.t()) :: boolean()
-  def authenticate(email, password) do
+  def authenticate(email, password) when is_binary(password) do
     with {:ok, user} <- get_user(:auth, email) do
       Argon2.verify_pass(password, user.password_hash)
       |> do_authenticate(user.id)
     end
   end
+
+  def authenticate(_, _), do: {:error, :invalid_password_type}
 
   defp do_authenticate(true, user_id), do: TokenRepository.generate_token(user_id)
 
