@@ -31,13 +31,17 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
     {:ok, token}
   end
 
-  def validate_token(token) do
+  def validate_token(token) when is_binary(token) do
     token
     |> query_retrieve_token()
     |> last(:inserted_at)
     |> Repo.one()
     |> do_validate_token()
   end
+
+  def validate_token(_), do: {:error, :invalid_token_type}
+
+  defp do_validate_token(nil), do: {:error, :token_dont_exist}
 
   defp do_validate_token(token) do
     date = DateTime.utc_now()
@@ -57,6 +61,8 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
     token
     |> Token.changeset_update(%{updated_at: time_now})
     |> Repo.update()
+
+    {:ok, :renewed}
   end
 
   defp renew_token(false, _, _), do: {:error, :season_expired}
