@@ -8,6 +8,10 @@ defmodule FinancialSystem.Core.Tokens.Token do
 
   alias FinancialSystem.Core.Users.User
 
+  @type t :: %__MODULE__{
+          id: String.t()
+        }
+
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "tokens" do

@@ -17,64 +17,63 @@ defmodule TokenRepositoryTest do
           "yaxx@gmailsx.com",
           "X@ghnx1234"
         )
-  
+
       {:ok, token} = TokenRepository.generate_token(user.id)
-  
+
       token_length = token |> String.length()
-  
-      suposed_to_be_length = 64
-  
-      assert token_length == suposed_to_be_length
+
+      expected_length = 64
+
+      assert token_length == expected_length
     end
-  
+
     test "Should not be able to create a token for an unexistent user" do
       token = TokenRepository.generate_token(UUID.uuid4())
-  
+
       error = {:error, :user_dont_exist}
-  
+
       assert token == error
     end
-  
-      test "Should not be able to create a token if insert a invalid id type" do
+
+    test "Should not be able to create a token if insert a invalid id type" do
       token = TokenRepository.generate_token(12)
-  
+
       error = {:error, :invalid_id_type}
-  
+
       assert token == error
     end
   end
+
   describe "validate_token/1" do
     test "Should be able to verify if token is valid if insert a valid token" do
-
       FinancialSystem.Core.Users.UserRepository.new_user(
         "Yxcaxx",
         "yasdxx@gmailsx.com",
         "X@ghnx1234"
       )
-    {:ok, token} = FinancialSystem.Core.authenticate(        "yasdxx@gmailsx.com",
-    "X@ghnx1234")
-    {:ok, token_valided}
-     = TokenRepository.validate_token(token)
 
-     assert token_valided == :renewed
+      {:ok, token} =
+        FinancialSystem.Core.authenticate(
+          "yasdxx@gmailsx.com",
+          "X@ghnx1234"
+        )
+
+      assert :ok == TokenRepository.validate_token(token)
     end
 
     test "Should not be able to verify if token is valid if insert a invalid token" do
+      {:error, token_validated} =
+        TokenRepository.validate_token(
+          "aasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasasdasadasdas"
+        )
 
-      
-    {:error, token_valided}
-     = TokenRepository.validate_token("aasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasasdasadasdas")
-
-     assert token_valided == :token_dont_exist
+      assert token_validated == :token_dont_exist
     end
 
     test "Should not be able to verify if token is valid if insert a invalid token type" do
+      {:error, token_validated} = TokenRepository.validate_token(123)
 
-      
-      {:error, token_valided}
-       = TokenRepository.validate_token(123)
-  
-       assert token_valided == :invalid_token_type
-      end
+      assert token_validated == :invalid_token_type
+    end
   end
 end

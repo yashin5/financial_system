@@ -3,6 +3,7 @@ defmodule FinancialSystem.Core.Users.UserRepository do
   alias FinancialSystem.Core.Tokens.TokenRepository
   alias FinancialSystem.Core.Users.User
 
+  @spec new_user(String.t(), String.t(), String.t()) :: {:ok, User.t()} | {:error, atom()}
   def new_user(name, email, password) do
     name
     |> new(email, password)
@@ -19,7 +20,7 @@ defmodule FinancialSystem.Core.Users.UserRepository do
     %{name: name, email: email, password: password}
   end
 
-  @callback authenticate(String.t(), String.t()) :: boolean()
+  @callback authenticate(String.t(), String.t()) :: {:ok, String.t()} | {:error, atom()}
   def authenticate(email, password) when is_binary(password) do
     with {:ok, user} <- get_user(:auth, email) do
       Argon2.verify_pass(password, user.password_hash)
@@ -33,6 +34,7 @@ defmodule FinancialSystem.Core.Users.UserRepository do
 
   defp do_authenticate(_, _), do: {:error, :invalid_email_or_password}
 
+  @spec get_user(none() | atom(), String.t()) :: {:ok, User.t()} | {:error, atom()}
   def get_user(:auth, email) do
     User
     |> Repo.get_by(email: email)

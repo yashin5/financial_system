@@ -6,6 +6,12 @@ defmodule FinancialSystem.Core.Users.User do
   alias FinancialSystem.Core.Accounts.Account
   alias FinancialSystem.Core.Tokens.Token
 
+  @type t :: %__MODULE__{
+          email: String.t(),
+          name: String.t(),
+          password_hash: String.t()
+        }
+
   @email_regex ~r/@/
   @password_regex ~r/^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/
 
@@ -19,7 +25,6 @@ defmodule FinancialSystem.Core.Users.User do
 
     has_one(:account, Account)
     has_many(:tokens, Token)
-
 
     timestamps()
   end

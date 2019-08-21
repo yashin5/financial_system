@@ -5,6 +5,7 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
   alias FinancialSystem.Core.Tokens.Token
   alias FinancialSystem.Core.Users.UserRepository
 
+  @spec generate_token(String.t()) :: {:ok, String.t()} | {:error, atom()}
   def generate_token(id) do
     with {:ok, user} <- UserRepository.get_user(id),
          {:ok, new_token} <- do_generate_token() do
@@ -31,6 +32,7 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
     {:ok, token}
   end
 
+  @spec validate_token(String.t()) :: :ok | {:error, atom()}
   def validate_token(token) when is_binary(token) do
     token
     |> query_retrieve_token()
@@ -62,7 +64,7 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
     |> Token.changeset_update(%{updated_at: time_now})
     |> Repo.update()
 
-    {:ok, :renewed}
+    :ok
   end
 
   defp renew_token(false, _, _), do: {:error, :season_expired}
