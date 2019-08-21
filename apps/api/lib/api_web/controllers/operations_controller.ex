@@ -8,11 +8,10 @@ defmodule ApiWeb.OperationsController do
   action_fallback(ApiWeb.FallbackController)
 
   def deposit(conn, %{
-        "account_id" => account_id,
         "currency" => currency,
         "value" => value
       }) do
-    with {:ok, response} <- Core.deposit(account_id, currency, value) do
+    with {:ok, response} <- Core.deposit(conn.assigns[:account_id], currency, value) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")

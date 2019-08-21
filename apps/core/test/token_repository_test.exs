@@ -46,11 +46,12 @@ defmodule TokenRepositoryTest do
 
   describe "validate_token/1" do
     test "Should be able to verify if token is valid if insert a valid token" do
-      FinancialSystem.Core.Users.UserRepository.new_user(
-        "Yxcaxx",
-        "yasdxx@gmailsx.com",
-        "X@ghnx1234"
-      )
+      {:ok, user} =
+        FinancialSystem.Core.Users.UserRepository.new_user(
+          "Yxcaxx",
+          "yasdxx@gmailsx.com",
+          "X@ghnx1234"
+        )
 
       {:ok, token} =
         FinancialSystem.Core.authenticate(
@@ -58,7 +59,7 @@ defmodule TokenRepositoryTest do
           "X@ghnx1234"
         )
 
-      assert :ok == TokenRepository.validate_token(token)
+      assert {:ok, user.id} == TokenRepository.validate_token(token)
     end
 
     test "Should not be able to verify if token is valid if insert a invalid token" do

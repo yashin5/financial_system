@@ -32,7 +32,7 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
     {:ok, token}
   end
 
-  @spec validate_token(String.t()) :: :ok | {:error, atom()}
+  @spec validate_token(String.t()) :: {:ok, String.t()} | {:error, atom()}
   def validate_token(token) when is_binary(token) do
     token
     |> query_retrieve_token()
@@ -51,7 +51,7 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
     {_, time_now} =
       NaiveDateTime.new(date.year, date.month, date.day, date.hour, date.minute, date.second)
 
-    season_duration = 15
+    season_duration = 300
 
     time_now
     |> NaiveDateTime.diff(token.updated_at)
@@ -64,7 +64,7 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
     |> Token.changeset_update(%{updated_at: time_now})
     |> Repo.update()
 
-    :ok
+    {:ok, token.user_id}
   end
 
   defp renew_token(false, _, _), do: {:error, :season_expired}

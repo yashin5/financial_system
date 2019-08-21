@@ -3,7 +3,7 @@ defmodule ApiWeb.Router do
 
   pipeline :api do
     plug(:accepts, ["json"])
-    # plug(ApiWeb.Auth, [])
+    plug(ApiWeb.Auth, [])
   end
 
   scope "/api", ApiWeb do
