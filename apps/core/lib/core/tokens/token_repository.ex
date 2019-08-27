@@ -5,6 +5,14 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
   alias FinancialSystem.Core.Tokens.Token
   alias FinancialSystem.Core.Users.UserRepository
 
+  @doc """
+    Generate a token
+
+  ## Examples
+    {:ok, account} = FinancialSystem.Core.create("Yashin Santos",  "EUR", "220", "y@gmin.com", "B@kxin123")
+
+    FinancialSystem.Core.Tokens.TokenRepository.generate_token(account.id)
+  """
   @spec generate_token(String.t()) :: {:ok, String.t()} | {:error, atom()}
   def generate_token(id) do
     with {:ok, user} <- UserRepository.get_user(id),
@@ -32,6 +40,15 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
     {:ok, token}
   end
 
+  @doc """
+    Validate the token
+
+  ## Examples
+    {:ok, account} = FinancialSystem.Core.create("Yashin Santos",  "EUR", "220")
+    {:ok, token} = generate_token(account.id)
+
+    FinancialSystem.Core.Tokens.TokenRepository.validate_token(token)
+  """
   @spec validate_token(String.t()) :: {:ok, String.t()} | {:error, atom()}
   def validate_token(token) when is_binary(token) do
     token

@@ -3,6 +3,12 @@ defmodule FinancialSystem.Core.Users.UserRepository do
   alias FinancialSystem.Core.Tokens.TokenRepository
   alias FinancialSystem.Core.Users.User
 
+  @doc """
+    Create a user
+
+  ## Examples
+    FinancialSystem.Core.Users.UserRepository.new_user("Yashin Santos",  "y@gmail.com", "B@kxin123")
+  """
   @spec new_user(String.t(), String.t(), String.t()) :: {:ok, User.t()} | {:error, atom()}
   def new_user(name, email, password) do
     name
@@ -20,6 +26,15 @@ defmodule FinancialSystem.Core.Users.UserRepository do
     %{name: name, email: email, password: password}
   end
 
+  @doc """
+    Verify if email and password is valid
+
+  ## Examples
+    {:ok, account} = FinancialSystem.Core.create("Yashin Santos",  "EUR", "220", "y@gmin.com", "B@kxin123")
+
+
+    FinancialSystem.Core.Users.UserRepository.authenticate(y@gmin.com", "B@kxin123")
+  """
   @callback authenticate(String.t(), String.t()) :: {:ok, String.t()} | {:error, atom()}
   def authenticate(email, password) when is_binary(password) do
     with {:ok, user} <- get_user(:auth, email) do
