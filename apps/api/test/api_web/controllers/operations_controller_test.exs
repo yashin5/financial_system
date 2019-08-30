@@ -11,13 +11,16 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = Core.create("Yashin", "brl", "100", "asd@gmail.com", "fp3@naDSsjh2")
+      {_, account} = Core.create("Yashin", "brl", "100", "axsd@gmail.com", "fp3@naDSsjh2")
+      {_, token} = Core.authenticate("axsd@gmail.com", "fp3@naDSsjh2")
 
       params = %{account_id: account.id, value: "100"}
 
       response =
         build_conn()
         |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+
         |> post("/api/operations/withdraw", params)
         |> json_response(201)
 
@@ -35,12 +38,15 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       {_, account} = Core.create("raissa", "brl", "100", "asdf@gmail.com", "fp3@naDSsjh2")
+      {_, token} = Core.authenticate("asdf@gmail.com", "fp3@naDSsjh2")
 
       params = %{account_id: account.id, value: 100}
 
       response =
         build_conn()
         |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+
         |> post("/api/operations/withdraw", params)
         |> json_response(400)
 
@@ -49,19 +55,7 @@ defmodule ApiWeb.OperationsControllerTest do
       assert response == expected
     end
 
-    test "when params are valid but the action cannot  be taken, should return 422 and error message" do
-      params = %{account_id: UUID.uuid4(), value: "100"}
-
-      response =
-        build_conn()
-        |> put_req_header("content-type", "application/json")
-        |> post("/api/operations/withdraw", params)
-        |> json_response(422)
-
-      expected = %{"error" => "account_dont_exist"}
-
-      assert response == expected
-    end
+  
   end
 
   describe "POST /api/operations/deposit" do
@@ -71,12 +65,15 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       {_, account} = Core.create("Yashin", "brl", "100", "asdfg@gmail.com", "fp3@naDSsjh2")
-
+      {_, token} = Core.authenticate("asdfg@gmail.com", "fp3@naDSsjh2"
+      )
       params = %{account_id: account.id, currency: "brl", value: "100"}
 
       response =
         build_conn()
         |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+
         |> post("/api/operations/deposit", params)
         |> json_response(201)
 
@@ -88,19 +85,7 @@ defmodule ApiWeb.OperationsControllerTest do
       assert response == expected
     end
 
-    test "when params are valid but the action cannot  be taken, should return 422 and error message" do
-      params = %{account_id: UUID.uuid4(), currency: "brl", value: "100"}
-
-      response =
-        build_conn()
-        |> put_req_header("content-type", "application/json")
-        |> post("/api/operations/deposit", params)
-        |> json_response(422)
-
-      expected = %{"error" => "account_dont_exist"}
-
-      assert response == expected
-    end
+    
 
     test "when params is not valid, should return 400 and error message" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
@@ -108,12 +93,15 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       {_, account} = Core.create("raissa", "brl", "100", "asdfgh@gmail.com", "fp3@naDSsjh2")
+      {_, token} = Core.authenticate("asdfgh@gmail.com", "fp3@naDSsjh2")
 
       params = %{account_id: account.id, currency: "brl", value: 100}
 
       response =
         build_conn()
         |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+
         |> post("/api/operations/deposit", params)
         |> json_response(400)
 
@@ -130,7 +118,7 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       {_, account} = Core.create("raissa", "brl", "100", "asdfghh@gmail.com", "fp3@naDSsjh2")
-
+      {_, token} = Core.authenticate("asdfghh@gmail.com", "fp3@naDSsjh2")
       {_, account2} = Core.create("yashin", "brl", "100", "yashin@outlook.com", "fp3@naDSsjh2")
 
       params = %{account_from: account.id, account_to: account2.id, value: "100"}
@@ -138,6 +126,8 @@ defmodule ApiWeb.OperationsControllerTest do
       response =
         build_conn()
         |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+
         |> post("/api/operations/transfer", params)
         |> json_response(201)
 
@@ -155,7 +145,7 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       {_, account} = Core.create("raissa", "brl", "0", "aaaa@gmail.com", "fp3@naDSsjh2")
-
+      {_, token} = Core.authenticate("aaaa@gmail.com", "fp3@naDSsjh2")
       {_, account2} = Core.create("yashin", "brl", "100", "ssss@outloil.com", "fp3@naDSsjh2")
 
       params = %{account_from: account.id, account_to: account2.id, value: "100"}
@@ -163,6 +153,8 @@ defmodule ApiWeb.OperationsControllerTest do
       response =
         build_conn()
         |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+
         |> post("/api/operations/transfer", params)
         |> json_response(422)
 
@@ -177,7 +169,7 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       {_, account} = Core.create("raissa", "brl", "100", "dddd@gmail.com", "fp3@naDSsjh2")
-
+      {_, token} = Core.authenticate("dddd@gmail.com", "fp3@naDSsjh2")
       {_, account2} = Core.create("yashin", "brl", "100", "fffff@outlook.com", "fp3@naDSsjh2")
 
       params = %{account_from: account.id, account_to: account2.id, value: 100}
@@ -185,6 +177,8 @@ defmodule ApiWeb.OperationsControllerTest do
       response =
         build_conn()
         |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+
         |> post("/api/operations/transfer", params)
         |> json_response(400)
 
@@ -205,7 +199,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account2} =
         Core.create("Antonio Marcos", "BRL", "100", "gggg@gmail.com", "fp3@naDSsjh2")
-
+      {_, token} = Core.authenticate("gggg@gmail.com", "fp3@naDSsjh2")
       {_, account3} =
         Core.create("Mateus Mathias", "BRL", "100", "yashin@yahoo.com", "fp3@naDSsjh2")
 
@@ -219,6 +213,8 @@ defmodule ApiWeb.OperationsControllerTest do
       response =
         build_conn()
         |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+
         |> post("/api/operations/split", params)
         |> json_response(201)
 
@@ -238,7 +234,7 @@ defmodule ApiWeb.OperationsControllerTest do
       {_, account} = Core.create("Yashin Santos", "BRL", "100", "hhhh@gmail.com", "fp3@naDSsjh2")
 
       {_, account2} = Core.create("Antonio Marcos", "BRL", "0", "qqq@yahoo.com", "fp3@naDSsjh2")
-
+      {_, token} = Core.authenticate("qqq@yahoo.com", "fp3@naDSsjh2")
       {_, account3} =
         Core.create("Mateus Mathias", "BRL", "100", "www@outlook.com", "fp3@naDSsjh2")
 
@@ -252,6 +248,8 @@ defmodule ApiWeb.OperationsControllerTest do
       response =
         build_conn()
         |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+
         |> post("/api/operations/split", params)
         |> json_response(422)
 
@@ -268,7 +266,7 @@ defmodule ApiWeb.OperationsControllerTest do
       {_, account} = Core.create("Yashin Santos", "BRL", "100", "eee@gmail.com", "fp3@naDSsjh2")
 
       {_, account2} = Core.create("Antonio Marcos", "BRL", "100", "rrr@yahoo.com", "fp3@naDSsjh2")
-
+      {_, token} = Core.authenticate("rrr@yahoo.com", "fp3@naDSsjh2")
       {_, account3} =
         Core.create("Mateus Mathias", "BRL", "100", "qqq@outlook.com", "fp3@naDSsjh2")
 
@@ -282,6 +280,8 @@ defmodule ApiWeb.OperationsControllerTest do
       response =
         build_conn()
         |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+
         |> post("/api/operations/split", params)
         |> json_response(400)
 
@@ -299,10 +299,13 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account} = Core.create("Yashin", "brl", "100", "qwqw@gmail.com", "fp3@naDSsjh2")
       Core.withdraw(account.id, "10")
+      {_, token} = Core.authenticate("qwqw@gmail.com", "fp3@naDSsjh2")
 
       response =
         build_conn()
         |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+
         |> get("/api/operations/financial_statement/" <> account.id)
         |> json_response(201)
 

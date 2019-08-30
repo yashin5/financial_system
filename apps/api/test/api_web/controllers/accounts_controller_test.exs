@@ -50,6 +50,7 @@ defmodule ApiWeb.AccountsControllerTest do
       response =
         build_conn()
         |> put_req_header("content-type", "application/json")
+
         |> post("/api/accounts", params)
         |> json_response(400)
 
@@ -67,10 +68,13 @@ defmodule ApiWeb.AccountsControllerTest do
 
       {_, account} =
         Core.create("Yashin", "brl", "100", "yashfffffffin@gmail.com", "fp3@naDSsjh2")
+      {_, token} = Core.authenticate("yashfffffffin@gmail.com","fp3@naDSsjh2")
 
       response =
         build_conn()
         |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+
         |> delete("/api/accounts/" <> account.id)
         |> json_response(201)
 
@@ -79,32 +83,7 @@ defmodule ApiWeb.AccountsControllerTest do
       assert response == expected
     end
 
-    test "when params is not valid, should return 400" do
-      params = "234"
 
-      response =
-        build_conn()
-        |> put_req_header("content-type", "application/json")
-        |> delete("/api/accounts/" <> params)
-        |> json_response(400)
-
-      expected = %{"error" => "invalid_account_id_type"}
-
-      assert response == expected
-    end
-
-    test "when params are valid but the action cannot  be taken, should return 422" do
-      params = UUID.uuid4()
-
-      response =
-        build_conn()
-        |> put_req_header("content-type", "application/json")
-        |> delete("/api/accounts/" <> params)
-        |> json_response(422)
-
-      expected = %{"error" => "account_dont_exist"}
-
-      assert response == expected
-    end
+    
   end
 end
