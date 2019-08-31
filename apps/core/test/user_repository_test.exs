@@ -117,7 +117,7 @@ defmodule UserRepositoryTest do
     test "Should be able to authenticate if pass data from existent user" do
       UserRepository.new_user("Yaxx", "yaxx@gmailsx.com", "X@ghnx1234")
 
-      {:ok, authenticate} = UserRepository.authenticate("yaxx@gmailsx.com", "X@ghnx1234")
+      {:ok, authenticate} = UserRepository.authenticate(%{"email" => "yaxx@gmailsx.com", "password" =>"X@ghnx1234"})
 
       token_length = authenticate |> String.length()
       supose_to_be_length = 64
@@ -126,7 +126,7 @@ defmodule UserRepositoryTest do
     end
 
     test "Should not be able to authenticate if pass data from unexistent user" do
-      authenticate = UserRepository.authenticate("yaxx@gmailsx.com", "X@ghnx1234")
+      authenticate = UserRepository.authenticate(%{"email" => "yaxx@gmailsx.com", "password" => "X@ghnx1234"})
 
       error = {:error, :user_dont_exist}
 
@@ -134,7 +134,7 @@ defmodule UserRepositoryTest do
     end
 
     test "Should not be able to authenticate if pass invalid email type" do
-      authenticate = UserRepository.authenticate(1, "X@ghnx1234")
+      authenticate = UserRepository.authenticate(%{"email" => 1, "password" => "X@ghnx1234"})
 
       error = {:error, :invalid_email_type}
 
@@ -142,7 +142,7 @@ defmodule UserRepositoryTest do
     end
 
     test "Should not be able to authenticate if pass invalid password type" do
-      authenticate = UserRepository.authenticate("yaxx@g.xom", 1)
+      authenticate = UserRepository.authenticate(%{"email" => "yaxx@g.xom", "password" => 1})
 
       error = {:error, :invalid_password_type}
 

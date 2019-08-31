@@ -47,7 +47,7 @@ defmodule FinancialSystem.Core.Users.UserRepository do
     end
   end
 
-  def authenticate(_, _), do: {:error, :invalid_password_type}
+  def authenticate(_), do: {:error, :invalid_password_type}
 
   defp do_authenticate(true, user_id), do: TokenRepository.generate_token(user_id)
 
