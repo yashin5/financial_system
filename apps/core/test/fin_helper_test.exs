@@ -16,7 +16,15 @@ defmodule FinHelperTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create("Roberta Santos", "BRL", "20.0", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create(
+          %{
+            "name" => "Roberta Santos",
+            "currency" => "BRL",
+            "value" => "20.0",
+            "email" => "test@gmail.com",
+            "password" => "f1aA678@"
+          }
+          )
 
       on_exit(fn ->
         nil
@@ -55,13 +63,34 @@ defmodule FinHelperTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create(
+          %{
+        "name" => "Yashin Santos",
+        "currency" =>  "BRL",
+        "value" => "1",
+        "email" => "test@gmail.com",
+        "password" => "f1aA678@"
+      })
 
       {_, account2} =
-        FinancialSystem.Core.create("Oliver Tsubasa", "BRL", "2", "test@outlook.com", "f1aA678@")
+        FinancialSystem.Core.create(
+          %{
+        "name" => "Oliver Tsubasa",
+        "currency" => "BRL",
+        "value" => "2",
+        "email" => "test@outlook.com",
+        "password" => "f1aA678@"
+      })
 
       {_, account3} =
-        FinancialSystem.Core.create("Inu Yasha", "BRL", "5", "test@yahoo.com", "f1aA678@")
+        FinancialSystem.Core.create(
+          %{
+        "name" => "Inu Yasha",
+        "currency" => "BRL",
+        "value" => "5",
+        "email" => "test@yahoo.com",
+        "password" => "f1aA678@"
+      })
 
       list_to = [
         %FinancialSystem.Core.Split{account: account.id, percent: 20},
@@ -125,10 +154,24 @@ defmodule FinHelperTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create(
+          %{
+        "name" => "Yashin Santos",
+        "currency" => "BRL",
+        "value" => "1",
+        "email" => "test@gmail.com",
+        "password" => "f1aA678@"
+      })
 
       {_, account3} =
-        FinancialSystem.Core.create("Inu Yasha", "BRL", "5", "test@outlook.com", "f1aA678@")
+        FinancialSystem.Core.create(
+          %{
+        "name" =>  "Inu Yasha",
+        "currency" => "BRL",
+        "value" => "5",
+        "email" => "test@outlook.com",
+        "password" => "f1aA678@"
+      } )
 
       list_to = [
         %FinancialSystem.Core.Split{account: account.id, percent: 20},
@@ -175,7 +218,14 @@ defmodule FinHelperTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create(
+          %{
+        "name" => "Yashin Santos",
+        "currency" => "BRL",
+        "value" => "1",
+        "email" => "test@gmail.com",
+        "password" => "f1aA678@"
+      })
 
       list_to = [
         %FinancialSystem.Core.Split{account: account.id, percent: 20},
