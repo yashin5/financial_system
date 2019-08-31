@@ -76,7 +76,13 @@ defmodule FinancialSystem.CoreTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create("Oliver Tsubasa", "brl", "1", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create(%{
+          "name" => "Oliver Tsubasa",
+          "currency" => "brl",
+          "value" => "1",
+          "email" => "test@gmail.com",
+          "password" => "f1aA678@"
+        })
 
       {_, account_data} = AccountRepository.find_account(account.id)
 
@@ -97,7 +103,13 @@ defmodule FinancialSystem.CoreTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create("Inu Yasha", "brl", "0", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create(%{
+          "name" => "Inu Yasha",
+          "currency" => "brl",
+          "value" => "0",
+          "email" => "test@gmail.com",
+          "password" => "f1aA678@"
+        })
 
       {_, account_data} = AccountRepository.find_account(account.id)
 
@@ -112,7 +124,13 @@ defmodule FinancialSystem.CoreTest do
 
     test "Not should be able to create a account with a name is not a string" do
       {:error, message} =
-        FinancialSystem.Core.create(1, "brll", "0", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create(%{
+          "name" => 1,
+          "currency" => "brll",
+          "value" => "0",
+          "email" => "test@gmail.com",
+          "password" => "f1aA678@"
+        })
 
       assert ^message = :invalid_name
     end
@@ -123,27 +141,58 @@ defmodule FinancialSystem.CoreTest do
       end)
 
       {:error, message} =
-        FinancialSystem.Core.create("Oliver Tsubasa", "brl", "-1", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create(%{
+          "name" => "Oliver Tsubasa",
+          "currency" => "brl",
+          "value" => "-1",
+          "email" => "test@gmail.com",
+          "password" => "f1aA678@"
+        })
 
       assert ^message = :invalid_value_less_than_0
     end
 
     test "Not should be able to create a account with a value in integer format" do
       {:error, message} =
-        FinancialSystem.Core.create("Oliver Tsubasa", "brl", 10, "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create(%{
+          "name" => "Oliver Tsubasa",
+          "currency" => "brl",
+          "value" => 10,
+          "email" => "test@gmail.com",
+          "password" => "f1aA678@"
+        })
 
       assert ^message = :invalid_value_type
     end
 
     test "Not should be able to create a account without a name" do
-      {:error, message} = FinancialSystem.Core.create("", "BRL", 10, "test@gmail.com", "f1aA678@")
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
 
-      assert ^message = :invalid_value_type
+      {:error, message} =
+        FinancialSystem.Core.create(%{
+          "name" => "",
+          "currency" => "BRL",
+          "value" => "10",
+          "email" => "test@gmail.com",
+          "password" => "f1aA678@"
+        })
+
+      error = [name: {"can't be blank", [validation: :required]}]
+
+      assert message.errors == error
     end
 
     test "Not should be able to create a account with a value in float format" do
       {:error, message} =
-        FinancialSystem.Core.create("Oliver Tsubasa", "brl", 10.0, "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create(%{
+          "name" => "Oliver Tsubasa",
+          "currency" => "brl",
+          "value" => 10.0,
+          "email" => "test@gmail.com",
+          "password" => "f1aA678@"
+        })
 
       assert ^message = :invalid_value_type
     end
@@ -154,7 +203,13 @@ defmodule FinancialSystem.CoreTest do
       end)
 
       {:error, message} =
-        FinancialSystem.Core.create("Oliver Tsubasa", "brll", "0", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create(%{
+          "name" => "Oliver Tsubasa",
+          "currency" => "brll",
+          "value" => "0",
+          "email" => "test@gmail.com",
+          "password" => "f1aA678@"
+        })
 
       assert ^message = :currency_is_not_valid
     end
@@ -167,21 +222,33 @@ defmodule FinancialSystem.CoreTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create("Oliver Tsubasa", "brl", "1", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create(%{
+          "name" => "Oliver Tsubasa",
+          "currency" => "brl",
+          "value" => "1",
+          "email" => "test@gmail.com",
+          "password" => "f1aA678@"
+        })
 
-      {:ok, message} = FinancialSystem.Core.delete(account.id)
+      {:ok, message} =
+        FinancialSystem.Core.delete(%{
+          "id" => account.id
+        })
 
       assert ^message = :account_deleted
     end
 
     test "Not should be able to delete if insert id different from type string" do
-      {:error, message} = FinancialSystem.Core.delete(1.1)
+      {:error, message} = FinancialSystem.Core.delete(%{"id" => 1.1})
 
       assert ^message = :invalid_account_id_type
     end
 
     test "Not should be able to delete an inexistent account" do
-      {:error, message} = FinancialSystem.Core.delete(UUID.uuid4())
+      {:error, message} =
+        FinancialSystem.Core.delete(%{
+          "id" => UUID.uuid4()
+        })
 
       assert ^message = :account_dont_exist
     end
