@@ -7,11 +7,8 @@ defmodule ApiWeb.AccountsController do
 
   action_fallback(ApiWeb.FallbackController)
 
-  def authenticate(conn, %{
-        "email" => email,
-        "password" => password
-      }) do
-    with {:ok, response} <- Core.authenticate(email, password) do
+  def authenticate(conn, params) do
+    with {:ok, response} <- Core.authenticate(params) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
@@ -19,14 +16,8 @@ defmodule ApiWeb.AccountsController do
     end
   end
 
-  def create(conn, %{
-        "name" => name,
-        "currency" => currency,
-        "value" => value,
-        "email" => email,
-        "password" => password
-      }) do
-    with {:ok, response} <- Core.create(name, currency, value, email, password) do
+  def create(conn, params) do
+    with {:ok, response} <- Core.create(params) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
@@ -34,10 +25,8 @@ defmodule ApiWeb.AccountsController do
     end
   end
 
-  def delete(conn, %{
-        "id" => id
-      }) do
-    with {:ok, response} <- Core.delete(id) do
+  def delete(conn, param) do
+    with {:ok, response} <- Core.delete(param) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")

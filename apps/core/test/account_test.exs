@@ -49,7 +49,13 @@ defmodule FinancialSystem.CoreTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create("Yashin Santos", "BRL", "0.10", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create(%{
+          "name" => "Yashin Santos",
+          "currency" => "BRL",
+          "value" => "0.10",
+          "email" => "test@gmail.com",
+          "password" => "f1aA678@"
+        })
 
       {_, account_data} = AccountRepository.find_account(account.id)
 

@@ -7,11 +7,10 @@ defmodule ApiWeb.OperationsController do
 
   action_fallback(ApiWeb.FallbackController)
 
-  def deposit(conn, %{
-        "currency" => currency,
-        "value" => value
-      }) do
-    with {:ok, response} <- Core.deposit(conn.assigns[:account_id], currency, value) do
+  def deposit(conn, params) do
+    with params_with_account_id <-
+           Map.update(params, "account_from", conn.assigns[:account_id], 11, & &1),
+         {:ok, response} <- Core.deposit(params_with_account_id) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
@@ -19,12 +18,10 @@ defmodule ApiWeb.OperationsController do
     end
   end
 
-  def withdraw(conn, %{
-        "account_id" => account_id,
-        "value" => value
-      }) do
-    with %{req_headers: [{"content-type", "application/json"}]} <- conn,
-         {:ok, response} <- Core.withdraw(account_id, value) do
+  def withdraw(conn, params) do
+    with params_with_account_id <-
+           Map.update(params, "account_from", conn.assigns[:account_id], 11, & &1),
+         {:ok, response} <- Core.withdraw(params_with_account_id) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
@@ -32,12 +29,10 @@ defmodule ApiWeb.OperationsController do
     end
   end
 
-  def transfer(conn, %{
-        "value" => value,
-        "account_from" => account_id_from,
-        "account_to" => account_id_to
-      }) do
-    with {:ok, response} <- Core.transfer(value, account_id_from, account_id_to) do
+  def transfer(conn, params) do
+    with params_with_account_id <-
+           Map.update(params, "account_from", conn.assigns[:account_id], 11, & &1),
+         {:ok, response} <- Core.transfer(params_with_account_id) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
@@ -45,16 +40,10 @@ defmodule ApiWeb.OperationsController do
     end
   end
 
-  def split(conn, %{
-        "account_id_from" => account_id_from,
-        "split_list" => split_list_param,
-        "value" => value
-      }) do
-    with split_list <-
-           Enum.map(split_list_param, fn item ->
-             %Split{account: item["account"], percent: item["percent"]}
-           end),
-         {:ok, response} <- Core.split(account_id_from, split_list, value) do
+  def split(conn, params) do
+    with params_with_account_id <-
+           Map.update(params, "account_from", conn.assigns[:account_id], 11, & &1),
+         {:ok, response} <- Core.split(params_with_account_id) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
@@ -62,12 +51,15 @@ defmodule ApiWeb.OperationsController do
     end
   end
 
-  def financial_statement(conn, %{"id" => id}) do
-    with {:ok, response} <- Core.financial_statement(id) do
+  def financial_statement(conn, param) do
+    with {:ok, response} <- Core.financial_statement(param) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
-      |> render("financial_statement.json", %{financial_statement: response, account_id: id})
+      |> render("financial_statement.json", %{
+        financial_statement: response,
+        account_id: conn.assigns[:account_id]
+      })
     end
   end
 end

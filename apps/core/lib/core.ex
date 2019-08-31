@@ -12,29 +12,29 @@ defmodule FinancialSystem.Core do
   @behaviour FinancialSystem.Core.Users.UserRepository
 
   @impl UserRepository
-  defdelegate authenticate(email, password), to: UserRepository, as: :authenticate
+  defdelegate authenticate(params), to: UserRepository, as: :authenticate
 
   @impl Account
-  defdelegate create(name, currency, value, email, password), to: Account
+  defdelegate create(params), to: Account
 
   @impl Account
-  defdelegate delete(account_id), to: Account
+  defdelegate delete(param), to: Account
 
   @impl Financial
   defdelegate show(account), to: FinancialOperations
 
   @impl Financial
-  defdelegate deposit(account, currency, value), to: FinancialOperations
+  defdelegate deposit(params), to: FinancialOperations
 
   @impl Financial
-  defdelegate withdraw(account, value), to: FinancialOperations
+  defdelegate withdraw(params), to: FinancialOperations
 
   @impl Financial
-  defdelegate transfer(account_from, account_to, value), to: FinancialOperations
+  defdelegate transfer(params), to: FinancialOperations
 
   @impl Financial
-  defdelegate split(account_from, split_list, value), to: FinancialOperations
+  defdelegate split(params), to: FinancialOperations
 
   @impl Financial
-  defdelegate financial_statement(account_id), to: FinancialOperations
+  defdelegate financial_statement(param), to: FinancialOperations
 end

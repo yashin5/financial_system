@@ -28,7 +28,13 @@ defmodule FinancialSystem.Core.Account do
             ) ::
               {:ok, Account.t()} | {:error, atom()}
 
-  def create(name, currency, value, email, password)
+  def create(%{
+        "name" => name,
+        "currency" => currency,
+        "value" => value,
+        "email" => email,
+        "password" => password
+      })
       when is_binary(name) and is_binary(currency) and is_binary(value) do
     with {:ok, currency_upcase} <- currency_finder().currency_is_valid(currency),
          {:ok, value_in_integer} <- Currency.amount_do(:store, value, currency_upcase),
@@ -42,17 +48,35 @@ defmodule FinancialSystem.Core.Account do
     end
   end
 
-  def create(name, currency, value, _email, _password)
+  def create(%{
+        "name" => name,
+        "currency" => currency,
+        "value" => value,
+        "email" => _email,
+        "password" => _password
+      })
       when not is_binary(name) and is_binary(currency) and is_binary(value) do
     {:error, :invalid_name}
   end
 
-  def create(name, currency, value, _email, _password)
+  def create(%{
+        "name" => name,
+        "currency" => currency,
+        "value" => value,
+        "email" => _email,
+        "password" => _password
+      })
       when is_binary(name) and not is_binary(currency) and is_binary(value) do
     {:error, :invalid_currency_type}
   end
 
-  def create(name, currency, value, _email, _password)
+  def create(%{
+        "name" => name,
+        "currency" => currency,
+        "value" => value,
+        "email" => _email,
+        "password" => _password
+      })
       when is_binary(name) and is_binary(currency) and not is_binary(value) do
     {:error, :invalid_value_type}
   end
@@ -74,7 +98,10 @@ defmodule FinancialSystem.Core.Account do
     FinancialSystem.Core.Account.delete(account.id)
   """
   @callback delete(String.t()) :: {:ok | :error, atom()}
-  def delete(account_id) when is_binary(account_id) do
+  def delete(%{
+        "id" => account_id
+      })
+      when is_binary(account_id) do
     with {:ok, account} <- AccountRepository.find_account(account_id) do
       AccountRepository.delete_account(account)
     end
