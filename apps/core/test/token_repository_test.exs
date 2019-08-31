@@ -55,8 +55,8 @@ defmodule TokenRepositoryTest do
 
       {:ok, token} =
         FinancialSystem.Core.authenticate(
-          "yasdxx@gmailsx.com",
-          "X@ghnx1234"
+          %{"email" => "yasdxx@gmailsx.com",
+          "password" => "X@ghnx1234"}
         )
 
       assert {:ok, user.id} == TokenRepository.validate_token(token)
