@@ -3,7 +3,21 @@ defmodule ApiWeb.AccountsController do
 
   use ApiWeb, :controller
 
+  alias FinancialSystem.Core
+
   action_fallback(ApiWeb.FallbackController)
+
+  def authenticate(conn, %{
+        "email" => email,
+        "password" => password
+      }) do
+    with {:ok, response} <- Core.authenticate(email, password) do
+      conn
+      |> put_status(:created)
+      |> put_resp_header("content-type", "application/json")
+      |> render("authenticate.json", authenticate: response)
+    end
+  end
 
   def create(conn, %{
         "name" => name,
@@ -12,7 +26,7 @@ defmodule ApiWeb.AccountsController do
         "email" => email,
         "password" => password
       }) do
-    with {:ok, response} <- FinancialSystem.Core.create(name, currency, value, email, password) do
+    with {:ok, response} <- Core.create(name, currency, value, email, password) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
@@ -23,7 +37,7 @@ defmodule ApiWeb.AccountsController do
   def delete(conn, %{
         "id" => id
       }) do
-    with {:ok, response} <- FinancialSystem.Core.delete(id) do
+    with {:ok, response} <- Core.delete(id) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")

@@ -9,6 +9,7 @@ defmodule ApiWeb.Router do
     pipe_through(:create)
 
     post("/accounts", AccountsController, :create)
+    post("/accounts/authenticate", AccountsController, :authenticate)
   end
 
   pipeline :api do
