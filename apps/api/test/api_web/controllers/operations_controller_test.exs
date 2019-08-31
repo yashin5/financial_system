@@ -6,7 +6,7 @@ defmodule ApiWeb.OperationsControllerTest do
   alias FinancialSystem.Core
 
   describe "POST /api/operations/withdraw" do
-    test "when params is not valid, should return 201 and the response" do
+    test "when params is not valid, should return 201 and the response", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -17,10 +17,9 @@ defmodule ApiWeb.OperationsControllerTest do
       params = %{account_id: account.id, value: "100"}
 
       response =
-        build_conn()
+        conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
-
         |> post("/api/operations/withdraw", params)
         |> json_response(201)
 
@@ -32,7 +31,7 @@ defmodule ApiWeb.OperationsControllerTest do
       assert response == expected
     end
 
-    test "when params is not valid, should return 400 and error message" do
+    test "when params is not valid, should return 400 and error message", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -43,10 +42,9 @@ defmodule ApiWeb.OperationsControllerTest do
       params = %{account_id: account.id, value: 100}
 
       response =
-        build_conn()
+        conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
-
         |> post("/api/operations/withdraw", params)
         |> json_response(400)
 
@@ -54,26 +52,22 @@ defmodule ApiWeb.OperationsControllerTest do
 
       assert response == expected
     end
-
-  
   end
 
   describe "POST /api/operations/deposit" do
-    test "when params is not valid, should return 201 and the response" do
+    test "when params is not valid, should return 201 and the response", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
       {_, account} = Core.create("Yashin", "brl", "100", "asdfg@gmail.com", "fp3@naDSsjh2")
-      {_, token} = Core.authenticate("asdfg@gmail.com", "fp3@naDSsjh2"
-      )
+      {_, token} = Core.authenticate("asdfg@gmail.com", "fp3@naDSsjh2")
       params = %{account_id: account.id, currency: "brl", value: "100"}
 
       response =
-        build_conn()
+        conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
-
         |> post("/api/operations/deposit", params)
         |> json_response(201)
 
@@ -85,9 +79,7 @@ defmodule ApiWeb.OperationsControllerTest do
       assert response == expected
     end
 
-    
-
-    test "when params is not valid, should return 400 and error message" do
+    test "when params is not valid, should return 400 and error message", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -98,10 +90,9 @@ defmodule ApiWeb.OperationsControllerTest do
       params = %{account_id: account.id, currency: "brl", value: 100}
 
       response =
-        build_conn()
+        conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
-
         |> post("/api/operations/deposit", params)
         |> json_response(400)
 
@@ -112,7 +103,7 @@ defmodule ApiWeb.OperationsControllerTest do
   end
 
   describe "POST /api/operations/transfer" do
-    test "POST /" do
+    test "POST /", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, 3, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -124,10 +115,9 @@ defmodule ApiWeb.OperationsControllerTest do
       params = %{account_from: account.id, account_to: account2.id, value: "100"}
 
       response =
-        build_conn()
+        conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
-
         |> post("/api/operations/transfer", params)
         |> json_response(201)
 
@@ -139,7 +129,7 @@ defmodule ApiWeb.OperationsControllerTest do
       assert response == expected
     end
 
-    test "when params are valid but the action cannot  be taken, should return 422" do
+    test "when params are valid but the action cannot  be taken, should return 422", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -151,10 +141,9 @@ defmodule ApiWeb.OperationsControllerTest do
       params = %{account_from: account.id, account_to: account2.id, value: "100"}
 
       response =
-        build_conn()
+        conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
-
         |> post("/api/operations/transfer", params)
         |> json_response(422)
 
@@ -163,7 +152,7 @@ defmodule ApiWeb.OperationsControllerTest do
       assert response == expected
     end
 
-    test "when params is not valid, should return 400" do
+    test "when params is not valid, should return 400", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -175,10 +164,9 @@ defmodule ApiWeb.OperationsControllerTest do
       params = %{account_from: account.id, account_to: account2.id, value: 100}
 
       response =
-        build_conn()
+        conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
-
         |> post("/api/operations/transfer", params)
         |> json_response(400)
 
@@ -189,7 +177,7 @@ defmodule ApiWeb.OperationsControllerTest do
   end
 
   describe "POST /api/operations/split" do
-    test "POST /" do
+    test "POST /", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, 5, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -199,7 +187,9 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account2} =
         Core.create("Antonio Marcos", "BRL", "100", "gggg@gmail.com", "fp3@naDSsjh2")
+
       {_, token} = Core.authenticate("gggg@gmail.com", "fp3@naDSsjh2")
+
       {_, account3} =
         Core.create("Mateus Mathias", "BRL", "100", "yashin@yahoo.com", "fp3@naDSsjh2")
 
@@ -211,10 +201,9 @@ defmodule ApiWeb.OperationsControllerTest do
       params = %{account_id_from: account2.id, split_list: split_list, value: "100"}
 
       response =
-        build_conn()
+        conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
-
         |> post("/api/operations/split", params)
         |> json_response(201)
 
@@ -226,7 +215,7 @@ defmodule ApiWeb.OperationsControllerTest do
       assert response == expected
     end
 
-    test "when params are valid but the action cannot  be taken, should return 422" do
+    test "when params are valid but the action cannot  be taken, should return 422", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, 5, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -235,6 +224,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account2} = Core.create("Antonio Marcos", "BRL", "0", "qqq@yahoo.com", "fp3@naDSsjh2")
       {_, token} = Core.authenticate("qqq@yahoo.com", "fp3@naDSsjh2")
+
       {_, account3} =
         Core.create("Mateus Mathias", "BRL", "100", "www@outlook.com", "fp3@naDSsjh2")
 
@@ -246,10 +236,9 @@ defmodule ApiWeb.OperationsControllerTest do
       params = %{account_id_from: account2.id, split_list: split_list, value: "100"}
 
       response =
-        build_conn()
+        conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
-
         |> post("/api/operations/split", params)
         |> json_response(422)
 
@@ -258,7 +247,7 @@ defmodule ApiWeb.OperationsControllerTest do
       assert response == expected
     end
 
-    test "when params is not valid, should return 400" do
+    test "when params is not valid, should return 400", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, 5, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -267,6 +256,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account2} = Core.create("Antonio Marcos", "BRL", "100", "rrr@yahoo.com", "fp3@naDSsjh2")
       {_, token} = Core.authenticate("rrr@yahoo.com", "fp3@naDSsjh2")
+
       {_, account3} =
         Core.create("Mateus Mathias", "BRL", "100", "qqq@outlook.com", "fp3@naDSsjh2")
 
@@ -278,10 +268,9 @@ defmodule ApiWeb.OperationsControllerTest do
       params = %{account_id_from: account2.id, split_list: split_list, value: 100}
 
       response =
-        build_conn()
+        conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
-
         |> post("/api/operations/split", params)
         |> json_response(400)
 
@@ -292,7 +281,7 @@ defmodule ApiWeb.OperationsControllerTest do
   end
 
   describe "GET /api/operations/financial_statement" do
-    test "GET /" do
+    test "GET /", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -302,10 +291,9 @@ defmodule ApiWeb.OperationsControllerTest do
       {_, token} = Core.authenticate("qwqw@gmail.com", "fp3@naDSsjh2")
 
       response =
-        build_conn()
+        conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
-
         |> get("/api/operations/financial_statement/" <> account.id)
         |> json_response(201)
 

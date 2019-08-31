@@ -8,7 +8,7 @@ defmodule ApiWeb.AccountsControllerTest do
   setup :verify_on_exit!
 
   describe "POST /api/accounts" do
-    test "when params are valid, should return 201" do
+    test "when params are valid, should return 201", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -22,7 +22,7 @@ defmodule ApiWeb.AccountsControllerTest do
       }
 
       response =
-        build_conn()
+        conn
         |> put_req_header("content-type", "application/json")
         |> post("/api/accounts", params)
         |> json_response(201)
@@ -38,7 +38,7 @@ defmodule ApiWeb.AccountsControllerTest do
       assert response == expected
     end
 
-    test "when params is not valid, should return 400" do
+    test "when params is not valid, should return 400", %{conn: conn} do
       params = %{
         name: "Yashin",
         currency: "brl",
@@ -48,9 +48,8 @@ defmodule ApiWeb.AccountsControllerTest do
       }
 
       response =
-        build_conn()
+        conn
         |> put_req_header("content-type", "application/json")
-
         |> post("/api/accounts", params)
         |> json_response(400)
 
@@ -61,20 +60,20 @@ defmodule ApiWeb.AccountsControllerTest do
   end
 
   describe "DELETE /api/accounts/:id" do
-    test "when params are valid, should return 200" do
+    test "when params are valid, should return 200", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
       {_, account} =
         Core.create("Yashin", "brl", "100", "yashfffffffin@gmail.com", "fp3@naDSsjh2")
-      {_, token} = Core.authenticate("yashfffffffin@gmail.com","fp3@naDSsjh2")
+
+      {_, token} = Core.authenticate("yashfffffffin@gmail.com", "fp3@naDSsjh2")
 
       response =
-        build_conn()
+        conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
-
         |> delete("/api/accounts/" <> account.id)
         |> json_response(201)
 
@@ -82,8 +81,5 @@ defmodule ApiWeb.AccountsControllerTest do
 
       assert response == expected
     end
-
-
-    
   end
 end

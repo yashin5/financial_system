@@ -4,7 +4,7 @@ defmodule ApiWeb.AuthTest do
   import Mox
 
   describe "POST" do
-    test "When token is valid, return true" do
+    test "When token is valid, return true", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -17,7 +17,7 @@ defmodule ApiWeb.AuthTest do
       params = %{account_id: account.id, value: "100"}
 
       conn =
-        build_conn()
+        conn
         |> put_req_header("autorization", token)
         |> post("/api/operations/withdraw", params)
         |> json_response(201)

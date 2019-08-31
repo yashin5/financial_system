@@ -1,7 +1,6 @@
 defmodule ApiWeb.FallbackController do
   @moduledoc false
 
-
   use ApiWeb, :controller
 
   def call(conn, {:error, :invalid_account_id_type}) do
