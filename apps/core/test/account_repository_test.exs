@@ -49,7 +49,14 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create(
+          %{
+        "name" => "Yashin Santos",
+        "currency" => "BRL",
+        "value" => "1",
+        "email" => "test@gmail.com",
+        "password" => "f1aA678@"
+      })
 
       {:ok, message} = AccountRepository.delete_account(account)
 
@@ -70,7 +77,14 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create("Yashin Santos", "BRL", "1", "test@gmail.com", "f1aA678@")
+        FinancialSystem.Core.create(
+          %{
+        "name" => "Yashin Santos",
+        "currency" => "BRL",
+        "value" => "1",
+        "email" => "test@gmail.com",
+        "password" => "f1aA678@"
+      })
 
       {:ok, _} = AccountRepository.delete_account(account)
 
