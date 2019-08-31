@@ -17,7 +17,13 @@ defmodule FinancialSystem.Core.Account do
     Create user accounts
 
   ## Examples
-    FinancialSystem.Core.create("Yashin Santos",  "EUR", "220")
+    FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
   """
   @callback create(
               String.t() | any(),
@@ -92,7 +98,13 @@ defmodule FinancialSystem.Core.Account do
     Delete a existent account.
 
   ## Examples
-    {:ok, account} = FinancialSystem.Core.create("Yashin Santos",  "EUR", "220")
+    {:ok, account} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
     FinancialSystem.Core.Account.delete(account.id)
   """

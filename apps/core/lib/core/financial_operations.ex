@@ -19,7 +19,13 @@ defmodule FinancialSystem.Core.FinancialOperations do
     Show the value in account.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
     FinancialSystem.Core.show(account.id)
   """
@@ -40,9 +46,19 @@ defmodule FinancialSystem.Core.FinancialOperations do
     Deposit value in account.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
-    FinancialSystem.Core.deposit(account.id, "BRL", "10")
+    FinancialSystem.Core.deposit(%{
+        "account_id" => account.id,
+        "currency" => "BRL",
+        "value" => "10"
+      })
   """
   @impl true
   def deposit(%{
@@ -87,9 +103,18 @@ defmodule FinancialSystem.Core.FinancialOperations do
     Takes out the value of an account.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
-    FinancialSystem.Core.withdraw(account.id, "10")
+    FinancialSystem.Core.withdraw(%{
+        "account_id" => account.id,
+        "value" => "10"
+      })
   """
   @impl true
   def withdraw(%{
@@ -122,10 +147,26 @@ defmodule FinancialSystem.Core.FinancialOperations do
    Transfer of values ​​between accounts.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
-    {_, account2} = FinancialSystem.Core.create("Antonio Marcos", "BRL", "100")
+    {_, account} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
+    {_, account2} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "BRL",
+        "value" => "100",
+        "email" => "xsx@xx.com",
+        "password" => "B@xopn123"
+      })
 
-    FinancialSystem.Core.transfer("15", account.id, account2.id)
+    FinancialSystem.Core.transfer(%{
+        "value" => "15",
+        "account_from" => account,
+        "account_to" => account2
+      })
   """
   @impl true
   def transfer(%{
@@ -176,12 +217,34 @@ defmodule FinancialSystem.Core.FinancialOperations do
    Transfer of values ​​between multiple accounts.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "100")
-    {_, account2} = FinancialSystem.Core.create("Antonio Marcos", "BRL", "100")
-    {_, account3} = FinancialSystem.Core.create("Mateus Mathias", "BRL", "100")
-    split_list = [%FinancialSystem.Core.Split{account: account.id, percent: 50}, %FinancialSystem.Core.Split{account: account3.id, percent: 50}]
+    {_, account} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
+    {_, account2} = FinancialSystem.Core.create(%{
+        "name" => "Antonio Marcos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
+    {_, account3} = FinancialSystem.Core.create(%{
+        "name" => "Mateus Mathias",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
+    split_list = [%{account: account.id, percent: 50}, %{account: account3.id, percent: 50}]
 
-    FinancialSystem.Core.split(account2.id, split_list, "100")
+    FinancialSystem.Core.split(%{
+        "account_id_from" => account2.id,
+        "split_list" => split_list,
+        "value" => "100"
+      })
   """
   @impl true
   def split(%{
@@ -256,11 +319,20 @@ defmodule FinancialSystem.Core.FinancialOperations do
     Show the financial statement from account.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(%{
+        "name" => "Mateus Mathias",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
-    FinancialSystem.Core.withdraw(account.id, "1")
+    FinancialSystem.Core.withdraw(%{
+        "account_id" => account.id,
+        "value" => "1"
+      })
 
-    FinancialSystem.Core.financial_statement(account.id)
+    FinancialSystem.Core.financial_statement(%{"id" => account.id})
   """
   @impl true
   def financial_statement(%{"id" => account_id}) when is_binary(account_id) do
