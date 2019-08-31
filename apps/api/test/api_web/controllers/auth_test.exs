@@ -3,28 +3,31 @@ defmodule ApiWeb.AuthTest do
 
   import Mox
 
+  alias FinancialSystem.Core
+
   describe "POST" do
     test "When token is valid, return true", %{conn: conn} do
-      expect(CurrencyMock, :currency_is_valid, fn currency ->
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
-      {:ok, account} =
-        FinancialSystem.Core.create("Yashin", "brl", "122", "email@gmail.com", "Y@ashin4321")
+      {_, account} = Core.create("Yashin", "brl", "100", "asdfg@gmail.com", "fp3@naDSsjh2")
+      {_, token} = Core.authenticate("asdfg@gmail.com", "fp3@naDSsjh2")
+      params = %{account_id: account.id, currency: "brl", value: "100"}
 
-      {:ok, token} = FinancialSystem.Core.authenticate("email@gmail.com", "Y@ashin4321")
-
-      params = %{account_id: account.id, value: "100"}
-
-      conn =
+      response =
         conn
-        |> put_req_header("autorization", token)
-        |> post("/api/operations/withdraw", params)
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> post("/api/operations/deposit", params)
         |> json_response(201)
 
-      expected = %{"error" => "account_dont_exist"}
+      expected = %{
+        "account_id" => response["account_id"],
+        "new_balance" => 20000
+      }
 
-      assert conn == expected
+      assert response == expected
     end
   end
 end
