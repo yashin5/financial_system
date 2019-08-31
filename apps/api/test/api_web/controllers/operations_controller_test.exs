@@ -99,7 +99,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       expected = %{
         "account_id" => response["account_id"],
-        "new_balance" => 20000
+        "new_balance" => 20_000
       }
 
       assert response == expected
@@ -439,11 +439,11 @@ defmodule ApiWeb.OperationsControllerTest do
           "password" => "fp3@naDSsjh2"
         })
 
-      Core.withdraw(
-        %{
-          "account_id" => account.id,
-          "value" => "10"
-        })
+      Core.withdraw(%{
+        "account_id" => account.id,
+        "value" => "10"
+      })
+
       {_, token} = Core.authenticate(%{"email" => "qwqw@gmail.com", "password" => "fp3@naDSsjh2"})
 
       response =

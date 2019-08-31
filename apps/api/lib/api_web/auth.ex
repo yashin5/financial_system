@@ -3,12 +3,13 @@ defmodule ApiWeb.Auth do
 
   alias FinancialSystem.Core.Accounts.Account
   alias FinancialSystem.Core.Repo
+  alias FinancialSystem.Core.Tokens.TokenRepository
 
   def init(options \\ []), do: options
 
   def call(conn, _options) do
-    with token when is_binary(token) <- get_req_header(conn, "authorization") |> List.first(),
-         {:ok, user_id} <- FinancialSystem.Core.Tokens.TokenRepository.validate_token(token),
+    with token when is_binary(token) <- conn |> get_req_header("authorization") |> List.first(),
+         {:ok, user_id} <- TokenRepository.validate_token(token),
          %Account{} = account <- get_account(user_id) do
       assign(conn, :account_id, account.id)
     else

@@ -216,28 +216,28 @@ defmodule FinancialSystem.Core.FinancialOperations do
   end
 
   def split(%{
-    "account_id_from" => account_from,
-    "split_list" => split_list_another_format,
-    "value" => value
-  })
+        "account_id_from" => account_from,
+        "split_list" => split_list_another_format,
+        "value" => value
+      })
       when not is_binary(account_from) and is_list(split_list_another_format) and is_binary(value) do
     {:error, :invalid_account_id_type}
   end
 
   def split(%{
-    "account_id_from" => account_from,
-    "split_list" => split_list_another_format,
-    "value" => value
-  })
+        "account_id_from" => account_from,
+        "split_list" => split_list_another_format,
+        "value" => value
+      })
       when is_binary(account_from) and not is_list(split_list_another_format) and is_binary(value) do
     {:error, :invalid_split_list_type}
   end
 
   def split(%{
-    "account_id_from" => account_from,
-    "split_list" => split_list_another_format,
-    "value" => value
-  })
+        "account_id_from" => account_from,
+        "split_list" => split_list_another_format,
+        "value" => value
+      })
       when is_binary(account_from) and is_list(split_list_another_format) and not is_binary(value) do
     {:error, :invalid_value_type}
   end

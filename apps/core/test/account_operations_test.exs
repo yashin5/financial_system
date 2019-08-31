@@ -3,8 +3,8 @@ defmodule AccountOperationsTest do
 
   import Mox
 
-  alias FinancialSystem.Core.Accounts.AccountRepository
   alias FinancialSystem.Core.AccountOperations
+  alias FinancialSystem.Core.Accounts.AccountRepository
 
   setup :verify_on_exit!
 
@@ -17,14 +17,13 @@ defmodule AccountOperationsTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create(
-          %{
-        "name" => "Yashin Santos",
-        "currency" => "BRL",
-        "value" => "1",
-        "email" => "test@gmail.com",
-        "password" => "f1aA678@"
-      })
+        FinancialSystem.Core.create(%{
+          "name" => "Yashin Santos",
+          "currency" => "BRL",
+          "value" => "1",
+          "email" => "test@gmail.com",
+          "password" => "f1aA678@"
+        })
 
       AccountOperations.subtract_value_in_balance(account, 1, "withdraw")
 
@@ -42,14 +41,13 @@ defmodule AccountOperationsTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create(
-          %{
-        "name" => "Yashin Santos",
-        "currency" => "BRL",
-        "value" => "1",
-        "email" => "test@gmail.com",
-        "password" => "f1aA678@"
-      })
+        FinancialSystem.Core.create(%{
+          "name" => "Yashin Santos",
+          "currency" => "BRL",
+          "value" => "1",
+          "email" => "test@gmail.com",
+          "password" => "f1aA678@"
+        })
 
       AccountOperations.sum_value_in_balance(account, 1, "deposit")
 

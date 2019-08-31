@@ -32,7 +32,8 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
 
     token = %{
       token:
-        :crypto.strong_rand_bytes(length)
+        length
+        |> :crypto.strong_rand_bytes()
         |> Base.encode64()
         |> binary_part(0, length)
     }

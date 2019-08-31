@@ -42,7 +42,8 @@ defmodule FinancialSystem.Core.Users.UserRepository do
       })
       when is_binary(password) do
     with {:ok, user} <- get_user(:auth, email) do
-      Argon2.verify_pass(password, user.password_hash)
+      password
+      |> Argon2.verify_pass(user.password_hash)
       |> do_authenticate(user.id)
     end
   end

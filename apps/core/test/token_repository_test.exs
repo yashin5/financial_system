@@ -4,6 +4,7 @@ defmodule TokenRepositoryTest do
   import Mox
 
   alias FinancialSystem.Core.Tokens.TokenRepository
+  alias FinancialSystem.Core.Users.UserRepository
 
   setup :verify_on_exit!
 
@@ -12,7 +13,7 @@ defmodule TokenRepositoryTest do
   describe "generate_token/1" do
     test "Should be able to create a token for an existent user" do
       {:ok, user} =
-        FinancialSystem.Core.Users.UserRepository.new_user(
+        UserRepository.new_user(
           "Yxcaxx",
           "yaxx@gmailsx.com",
           "X@ghnx1234"
@@ -47,17 +48,17 @@ defmodule TokenRepositoryTest do
   describe "validate_token/1" do
     test "Should be able to verify if token is valid if insert a valid token" do
       {:ok, user} =
-        FinancialSystem.Core.Users.UserRepository.new_user(
+        UserRepository.new_user(
           "Yxcaxx",
           "yasdxx@gmailsx.com",
           "X@ghnx1234"
         )
 
       {:ok, token} =
-        FinancialSystem.Core.authenticate(
-          %{"email" => "yasdxx@gmailsx.com",
-          "password" => "X@ghnx1234"}
-        )
+        FinancialSystem.Core.authenticate(%{
+          "email" => "yasdxx@gmailsx.com",
+          "password" => "X@ghnx1234"
+        })
 
       assert {:ok, user.id} == TokenRepository.validate_token(token)
     end

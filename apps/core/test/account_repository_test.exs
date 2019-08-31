@@ -1,9 +1,12 @@
 defmodule FinancialSystem.Core.AccountRepositoryTest do
+  
   use FinancialSystem.Core.DataCase, async: true
-
+  
   import Mox
 
+  alias FinancialSystem.Core.Accounts.Account
   alias FinancialSystem.Core.Accounts.AccountRepository
+  alias FinancialSystem.Core.Repo
   alias FinancialSystem.Core.Users.User
 
   setup :verify_on_exit!
@@ -19,7 +22,7 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
           email: "teste@gmail.com",
           password: "f1aA678@"
         })
-        |> FinancialSystem.Core.Repo.insert()
+        |> Repo.insert()
 
       {:ok, account} =
         %FinancialSystem.Core.Accounts.Account{
@@ -49,14 +52,13 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create(
-          %{
-        "name" => "Yashin Santos",
-        "currency" => "BRL",
-        "value" => "1",
-        "email" => "test@gmail.com",
-        "password" => "f1aA678@"
-      })
+        FinancialSystem.Core.create(%{
+          "name" => "Yashin Santos",
+          "currency" => "BRL",
+          "value" => "1",
+          "email" => "test@gmail.com",
+          "password" => "f1aA678@"
+        })
 
       {:ok, message} = AccountRepository.delete_account(account)
 
@@ -77,14 +79,13 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create(
-          %{
-        "name" => "Yashin Santos",
-        "currency" => "BRL",
-        "value" => "1",
-        "email" => "test@gmail.com",
-        "password" => "f1aA678@"
-      })
+        FinancialSystem.Core.create(%{
+          "name" => "Yashin Santos",
+          "currency" => "BRL",
+          "value" => "1",
+          "email" => "test@gmail.com",
+          "password" => "f1aA678@"
+        })
 
       {:ok, _} = AccountRepository.delete_account(account)
 

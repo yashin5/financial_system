@@ -34,7 +34,7 @@ defmodule ApiWeb.AuthTest do
 
       expected = %{
         "account_id" => response["account_id"],
-        "new_balance" => 20000
+        "new_balance" => 20_000
       }
 
       assert response == expected

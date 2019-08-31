@@ -31,7 +31,7 @@ defmodule ApiWeb.AccountsControllerTest do
         "account" => %{
           "currency" => "BRL",
           "id" => response["account"]["id"],
-          "value" => 10000
+          "value" => 10_000
         }
       }
 
