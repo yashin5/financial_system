@@ -1,7 +1,6 @@
 defmodule FinancialSystem.Core.AccountRepositoryTest do
-  
   use FinancialSystem.Core.DataCase, async: true
-  
+
   import Mox
 
   alias FinancialSystem.Core.Accounts.Account
