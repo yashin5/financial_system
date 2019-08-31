@@ -11,8 +11,18 @@ defmodule ApiWeb.AuthTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = Core.create("Yashin", "brl", "100", "asdfg@gmail.com", "fp3@naDSsjh2")
-      {_, token} = Core.authenticate("asdfg@gmail.com", "fp3@naDSsjh2")
+      {_, account} =
+        Core.create(%{
+          "name" => "Yashin",
+          "currency" => "brl",
+          "value" => "100",
+          "email" => "asdfg@gmail.com",
+          "password" => "fp3@naDSsjh2"
+        })
+
+      {_, token} =
+        Core.authenticate(%{"email" => "asdfg@gmail.com", "password" => "fp3@naDSsjh2"})
+
       params = %{account_id: account.id, currency: "brl", value: "100"}
 
       response =

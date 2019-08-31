@@ -66,16 +66,16 @@ defmodule ApiWeb.AccountsControllerTest do
       end)
 
       {_, account} =
-        Core.create(
-          %{
-            "name" => "Yashin",
-            "currency" => "brl",
-            "value" =>  "100",
-            "email" =>  "yashfffffffin@gmail.com",
-            "password" => "fp3@naDSsjh2"
-          })
+        Core.create(%{
+          "name" => "Yashin",
+          "currency" => "brl",
+          "value" => "100",
+          "email" => "yashfffffffin@gmail.com",
+          "password" => "fp3@naDSsjh2"
+        })
 
-      {_, token} = Core.authenticate(%{"email" => "yashfffffffin@gmail.com", "password" => "fp3@naDSsjh2"})
+      {_, token} =
+        Core.authenticate(%{"email" => "yashfffffffin@gmail.com", "password" => "fp3@naDSsjh2"})
 
       response =
         conn

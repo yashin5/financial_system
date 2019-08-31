@@ -9,7 +9,7 @@ defmodule ApiWeb.OperationsController do
 
   def deposit(conn, params) do
     with params_with_account_id <-
-           Map.update(params, "account_from", conn.assigns[:account_id], 11, & &1),
+           Map.update(params, "account_from", conn.assigns[:account_id], &(&1)),
          {:ok, response} <- Core.deposit(params_with_account_id) do
       conn
       |> put_status(:created)
@@ -20,7 +20,7 @@ defmodule ApiWeb.OperationsController do
 
   def withdraw(conn, params) do
     with params_with_account_id <-
-           Map.update(params, "account_from", conn.assigns[:account_id], 11, & &1),
+           Map.update(params , "account_from", conn.assigns[:account_id], &(&1)),
          {:ok, response} <- Core.withdraw(params_with_account_id) do
       conn
       |> put_status(:created)
@@ -31,7 +31,7 @@ defmodule ApiWeb.OperationsController do
 
   def transfer(conn, params) do
     with params_with_account_id <-
-           Map.update(params, "account_from", conn.assigns[:account_id], 11, & &1),
+           Map.update(params, "account_from", conn.assigns[:account_id], &(&1)),
          {:ok, response} <- Core.transfer(params_with_account_id) do
       conn
       |> put_status(:created)
@@ -42,7 +42,7 @@ defmodule ApiWeb.OperationsController do
 
   def split(conn, params) do
     with params_with_account_id <-
-           Map.update(params, "account_from", conn.assigns[:account_id], 11, & &1),
+           Map.update(params, "account_from", conn.assigns[:account_id], &(&1)),
          {:ok, response} <- Core.split(params_with_account_id) do
       conn
       |> put_status(:created)
