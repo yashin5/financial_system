@@ -1,4 +1,6 @@
 defmodule ApiWeb.Router do
+    @moduledoc false
+
   use ApiWeb, :router
 
   pipeline :create do

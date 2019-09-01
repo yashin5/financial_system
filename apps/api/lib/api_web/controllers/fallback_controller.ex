@@ -5,11 +5,12 @@ defmodule ApiWeb.FallbackController do
   import Ecto.Changeset
 
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
-    errors = traverse_errors(changeset, fn {msg, opts} ->
-      Enum.reduce(opts, msg, fn {key, value}, acc ->
-        String.replace(acc, "%{#{key}}", to_string(value))
+    errors =
+      traverse_errors(changeset, fn {msg, opts} ->
+        Enum.reduce(opts, msg, fn {key, value}, acc ->
+          String.replace(acc, "%{#{key}}", to_string(value))
+        end)
       end)
-    end)
 
     conn
     |> put_status(:unprocessable_entity)
@@ -85,6 +86,20 @@ defmodule ApiWeb.FallbackController do
     |> put_status(:unprocessable_entity)
     |> put_view(ApiWeb.ErrorView)
     |> render("error.json", %{error: :account_dont_exist})
+  end
+
+  def call(conn, {:error, :user_dont_exist}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(ApiWeb.ErrorView)
+    |> render("error.json", %{error: :user_dont_exist})
+  end
+
+  def call(conn, {:error, :invalid_email_or_password}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(ApiWeb.ErrorView)
+    |> render("error.json", %{error: :invalid_email_or_password})
   end
 
   def call(conn, {:error, :currency_is_not_valid}) do

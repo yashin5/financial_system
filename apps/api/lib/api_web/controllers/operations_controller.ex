@@ -1,9 +1,10 @@
 defmodule ApiWeb.OperationsController do
+    @moduledoc false
+
   use ApiWeb, :controller
 
   alias FinancialSystem.Core
   alias FinancialSystem.Core.Split
-  @moduledoc false
 
   action_fallback(ApiWeb.FallbackController)
 

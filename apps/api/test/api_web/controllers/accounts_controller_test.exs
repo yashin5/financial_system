@@ -7,6 +7,87 @@ defmodule ApiWeb.AccountsControllerTest do
 
   setup :verify_on_exit!
 
+  describe "POST /api/authenticate" do
+    test "when params are valid, should return 201 and the token", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      Core.create(%{
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "qwauhqqqw@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
+
+      params = %{email: "qwauhqqqw@gmail.com", password: "fp3@naDSsjh2"}
+
+      response =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> post("/api/accounts/authenticate", params)
+        |> json_response(201)
+
+      token_length = String.length(response["token"])
+      expected_length = 64
+
+      assert token_length == expected_length
+    end
+
+    test "when password and email dont match, should return a message", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      Core.create(%{
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "qwauhqqqw@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
+
+      params = %{email: "qwauhqqqw@gmail.com", password: "f3@naDSsjh2"}
+
+      response =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> post("/api/accounts/authenticate", params)
+        |> json_response(422)
+
+      expected_error = "invalid_email_or_password"
+
+      assert response["error"] == expected_error
+    end
+
+    test "when user dont exist, shoulg return a message", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      Core.create(%{
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "qwauhqqqw@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
+
+      params = %{email: "qauhqqqw@gmail.com", password: "fp3@naDSsjh2"}
+
+      response =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> post("/api/accounts/authenticate", params)
+        |> json_response(422)
+
+      expected_error = "user_dont_exist"
+
+      assert response["error"] == expected_error
+    end
+  end
+
   describe "POST /api/accounts" do
     test "when params are valid, should return 201", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
