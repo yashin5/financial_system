@@ -1,5 +1,5 @@
 defmodule ApiWeb.OperationsController do
-    @moduledoc false
+  @moduledoc false
 
   use ApiWeb, :controller
 

@@ -1,6 +1,6 @@
 defmodule FinancialSystem.Core.Tokens.Token do
   @moduledoc """
-  Schema to table Accounts
+  Schema to table Token
   """
   use Ecto.Schema
 

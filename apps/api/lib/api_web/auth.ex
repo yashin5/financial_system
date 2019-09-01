@@ -1,7 +1,7 @@
 defmodule ApiWeb.Auth do
-    @moduledoc """
-    This module is a Plug responsable to make the authorization in a router pipeline.
-    """
+  @moduledoc """
+  This module is a Plug responsable to make the authorization in a router pipeline.
+  """
 
   import Plug.Conn
 

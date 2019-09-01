@@ -1,5 +1,5 @@
 defmodule ApiWeb.OperationsView do
-    @moduledoc false
+  @moduledoc false
 
   use ApiWeb, :view
 

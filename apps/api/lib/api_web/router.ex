@@ -1,5 +1,5 @@
 defmodule ApiWeb.Router do
-    @moduledoc false
+  @moduledoc false
 
   use ApiWeb, :router
 

@@ -1,4 +1,7 @@
 defmodule FinancialSystem.Core.Tokens.TokenRepository do
+  @moduledoc """
+  This module is responsable to generat eand renew the token from auth.
+  """
   import Ecto.Query, only: [from: 2, last: 2]
 
   alias FinancialSystem.Core.Repo

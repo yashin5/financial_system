@@ -1,4 +1,7 @@
 defmodule FinancialSystem.Core.Users.User do
+  @moduledoc """
+  Schema to table User
+  """
   use Ecto.Schema
 
   import Ecto.Changeset

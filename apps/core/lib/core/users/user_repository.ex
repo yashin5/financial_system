@@ -1,4 +1,8 @@
 defmodule FinancialSystem.Core.Users.UserRepository do
+  @moduledoc """
+  This module is responsable to create, get and authenticate a user.
+  """
+
   alias FinancialSystem.Core.Repo
   alias FinancialSystem.Core.Tokens.TokenRepository
   alias FinancialSystem.Core.Users.User
