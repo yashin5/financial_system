@@ -2,6 +2,20 @@ defmodule ApiWeb.FallbackController do
   @moduledoc false
 
   use ApiWeb, :controller
+  import Ecto.Changeset
+
+  def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
+    errors = traverse_errors(changeset, fn {msg, opts} ->
+      Enum.reduce(opts, msg, fn {key, value}, acc ->
+        String.replace(acc, "%{#{key}}", to_string(value))
+      end)
+    end)
+
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(ApiWeb.ErrorView)
+    |> render("error.json", %{error: errors})
+  end
 
   def call(conn, {:error, :invalid_account_id_type}) do
     conn
