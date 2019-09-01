@@ -14,7 +14,13 @@ defmodule FinancialSystem.Core.FinHelper do
     Verify if the account have funds for the operation.
 
   ## Examples
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+      {_, account} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
       FinancialSystem.Core.FinHelper.funds(account.id, 220)
   """
@@ -46,9 +52,27 @@ defmodule FinancialSystem.Core.FinHelper do
     Verify if the list of split have a account from inside him.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
-    {_, account2} = FinancialSystem.Core.create("Antonio Marcos", "BRL", "100")
-    {_, account3} = FinancialSystem.Core.create("Mateus Mathias", "BRL", "100")
+    {_, account} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
+    {_, account2} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
+    {_, account3} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
     split_list = [%FinancialSystem.Core.Split{account: account.id, percent: 80}, %FinancialSystem.Core.Split{account: account3.id, percent: 20}]
 
     FinancialSystem.Core.FinHelper.transfer_have_account_from(account2.id, split_list)
@@ -69,8 +93,20 @@ defmodule FinancialSystem.Core.FinHelper do
     Verify if the accounts are the same.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
-    {_, account2} = FinancialSystem.Core.create("Antonio Marcos", "BRL", "100")
+    {_, account} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
+    {_, account2} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
     FinancialSystem.Core.FinHelper.transfer_have_account_from(account2.id, account.id)
   """
@@ -109,8 +145,20 @@ defmodule FinancialSystem.Core.FinHelper do
     Verify if the total percent is 100.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
-    {_, account3} = FinancialSystem.Core.create("Mateus Mathias", "BRL", "100")
+    {_, account} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
+    {_, account3} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
     split_list = [%FinancialSystem.Core.Split{account: account.id, percent: 80}, %FinancialSystem.Core.Split{account: account3.id, percent: 20}]
 
     FinancialSystem.Core.FinHelper.percent_ok(split_list)
@@ -134,8 +182,20 @@ defmodule FinancialSystem.Core.FinHelper do
     Unite the duplicated accounts in split_list.
 
   ## Examples
-    {_, account2} = FinancialSystem.Core.create("Antonio Marcos", "BRL", "100")
-    {_, account3} = FinancialSystem.Core.create("Mateus Mathias", "BRL", "100")
+    {_, account2} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
+    {_, account3} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
     split_list = [%FinancialSystem.Core.Split{account: account2.id, percent: 80}, %FinancialSystem.Core.Split{account: account2.id, percent: 20}]
 
     FinancialSystem.Core.FinHelper.unite_equal_account_split(split_list)
@@ -158,8 +218,20 @@ defmodule FinancialSystem.Core.FinHelper do
     Divides the amount to be transferred to each account in a split.
 
   ## Examples
-    {_, account2} = FinancialSystem.Core.create("Antonio Marcos", "BRL", "100")
-    {_, account3} = FinancialSystem.Core.create("Mateus Mathias", "BRL", "100")
+    {_, account2} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
+    {_, account3} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
     split_list = [%FinancialSystem.Core.Split{account: account2.id, percent: 80}, %FinancialSystem.Core.Split{account: account2.id, percent: 20}]
 
     FinancialSystem.Core.FinHelper.division_of_values_to_make_split_transfer(split_list, 100)

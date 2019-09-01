@@ -28,7 +28,14 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
     Delete an account from system.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(
+      %{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
     FinancialSystem.Core.AccountRepository.delete_account(account)
   """
@@ -47,7 +54,13 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
     Checks if the account exists.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
     FinancialSystem.Core.AccountRepository.find_account(account.id)
   """

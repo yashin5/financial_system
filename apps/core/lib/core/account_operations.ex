@@ -15,7 +15,14 @@ defmodule FinancialSystem.Core.AccountOperations do
     Subtracts value in  operations.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(
+      %{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
     FinancialSystem.Core.AccountOperations.subtract_value_in_balance(account, 100, "withdraw")
   """
@@ -34,7 +41,14 @@ defmodule FinancialSystem.Core.AccountOperations do
     Sum value in operations.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(
+      %{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
     FinancialSystem.Core.AccountOperations.sum_value_in_balance(account, 100, "deposit")
   """
@@ -81,7 +95,14 @@ defmodule FinancialSystem.Core.AccountOperations do
     Show the transactions from account.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(
+      %{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
     FinancialSystem.Core.deposit(account.id, "brl", "1")
 

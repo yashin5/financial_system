@@ -1,7 +1,4 @@
 defmodule FinancialSystem.Core.Tokens.TokenRepository do
-  @moduledoc """
-  This module is responsable to generat eand renew the token from auth.
-  """
   import Ecto.Query, only: [from: 2, last: 2]
 
   alias FinancialSystem.Core.Repo
@@ -12,7 +9,14 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
     Generate a token
 
   ## Examples
-    {:ok, account} = FinancialSystem.Core.create("Yashin Santos",  "EUR", "220", "y@gmin.com", "B@kxin123")
+    {:ok, account} = FinancialSystem.Core.create(
+      %{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
     FinancialSystem.Core.Tokens.TokenRepository.generate_token(account.id)
   """
@@ -48,7 +52,14 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
     Validate the token
 
   ## Examples
-    {:ok, account} = FinancialSystem.Core.create("Yashin Santos",  "EUR", "220")
+    {:ok, account} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
+      
     {:ok, token} = generate_token(account.id)
 
     FinancialSystem.Core.Tokens.TokenRepository.validate_token(token)
