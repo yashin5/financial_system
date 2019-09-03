@@ -25,13 +25,13 @@ defmodule FinancialSystem.Core.Account do
         "password" => "B@xopn123"
       })
   """
-  @callback create(
-              String.t() | any(),
-              String.t() | any(),
-              String.t() | any(),
-              String.t() | any(),
-              String.t() | any()
-            ) ::
+  @callback create(%{
+              name: String.t() | any(),
+              currency: String.t() | any(),
+              value: String.t() | any(),
+              email: String.t() | any(),
+              password: String.t() | any()
+            }) ::
               {:ok, Account.t()} | {:error, atom()}
 
   def create(%{

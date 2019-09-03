@@ -46,7 +46,8 @@ defmodule FinancialSystem.Core.Users.UserRepository do
 
     FinancialSystem.Core.Users.UserRepository.authenticate(y@gmin.com", "B@kxin123")
   """
-  @callback authenticate(String.t(), String.t()) :: {:ok, String.t()} | {:error, atom()}
+  @callback authenticate(%{email: String.t(), password: String.t()}) ::
+              {:ok, String.t()} | {:error, atom()}
   def authenticate(%{
         "email" => email,
         "password" => password

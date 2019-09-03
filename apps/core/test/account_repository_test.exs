@@ -24,7 +24,7 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
         |> Repo.insert()
 
       {:ok, account} =
-        %FinancialSystem.Core.Accounts.Account{
+        %Account{
           active: true,
           currency: "BRL",
           value: 100,
