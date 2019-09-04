@@ -11,6 +11,6 @@ defmodule FinancialSystem.Core.Repo.Migrations.Roles do
       timestamps()
     end
 
-    create(unique_index(:tokens, [:role]))
+    create(unique_index(:roles, [:role]))
   end
 end

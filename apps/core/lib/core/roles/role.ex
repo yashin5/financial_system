@@ -1,20 +1,17 @@
-defmodule FinancialSystem.Core.Authorizations.Authorization do
+defmodule FinancialSystem.Core.Roles.Role do
   use Ecto.Schema
 
   import Ecto.Changeset
 
+  alias FinancialSystem.Core.Permissions.Permission
   alias FinancialSystem.Core.Users.User
-
-  @type t :: %__MODULE__{
-          id: String.t()
-        }
 
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "tokens" do
     field(:role, :string)
-    field(:permissions, {:array, :inner_type})
 
+    has_one(:permission, Permission)
     belongs_to(:user, User, type: :binary_id)
 
     timestamps()
@@ -22,7 +19,7 @@ defmodule FinancialSystem.Core.Authorizations.Authorization do
 
   def changeset_insert(accounts, params \\ %{}) do
     accounts
-    |> cast(params, [:role, :permissions])
-    |> validate_required([:role, :permissions])
+    |> cast(params, [:role])
+    |> validate_required([:role])
   end
 end

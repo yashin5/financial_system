@@ -9,7 +9,7 @@ defmodule FinancialSystem.Core.Repo.Migrations.Permissions do
       add(:can_delete, :boolean)
       add(:can_view_all, :boolean)
 
-      add(:roles_id, references(:roles, type: :uuid), null: false)
+      add(:role_id, references(:roles, type: :uuid), null: false)
 
       timestamps()
     end
