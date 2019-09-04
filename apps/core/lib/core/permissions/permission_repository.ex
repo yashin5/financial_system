@@ -4,14 +4,14 @@ defmodule FinancialSystem.Core.Permissions.PermissionRepository do
   alias FinancialSystem.Core.Roles.RoleRepository
 
   def can_do_this_action(:can_create, role) do
-    {:ok, role_data} = RoleRepository.get_role(role)
+    role_data = RoleRepository.get_role(role)
 
     get_permission(role_data.id)
     |> can?(:can_create)
   end
 
   def can_do_this_action(:can_view, role) do
-    {:ok, role_data} = RoleRepository.get_role(role)
+    {:ok, role_data} = RoleRepository.get_role(role) |> IO.inspect()
 
     get_permission(role_data.id)
     |> can?(:can_view)
@@ -31,7 +31,7 @@ defmodule FinancialSystem.Core.Permissions.PermissionRepository do
     |> can?(:can_view_all)
   end
 
-  def get_permission(role_id), do: Permission |> Repo.get!(role_id.id)
+  def get_permission(role_id), do: Permission |> Repo.get_by!(role_id: role_id.id) |> IO.inspect()
 
   def can?(%Permission{} = permissions, action) do
     Map.get(permissions, action) == true
