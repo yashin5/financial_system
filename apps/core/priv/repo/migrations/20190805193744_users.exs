@@ -4,6 +4,7 @@ defmodule FinancialSystem.Core.Repo.Migrations.Users do
   def change do
     create table(:users, primary_key: false) do
       add(:id, :uuid, primary_key: true)
+      add(:role, :string)
       add(:name, :string)
       add(:email, :string)
       add(:password_hash, :string, null: true)

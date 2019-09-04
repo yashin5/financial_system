@@ -21,6 +21,7 @@ defmodule FinancialSystem.Core.Users.User do
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "users" do
+    field(:role, :string)
     field(:email, :string)
     field(:name, :string)
     field(:password, :string, virtual: true)
@@ -33,13 +34,14 @@ defmodule FinancialSystem.Core.Users.User do
   end
 
   def changeset(accounts, params \\ %{}) do
-    required_fields = [:name, :email, :password]
+    required_fields = [:role, :name, :email, :password]
 
     accounts
     |> cast(params, required_fields)
     |> validate_required(required_fields)
     |> validate_length(:name, min: 2, max: 30)
     |> validate_length(:password, min: 6, max: 150)
+    |> validate_length(:role, min: 5, max: 7)
     |> validate_format(:email, @email_regex)
     |> validate_pass()
     |> put_hash()
