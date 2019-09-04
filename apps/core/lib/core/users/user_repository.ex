@@ -13,10 +13,11 @@ defmodule FinancialSystem.Core.Users.UserRepository do
   ## Examples
     FinancialSystem.Core.Users.UserRepository.new_user("Yashin Santos",  "y@gmail.com", "B@kxin123")
   """
-  @spec new_user(String.t(), String.t(), String.t()) :: {:ok, User.t()} | {:error, atom()}
-  def new_user(name, email, password) do
-    name
-    |> new(email, password)
+  @spec new_user(String.t(), String.t(), String.t(), String.t()) ::
+          {:ok, User.t()} | {:error, atom()}
+  def new_user(role, name, email, password) do
+    role
+    |> new(name, email, password)
     |> do_new_user()
   end
 
@@ -26,8 +27,8 @@ defmodule FinancialSystem.Core.Users.UserRepository do
     |> Repo.insert()
   end
 
-  defp new(name, email, password) do
-    %{name: name, email: email, password: password}
+  defp new(role, name, email, password) do
+    %{role: role, name: name, email: email, password: password}
   end
 
   @doc """
