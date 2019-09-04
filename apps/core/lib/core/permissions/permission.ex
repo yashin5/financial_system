@@ -8,7 +8,7 @@ defmodule FinancialSystem.Core.Permissions.Permission do
 
   @primary_key {:id, :binary_id, autogenerate: true}
 
-  schema "tokens" do
+  schema "permissions" do
     field(:can_view, :boolean)
     field(:can_create, :boolean)
     field(:can_delete, :boolean)
@@ -19,7 +19,7 @@ defmodule FinancialSystem.Core.Permissions.Permission do
     timestamps()
   end
 
-  def changeset_insert(accounts, params \\ %{}) do
+  def changeset(accounts, params \\ %{}) do
     accounts
     |> cast(params, [:can_view, :can_create, :can_delete, :can_view_all])
     |> validate_required([:can_view, :can_create, :can_delete, :can_view_all])

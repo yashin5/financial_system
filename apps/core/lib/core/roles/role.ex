@@ -8,16 +8,15 @@ defmodule FinancialSystem.Core.Roles.Role do
 
   @primary_key {:id, :binary_id, autogenerate: true}
 
-  schema "tokens" do
+  schema "roles" do
     field(:role, :string)
 
     has_one(:permission, Permission)
-    belongs_to(:user, User, type: :binary_id)
 
     timestamps()
   end
 
-  def changeset_insert(accounts, params \\ %{}) do
+  def changeset(accounts, params \\ %{}) do
     accounts
     |> cast(params, [:role])
     |> validate_required([:role])
