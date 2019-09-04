@@ -16,6 +16,7 @@ defmodule ApiWeb.Auth do
          {:ok, user_id} <- TokenRepository.validate_token(token),
          %Account{} = account <- get_account(user_id) do
       assign(conn, :account_id, account.id)
+      assign(conn, :role, account.role)
     else
       _ -> send_resp(conn, 401, Jason.encode!(%{message: "unauthorized"}))
     end

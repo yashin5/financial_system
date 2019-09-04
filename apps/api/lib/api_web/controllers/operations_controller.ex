@@ -4,11 +4,13 @@ defmodule ApiWeb.OperationsController do
   use ApiWeb, :controller
 
   alias FinancialSystem.Core
+  alias FinancialSystem.Core.Permissions.Permission
 
   action_fallback(ApiWeb.FallbackController)
 
   def deposit(conn, params) do
-    with params_with_account_id <-
+    with {:ok, true} <- Permission.can_do_this_action(:can_create, conn.assigns["role"]),
+         params_with_account_id <-
            Map.update(params, "account_from", conn.assigns[:account_id], & &1),
          {:ok, response} <- Core.deposit(params_with_account_id) do
       conn

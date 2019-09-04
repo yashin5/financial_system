@@ -26,6 +26,7 @@ defmodule FinancialSystem.Core.Account do
       })
   """
   @callback create(%{
+              role: String.t() | any(),
               name: String.t() | any(),
               currency: String.t() | any(),
               value: String.t() | any(),

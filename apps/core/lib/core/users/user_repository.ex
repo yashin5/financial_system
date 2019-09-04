@@ -11,11 +11,11 @@ defmodule FinancialSystem.Core.Users.UserRepository do
     Create a user
 
   ## Examples
-    FinancialSystem.Core.Users.UserRepository.new_user("Yashin Santos",  "y@gmail.com", "B@kxin123")
+    FinancialSystem.Core.Users.UserRepository.new_user("admin", "Yashin Santos",  "y@gmail.com", "B@kxin123")
   """
   @spec new_user(String.t(), String.t(), String.t(), String.t()) ::
           {:ok, User.t()} | {:error, atom()}
-  def new_user(role, name, email, password) do
+  def new_user(role, name, email, password) when role in ["admin", "regular"] do
     role
     |> new(name, email, password)
     |> do_new_user()
