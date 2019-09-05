@@ -9,13 +9,8 @@ defmodule ApiWeb.OperationsController do
   action_fallback(ApiWeb.FallbackController)
 
   def deposit(conn, params) do
-    with true <-
-           PermissionRepository.can_do_this_action(
-             :can_create,
-             conn.assigns[:role]
-           ),
-         params_with_account_id <-
-           Map.update(params, "account_from", conn.assigns[:account_id], & &1),
+    with params_with_account_id <-
+           Map.update(params, "account_id", conn.assigns[:account_id], & &1),
          {:ok, response} <- Core.deposit(params_with_account_id) do
       conn
       |> put_status(:created)
@@ -26,7 +21,7 @@ defmodule ApiWeb.OperationsController do
 
   def withdraw(conn, params) do
     with params_with_account_id <-
-           Map.update(params, "account_from", conn.assigns[:account_id], & &1),
+           Map.update(params, "account_id", conn.assigns[:account_id], & &1),
          {:ok, response} <- Core.withdraw(params_with_account_id) do
       conn
       |> put_status(:created)

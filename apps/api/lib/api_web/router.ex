@@ -14,19 +14,42 @@ defmodule ApiWeb.Router do
     post("/accounts/authenticate", AccountsController, :authenticate)
   end
 
-  pipeline :api do
+  pipeline :api_can_create do
     plug(:accepts, ["json"])
     plug(ApiWeb.Auth, [])
+    plug(ApiWeb.PermissionCanCreate, [])
   end
 
   scope "/api", ApiWeb do
-    pipe_through(:api)
+    pipe_through(:api_can_create)
 
-    delete("/accounts/:id", AccountsController, :delete)
     post("/operations/deposit", OperationsController, :deposit)
     post("/operations/withdraw", OperationsController, :withdraw)
     post("/operations/transfer", OperationsController, :transfer)
     post("/operations/split", OperationsController, :split)
+  end
+
+  pipeline :api_can_delete do
+    plug(:accepts, ["json"])
+    plug(ApiWeb.Auth, [])
+    plug(ApiWeb.PermissionCanDelete, [])
+  end
+
+  scope "/api", ApiWeb do
+    pipe_through(:api_can_delete)
+
+    delete("/accounts/:id", AccountsController, :delete)
+  end
+
+  pipeline :api_can_view do
+    plug(:accepts, ["json"])
+    plug(ApiWeb.Auth, [])
+    plug(ApiWeb.PermissionCanView, [])
+  end
+
+  scope "/api", ApiWeb do
+    pipe_through(:api_can_view)
+
     get("/operations/financial_statement/:id", OperationsController, :financial_statement)
   end
 end

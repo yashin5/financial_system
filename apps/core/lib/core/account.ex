@@ -17,14 +17,7 @@ defmodule FinancialSystem.Core.Account do
     Create user accounts
 
   ## Examples
-    FinancialSystem.Core.create(%{
-        "role" => "regular,
-        "name" => "Yashin Santos",
-        "currency" => "EUR",
-        "value" => "220",
-        "email" => "xx@xx.com",
-        "password" => "B@xopn123"
-      })
+    FinancialSystem.Core.create(%{"role" => "regular", "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
   """
   @callback create(%{
               role: String.t() | any(),
