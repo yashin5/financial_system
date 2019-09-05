@@ -17,6 +17,7 @@ defmodule FinHelperTest do
 
       {_, account} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Roberta Santos",
           "currency" => "BRL",
           "value" => "20.0",
@@ -62,6 +63,7 @@ defmodule FinHelperTest do
 
       {_, account} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -71,6 +73,7 @@ defmodule FinHelperTest do
 
       {_, account2} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Oliver Tsubasa",
           "currency" => "BRL",
           "value" => "2",
@@ -80,6 +83,7 @@ defmodule FinHelperTest do
 
       {_, account3} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Inu Yasha",
           "currency" => "BRL",
           "value" => "5",
@@ -150,6 +154,7 @@ defmodule FinHelperTest do
 
       {_, account} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -159,6 +164,7 @@ defmodule FinHelperTest do
 
       {_, account3} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Inu Yasha",
           "currency" => "BRL",
           "value" => "5",
@@ -212,6 +218,7 @@ defmodule FinHelperTest do
 
       {_, account} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",

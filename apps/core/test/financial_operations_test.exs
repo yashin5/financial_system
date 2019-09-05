@@ -15,6 +15,7 @@ defmodule FinancialOperationsTest do
 
       {_, account} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -42,6 +43,7 @@ defmodule FinancialOperationsTest do
 
       {_, account} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -149,6 +151,7 @@ defmodule FinancialOperationsTest do
 
       {_, account} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -231,6 +234,7 @@ defmodule FinancialOperationsTest do
 
       {_, account} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -240,6 +244,7 @@ defmodule FinancialOperationsTest do
 
       {_, account2} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Oliver Tsubasa",
           "currency" => "BRL",
           "value" => "2",
@@ -353,6 +358,7 @@ defmodule FinancialOperationsTest do
 
       {_, account} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -362,6 +368,7 @@ defmodule FinancialOperationsTest do
 
       {_, account2} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Oliver Tsubasa",
           "currency" => "BRL",
           "value" => "1",
@@ -371,6 +378,7 @@ defmodule FinancialOperationsTest do
 
       {_, account3} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Inu Yasha",
           "currency" => "BRL",
           "value" => "5",
@@ -500,6 +508,7 @@ defmodule FinancialOperationsTest do
 
       {_, account} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",

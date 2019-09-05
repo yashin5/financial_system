@@ -17,6 +17,7 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
       {_, user} =
         %User{}
         |> User.changeset(%{
+          role: "regular",
           name: "Yashin",
           email: "teste@gmail.com",
           password: "f1aA678@"
@@ -52,6 +53,7 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
 
       {_, account} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -79,6 +81,7 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
 
       {_, account} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",

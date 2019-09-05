@@ -50,6 +50,7 @@ defmodule FinancialSystem.CoreTest do
 
       {_, account} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "0.10",
@@ -77,6 +78,7 @@ defmodule FinancialSystem.CoreTest do
 
       {_, account} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Oliver Tsubasa",
           "currency" => "brl",
           "value" => "1",
@@ -104,6 +106,7 @@ defmodule FinancialSystem.CoreTest do
 
       {_, account} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Inu Yasha",
           "currency" => "brl",
           "value" => "0",
@@ -125,6 +128,7 @@ defmodule FinancialSystem.CoreTest do
     test "Not should be able to create a account with a name is not a string" do
       {:error, message} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => 1,
           "currency" => "brll",
           "value" => "0",
@@ -142,6 +146,7 @@ defmodule FinancialSystem.CoreTest do
 
       {:error, message} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Oliver Tsubasa",
           "currency" => "brl",
           "value" => "-1",
@@ -155,6 +160,7 @@ defmodule FinancialSystem.CoreTest do
     test "Not should be able to create a account with a value in integer format" do
       {:error, message} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Oliver Tsubasa",
           "currency" => "brl",
           "value" => 10,
@@ -172,6 +178,7 @@ defmodule FinancialSystem.CoreTest do
 
       {:error, message} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "",
           "currency" => "BRL",
           "value" => "10",
@@ -187,6 +194,7 @@ defmodule FinancialSystem.CoreTest do
     test "Not should be able to create a account with a value in float format" do
       {:error, message} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Oliver Tsubasa",
           "currency" => "brl",
           "value" => 10.0,
@@ -204,6 +212,7 @@ defmodule FinancialSystem.CoreTest do
 
       {:error, message} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Oliver Tsubasa",
           "currency" => "brll",
           "value" => "0",
@@ -223,6 +232,7 @@ defmodule FinancialSystem.CoreTest do
 
       {_, account} =
         FinancialSystem.Core.create(%{
+          "role" => "regular",
           "name" => "Oliver Tsubasa",
           "currency" => "brl",
           "value" => "1",

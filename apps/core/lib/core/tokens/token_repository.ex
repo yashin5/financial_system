@@ -53,13 +53,14 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
 
   ## Examples
     {:ok, account} = FinancialSystem.Core.create(%{
+        "role" => "regular",
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
         "email" => "xx@xx.com",
         "password" => "B@xopn123"
       })
-      
+
     {:ok, token} = generate_token(account.id)
 
     FinancialSystem.Core.Tokens.TokenRepository.validate_token(token)

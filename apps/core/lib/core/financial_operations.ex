@@ -20,6 +20,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
+        "role" => "regular",
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -47,6 +48,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
+        "role" => "regular",
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -104,6 +106,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
+        "role" => "regular",
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -148,6 +151,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
+        "role" => "regular",
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -155,6 +159,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
         "password" => "B@xopn123"
       })
     {_, account2} = FinancialSystem.Core.create(%{
+        "role" => "regular",
         "name" => "Yashin Santos",
         "currency" => "BRL",
         "value" => "100",
@@ -218,6 +223,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
+        "role" => "regular",
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -225,6 +231,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
         "password" => "B@xopn123"
       })
     {_, account2} = FinancialSystem.Core.create(%{
+        "role" => "regular",
         "name" => "Antonio Marcos",
         "currency" => "EUR",
         "value" => "220",
@@ -232,6 +239,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
         "password" => "B@xopn123"
       })
     {_, account3} = FinancialSystem.Core.create(%{
+        "role" => "regular",
         "name" => "Mateus Mathias",
         "currency" => "EUR",
         "value" => "220",
@@ -320,6 +328,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
+        "role" => "regular",
         "name" => "Mateus Mathias",
         "currency" => "EUR",
         "value" => "220",

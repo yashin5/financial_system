@@ -14,7 +14,7 @@ defmodule ApiWeb.Auth do
 
   def call(conn, _options) do
     with token when is_binary(token) <- conn |> get_req_header("authorization") |> List.first(),
-         {:ok, user_id} <- TokenRepository.validate_token(token) |> IO.inspect(),
+         {:ok, user_id} <- TokenRepository.validate_token(token),
          {:ok, user} <- UserRepository.get_user(user_id),
          %Account{} = account <- get_account(user_id) do
       assign(conn, :account_id, account.id) |> assign(:role, user.role)

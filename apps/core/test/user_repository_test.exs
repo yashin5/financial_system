@@ -11,7 +11,7 @@ defmodule UserRepositoryTest do
 
   describe "new_user/3" do
     test "Should create a new user if pass correct params" do
-      {:ok, user} = UserRepository.new_user("Yaxx", "yaxx@gmailsx.com", "X@ghnx1234")
+      {:ok, user} = UserRepository.new_user("regular", "Yaxx", "yaxx@gmailsx.com", "X@ghnx1234")
 
       user_simulate = %{
         email: "yaxx@gmailsx.com",
@@ -31,7 +31,7 @@ defmodule UserRepositoryTest do
     end
 
     test "Should not create a new user if pass a invalid email" do
-      {:error, user} = UserRepository.new_user("Yaxx", "yaxx.com", "X@ghnx1234")
+      {:error, user} = UserRepository.new_user("regular", "Yaxx", "yaxx.com", "X@ghnx1234")
 
       user_errors = user.errors
 
@@ -41,7 +41,7 @@ defmodule UserRepositoryTest do
     end
 
     test "Should not create a new user if pass a invalid email type" do
-      {:error, user} = UserRepository.new_user("Yaxx", 11, "X@ghnx1234")
+      {:error, user} = UserRepository.new_user("regular", "Yaxx", 11, "X@ghnx1234")
 
       user_errors = user.errors
 
@@ -51,7 +51,7 @@ defmodule UserRepositoryTest do
     end
 
     test "Should not create a new user if pass a invalid name" do
-      {:error, user} = UserRepository.new_user("Y", "yaxx@g.com", "X@ghnx1234")
+      {:error, user} = UserRepository.new_user("regular", "Y", "yaxx@g.com", "X@ghnx1234")
 
       user_errors = user.errors
 
@@ -65,7 +65,7 @@ defmodule UserRepositoryTest do
     end
 
     test "Should not create a new user if pass a invalid name type" do
-      {:error, user} = UserRepository.new_user(12, "yaxx@g.com", "X@ghnx1234")
+      {:error, user} = UserRepository.new_user("regular", 12, "yaxx@g.com", "X@ghnx1234")
 
       user_errors = user.errors
 
@@ -75,7 +75,7 @@ defmodule UserRepositoryTest do
     end
 
     test "Should not create a new user if pass a invalid password" do
-      {:error, user} = UserRepository.new_user("Yaxx", "yaxx@g.com", "X@23")
+      {:error, user} = UserRepository.new_user("regular", "Yaxx", "yaxx@g.com", "X@23")
 
       user_errors = user.errors
 
@@ -89,7 +89,7 @@ defmodule UserRepositoryTest do
     end
 
     test "Should not create a new user if pass a invalid password type" do
-      {:error, user} = UserRepository.new_user("Yaxx", "yaxx@g.com", 1)
+      {:error, user} = UserRepository.new_user("regular", "Yaxx", "yaxx@g.com", 1)
 
       user_errors = user.errors
 
@@ -99,7 +99,7 @@ defmodule UserRepositoryTest do
     end
 
     test "Should not create a new user if pass a invalid password length" do
-      {:error, user} = UserRepository.new_user("Yaxx", "yaxx@g.com", "X@")
+      {:error, user} = UserRepository.new_user("regular", "Yaxx", "yaxx@g.com", "X@")
 
       user_errors = user.errors
 
@@ -115,7 +115,7 @@ defmodule UserRepositoryTest do
 
   describe "authenticate/2" do
     test "Should be able to authenticate if pass data from existent user" do
-      UserRepository.new_user("Yaxx", "yaxx@gmailsx.com", "X@ghnx1234")
+      UserRepository.new_user("regular", "Yaxx", "yaxx@gmailsx.com", "X@ghnx1234")
 
       {:ok, authenticate} =
         UserRepository.authenticate(%{"email" => "yaxx@gmailsx.com", "password" => "X@ghnx1234"})
@@ -154,7 +154,7 @@ defmodule UserRepositoryTest do
 
   describe "get_user/2" do
     test "Should be able to get user informations if pass a existent user email" do
-      UserRepository.new_user("Yaxx", "yaxx@gmailsx.com", "X@ghnx1234")
+      UserRepository.new_user("regular", "Yaxx", "yaxx@gmailsx.com", "X@ghnx1234")
 
       {:ok, user} = UserRepository.get_user(:auth, "yaxx@gmailsx.com")
 
@@ -193,7 +193,8 @@ defmodule UserRepositoryTest do
 
   describe "get_user/1" do
     test "Should be able to get user informations if pass a existent id of user" do
-      {:ok, new_user} = UserRepository.new_user("Yaxx", "yaxx@gmailsx.com", "X@ghnx1234")
+      {:ok, new_user} =
+        UserRepository.new_user("regular", "Yaxx", "yaxx@gmailsx.com", "X@ghnx1234")
 
       {:ok, user} = UserRepository.get_user(new_user.id)
 

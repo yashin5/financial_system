@@ -14,6 +14,7 @@ defmodule ApiWeb.AccountsControllerTest do
       end)
 
       Core.create(%{
+        "role" => "regular",
         "name" => "Yashin",
         "currency" => "brl",
         "value" => "100",
@@ -41,6 +42,7 @@ defmodule ApiWeb.AccountsControllerTest do
       end)
 
       Core.create(%{
+        "role" => "regular",
         "name" => "Yashin",
         "currency" => "brl",
         "value" => "100",
@@ -67,6 +69,7 @@ defmodule ApiWeb.AccountsControllerTest do
       end)
 
       Core.create(%{
+        "role" => "regular",
         "name" => "Yashin",
         "currency" => "brl",
         "value" => "100",
@@ -95,6 +98,7 @@ defmodule ApiWeb.AccountsControllerTest do
       end)
 
       params = %{
+        role: "regular",
         name: "Yashin",
         currency: "brl",
         value: "100",
@@ -121,6 +125,7 @@ defmodule ApiWeb.AccountsControllerTest do
 
     test "when params is not valid, should return 400", %{conn: conn} do
       params = %{
+        role: "regular",
         name: "Yashin",
         currency: "brl",
         value: 100,
@@ -148,6 +153,7 @@ defmodule ApiWeb.AccountsControllerTest do
 
       {_, account} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",

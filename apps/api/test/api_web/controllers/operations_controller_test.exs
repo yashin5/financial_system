@@ -13,6 +13,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -46,6 +47,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -78,6 +80,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -112,6 +115,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -145,6 +149,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -157,6 +162,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account2} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -188,6 +194,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "0",
@@ -199,6 +206,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account2} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -227,6 +235,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -238,6 +247,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account2} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -268,6 +278,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -277,6 +288,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account2} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -288,6 +300,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account3} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -324,6 +337,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -333,6 +347,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account2} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "0",
@@ -344,6 +359,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account3} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -377,6 +393,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -386,6 +403,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account2} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -397,6 +415,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account3} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -432,6 +451,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, account} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",

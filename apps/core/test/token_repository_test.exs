@@ -14,6 +14,7 @@ defmodule TokenRepositoryTest do
     test "Should be able to create a token for an existent user" do
       {:ok, user} =
         UserRepository.new_user(
+          "regular",
           "Yxcaxx",
           "yaxx@gmailsx.com",
           "X@ghnx1234"
@@ -49,6 +50,7 @@ defmodule TokenRepositoryTest do
     test "Should be able to verify if token is valid if insert a valid token" do
       {:ok, user} =
         UserRepository.new_user(
+          "regular",
           "Yxcaxx",
           "yasdxx@gmailsx.com",
           "X@ghnx1234"

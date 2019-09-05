@@ -13,6 +13,7 @@ defmodule ApiWeb.AuthTest do
 
       {_, account} =
         Core.create(%{
+          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",

@@ -11,21 +11,21 @@ defmodule FinancialSystem.Core.Permissions.PermissionRepository do
   end
 
   def can_do_this_action(:can_view, role) do
-    {:ok, role_data} = RoleRepository.get_role(role)
+    role_data = RoleRepository.get_role(role)
 
     get_permission(role_data.id)
     |> can?(:can_view)
   end
 
   def can_do_this_action(:can_delete, role) do
-    {:ok, role_data} = RoleRepository.get_role(role)
+    role_data = RoleRepository.get_role(role)
 
     get_permission(role_data.id)
     |> can?(:can_delete)
   end
 
   def can_do_this_action(:can_view_all, role) do
-    {:ok, role_data} = RoleRepository.get_role(role)
+    role_data = RoleRepository.get_role(role)
 
     get_permission(role_data.id)
     |> can?(:can_view_all)
