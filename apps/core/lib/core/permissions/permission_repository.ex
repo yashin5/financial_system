@@ -31,9 +31,9 @@ defmodule FinancialSystem.Core.Permissions.PermissionRepository do
     |> can?(:can_view_all)
   end
 
-  def get_permission(role_id), do: Permission |> Repo.get_by!(role_id: role_id)
+  defp get_permission(role_id), do: Permission |> Repo.get_by!(role_id: role_id)
 
-  def can?(%Permission{} = permissions, action) do
+  defp can?(%Permission{} = permissions, action) do
     Map.get(permissions, action) == true
   end
 end

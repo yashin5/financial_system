@@ -48,13 +48,13 @@ defmodule FinancialSystem.Core.Users.User do
     |> unique_constraint(:email)
   end
 
-  def validate_pass(%{valid?: true, changes: %{password: pass}} = changeset) do
+  defp validate_pass(%{valid?: true, changes: %{password: pass}} = changeset) do
     @password_regex
     |> Regex.match?(pass)
     |> do_validate_pass(changeset)
   end
 
-  def validate_pass(changeset), do: changeset
+  defp validate_pass(changeset), do: changeset
 
   defp do_validate_pass(true, changeset), do: changeset
 
@@ -62,9 +62,9 @@ defmodule FinancialSystem.Core.Users.User do
     add_error(changeset, :password, "Password does not match the minimun requirements")
   end
 
-  def put_hash(%{valid?: true, changes: %{password: pass}} = changeset) do
+  defp put_hash(%{valid?: true, changes: %{password: pass}} = changeset) do
     change(changeset, %{password_hash: Argon2.hash_pwd_salt(pass), password: nil})
   end
 
-  def put_hash(changeset), do: changeset
+  defp put_hash(changeset), do: changeset
 end
