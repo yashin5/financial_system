@@ -104,6 +104,36 @@ defmodule ApiWeb.OperationsControllerTest do
 
       assert response == expected
     end
+
+    test "when all params is not valid, should return 400 and error message", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "asdf@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
+
+      {_, token} = Core.authenticate(%{"email" => "asdf@gmail.com", "password" => "fp3@naDSsjh2"})
+
+      params = %{account_id: 1, value: 100}
+
+      response =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> post("/api/operations/withdraw", params)
+        |> json_response(400)
+
+      expected = %{"error" => "invalid_arguments_type"}
+
+      assert response == expected
+    end
   end
 
   describe "POST /api/operations/deposit" do
@@ -326,6 +356,37 @@ defmodule ApiWeb.OperationsControllerTest do
       assert response == expected
     end
 
+    test "should not be able to transfer to yourself, should return 422", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} =
+        Core.create(%{
+          "role" => "regular",
+          "name" => "Yashin",
+          "currency" => "brl",
+          "value" => "100",
+          "email" => "aaaa@gmail.com",
+          "password" => "fp3@naDSsjh2"
+        })
+
+      {_, token} = Core.authenticate(%{"email" => "aaaa@gmail.com", "password" => "fp3@naDSsjh2"})
+
+      params = %{account_to: account.id, value: "100"}
+
+      response =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> post("/api/operations/transfer", params)
+        |> json_response(422)
+
+      expected = %{"error" => "cannot_send_to_the_same"}
+
+      assert response == expected
+    end
+
     test "when params is not valid, should return 400", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
         {:ok, String.upcase(currency)}
@@ -384,15 +445,14 @@ defmodule ApiWeb.OperationsControllerTest do
           "password" => "fp3@naDSsjh2"
         })
 
-      {_, account2} =
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "gggg@gmail.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "gggg@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       {_, token} = Core.authenticate(%{"email" => "gggg@gmail.com", "password" => "fp3@naDSsjh2"})
 
@@ -411,7 +471,7 @@ defmodule ApiWeb.OperationsControllerTest do
         %{account: account3.id, percent: 50}
       ]
 
-      params = %{account_id_from: account2.id, split_list: split_list, value: "100"}
+      params = %{split_list: split_list, value: "100"}
 
       response =
         conn
@@ -424,6 +484,61 @@ defmodule ApiWeb.OperationsControllerTest do
         "account_id" => response["account_id"],
         "new_balance" => 0
       }
+
+      assert response == expected
+    end
+
+    test "should not be able to make split transfer if total percent not is 100", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, 5, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} =
+        Core.create(%{
+          "role" => "regular",
+          "name" => "Yashin",
+          "currency" => "brl",
+          "value" => "100",
+          "email" => "yashin@outlook.com",
+          "password" => "fp3@naDSsjh2"
+        })
+
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "gggg@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
+
+      {_, token} = Core.authenticate(%{"email" => "gggg@gmail.com", "password" => "fp3@naDSsjh2"})
+
+      {_, account3} =
+        Core.create(%{
+          "role" => "regular",
+          "name" => "Yashin",
+          "currency" => "brl",
+          "value" => "100",
+          "email" => "yashin@yahoo.com",
+          "password" => "fp3@naDSsjh2"
+        })
+
+      split_list = [
+        %{account: account.id, percent: 40},
+        %{account: account3.id, percent: 50}
+      ]
+
+      params = %{split_list: split_list, value: "100"}
+
+      response =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> post("/api/operations/split", params)
+        |> json_response(422)
+
+      expected = %{"error" => "invalid_total_percent"}
 
       assert response == expected
     end
@@ -443,15 +558,14 @@ defmodule ApiWeb.OperationsControllerTest do
           "password" => "fp3@naDSsjh2"
         })
 
-      {_, account2} =
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "0",
-          "email" => "qqq@yahoo.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "0",
+        "email" => "qqq@yahoo.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       {_, token} = Core.authenticate(%{"email" => "qqq@yahoo.com", "password" => "fp3@naDSsjh2"})
 
@@ -470,7 +584,7 @@ defmodule ApiWeb.OperationsControllerTest do
         %{account: account3.id, percent: 50}
       ]
 
-      params = %{account_id_from: account2.id, split_list: split_list, value: "100"}
+      params = %{split_list: split_list, value: "100"}
 
       response =
         conn
@@ -499,15 +613,14 @@ defmodule ApiWeb.OperationsControllerTest do
           "password" => "fp3@naDSsjh2"
         })
 
-      {_, account2} =
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "rrr@yahoo.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "rrr@yahoo.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       {_, token} = Core.authenticate(%{"email" => "rrr@yahoo.com", "password" => "fp3@naDSsjh2"})
 
@@ -526,7 +639,7 @@ defmodule ApiWeb.OperationsControllerTest do
         %{account: account3.id, percent: 50}
       ]
 
-      params = %{account_id_from: account2.id, split_list: split_list, value: 100}
+      params = %{split_list: split_list, value: 100}
 
       response =
         conn

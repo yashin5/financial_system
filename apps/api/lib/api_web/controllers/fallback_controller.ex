@@ -60,13 +60,6 @@ defmodule ApiWeb.FallbackController do
     |> render("error.json", %{error: :cannot_send_to_the_same})
   end
 
-  def call(conn, {:error, :invalid_type_to_compare}) do
-    conn
-    |> put_status(:bad_request)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :invalid_type_to_compare})
-  end
-
   def call(conn, {:error, :invalid_total_percent}) do
     conn
     |> put_status(:unprocessable_entity)

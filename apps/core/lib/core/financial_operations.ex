@@ -249,14 +249,14 @@ defmodule FinancialSystem.Core.FinancialOperations do
     split_list = [%{account: account.id, percent: 50}, %{account: account3.id, percent: 50}]
 
     FinancialSystem.Core.split(%{
-        "account_id_from" => account2.id,
+        "account_from" => account2.id,
         "split_list" => split_list,
         "value" => "100"
       })
   """
   @impl true
   def split(%{
-        "account_id_from" => account_from,
+        "account_from" => account_from,
         "split_list" => split_list_another_format,
         "value" => value
       })
@@ -287,7 +287,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
   end
 
   def split(%{
-        "account_id_from" => account_from,
+        "account_from" => account_from,
         "split_list" => split_list_another_format,
         "value" => value
       })
@@ -296,7 +296,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
   end
 
   def split(%{
-        "account_id_from" => account_from,
+        "account_from" => account_from,
         "split_list" => split_list_another_format,
         "value" => value
       })
@@ -305,7 +305,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
   end
 
   def split(%{
-        "account_id_from" => account_from,
+        "account_from" => account_from,
         "split_list" => split_list_another_format,
         "value" => value
       })
