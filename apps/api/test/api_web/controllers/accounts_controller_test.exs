@@ -123,6 +123,31 @@ defmodule ApiWeb.AccountsControllerTest do
       assert response == expected
     end
 
+    test "when name has less than 2 character, should return 400", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      params = %{
+        role: "regular",
+        name: "Y",
+        currency: "brl",
+        value: "100",
+        email: "yaxxxxxshin@gmail.com",
+        password: "fp3@naDSsjh2"
+      }
+
+      response =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> post("/api/accounts", params)
+        |> json_response(422)
+
+      expected = %{"error" => %{"name" => ["should be at least 2 character(s)"]}}
+
+      assert response == expected
+    end
+
     test "when params is not valid, should return 400", %{conn: conn} do
       params = %{
         role: "regular",

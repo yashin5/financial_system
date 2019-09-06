@@ -4,7 +4,6 @@ defmodule ApiWeb.OperationsController do
   use ApiWeb, :controller
 
   alias FinancialSystem.Core
-  alias FinancialSystem.Core.Permissions.PermissionRepository
 
   action_fallback(ApiWeb.FallbackController)
 

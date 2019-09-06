@@ -68,7 +68,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
         "currency" => currency_from,
         "value" => value
       })
-      when is_binary(account_id) and is_binary(value) do
+      when is_binary(account_id) and is_binary(value) and is_binary(currency_from) do
     sum_value(account_id, currency_from, value, "deposit")
   end
 

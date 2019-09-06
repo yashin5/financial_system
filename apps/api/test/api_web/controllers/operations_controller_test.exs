@@ -40,6 +40,40 @@ defmodule ApiWeb.OperationsControllerTest do
       assert response == expected
     end
 
+    test "when currency is not invalid type, should return 400", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} =
+        Core.create(%{
+          "role" => "regular",
+          "name" => "Yashin",
+          "currency" => "brl",
+          "value" => "100",
+          "email" => "axsd@gmail.com",
+          "password" => "fp3@naDSsjh2"
+        })
+
+      {_, token} = Core.authenticate(%{"email" => "axsd@gmail.com", "password" => "fp3@naDSsjh2"})
+
+      params = %{account_id: account.id, value: "100"}
+
+      response =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> post("/api/operations/withdraw", params)
+        |> json_response(201)
+
+      expected = %{
+        "account_id" => response["account_id"],
+        "new_balance" => 0
+      }
+
+      assert response == expected
+    end
+
     test "when params is not valid, should return 400 and error message", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
@@ -104,6 +138,70 @@ defmodule ApiWeb.OperationsControllerTest do
         "account_id" => response["account_id"],
         "new_balance" => 20_000
       }
+
+      assert response == expected
+    end
+
+    test "when currency is not invalid type, should return 400", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} =
+        Core.create(%{
+          "role" => "regular",
+          "name" => "Yashin",
+          "currency" => "brl",
+          "value" => "100",
+          "email" => "asdfg@gmail.com",
+          "password" => "fp3@naDSsjh2"
+        })
+
+      {_, token} =
+        Core.authenticate(%{"email" => "asdfg@gmail.com", "password" => "fp3@naDSsjh2"})
+
+      params = %{account_id: account.id, currency: 1, value: "100"}
+
+      response =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> post("/api/operations/deposit", params)
+        |> json_response(400)
+
+      expected = %{"error" => "invalid_currency_type"}
+
+      assert response == expected
+    end
+
+    test "when value ins equal or less than 0, should return 400", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} =
+        Core.create(%{
+          "role" => "regular",
+          "name" => "Yashin",
+          "currency" => "brl",
+          "value" => "100",
+          "email" => "asdfg@gmail.com",
+          "password" => "fp3@naDSsjh2"
+        })
+
+      {_, token} =
+        Core.authenticate(%{"email" => "asdfg@gmail.com", "password" => "fp3@naDSsjh2"})
+
+      params = %{account_id: account.id, currency: "brl", value: "-1"}
+
+      response =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> post("/api/operations/deposit", params)
+        |> json_response(400)
+
+      expected = %{"error" => "invalid_value_less_than_0"}
 
       assert response == expected
     end

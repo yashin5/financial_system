@@ -18,13 +18,6 @@ defmodule ApiWeb.FallbackController do
     |> render("error.json", %{error: errors})
   end
 
-  def call(conn, {:error, :invalid_account_id_type}) do
-    conn
-    |> put_status(:bad_request)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :invalid_account_id_type})
-  end
-
   def call(conn, {:error, :invalid_value_type}) do
     conn
     |> put_status(:bad_request)

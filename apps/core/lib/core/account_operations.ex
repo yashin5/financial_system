@@ -26,8 +26,8 @@ defmodule FinancialSystem.Core.AccountOperations do
 
     FinancialSystem.Core.AccountOperations.subtract_value_in_balance(account, 100, "withdraw")
   """
-  @spec subtract_value_in_balance(Account.t(), pos_integer(), String.t()) ::
-          Account.t() | no_return()
+  @spec subtract_value_in_balance(Account.t() | any(), pos_integer(), String.t() | any()) ::
+          Account.t() | {:error, atom()}
   def subtract_value_in_balance(%Account{id: id} = account, value, operation)
       when is_integer(value) and value > 0 do
     save_transaction(account, value, operation)
@@ -35,6 +35,11 @@ defmodule FinancialSystem.Core.AccountOperations do
     id
     |> calculate_balance(value * -1)
     |> make_operation(account)
+  end
+
+  def subtract_value_in_balance(_, value, _)
+      when is_integer(value) and value == 0 do
+    {:error, :invalid_value_less_than_0}
   end
 
   @doc """
@@ -52,7 +57,8 @@ defmodule FinancialSystem.Core.AccountOperations do
 
     FinancialSystem.Core.AccountOperations.sum_value_in_balance(account, 100, "deposit")
   """
-  @spec sum_value_in_balance(Account.t(), integer(), String.t()) :: Account.t() | no_return()
+  @spec sum_value_in_balance(Account.t() | any(), pos_integer(), String.t() | any()) ::
+          Account.t() | {:error, atom()}
   def sum_value_in_balance(%Account{id: id} = account, value, operation)
       when is_integer(value) and value > 0 do
     save_transaction(account, value, operation)
@@ -60,6 +66,11 @@ defmodule FinancialSystem.Core.AccountOperations do
     id
     |> calculate_balance(value)
     |> make_operation(account)
+  end
+
+  def sum_value_in_balance(_, value, _)
+      when is_integer(value) and value == 0 do
+    {:error, :invalid_value_less_than_0}
   end
 
   defp make_operation(value, account) do
