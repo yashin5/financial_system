@@ -416,7 +416,7 @@ defmodule FinancialOperationsTest do
       end)
 
       FinancialSystem.Core.split(%{
-        "account_id_from" => account2,
+        "account_from" => account2,
         "split_list" => split_list,
         "value" => "1"
       })
@@ -436,7 +436,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} =
         FinancialSystem.Core.split(%{
-          "account_id_from" => account,
+          "account_from" => account,
           "split_list" => split_list,
           "value" => "1"
         })
@@ -450,7 +450,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} =
         FinancialSystem.Core.split(%{
-          "account_id_from" => account,
+          "account_from" => account,
           "split_list" => split_list,
           "value" => "-1"
         })
@@ -463,7 +463,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} =
         FinancialSystem.Core.split(%{
-          "account_id_from" => "account2",
+          "account_from" => "account2",
           "split_list" => split_list,
           "value" => "1"
         })
@@ -477,7 +477,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} =
         FinancialSystem.Core.split(%{
-          "account_id_from" => account,
+          "account_from" => account,
           "split_list" => split_list,
           "value" => 1
         })
@@ -491,7 +491,7 @@ defmodule FinancialOperationsTest do
     } do
       {:error, message} =
         FinancialSystem.Core.split(%{
-          "account_id_from" => account,
+          "account_from" => account,
           "split_list" => split_list,
           "value" => 1.0
         })
