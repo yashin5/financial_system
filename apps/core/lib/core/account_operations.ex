@@ -38,8 +38,8 @@ defmodule FinancialSystem.Core.AccountOperations do
   end
 
   def subtract_value_in_balance(_, value, _)
-      when is_integer(value) and value == 0 do
-    {:error, :invalid_value_less_than_0}
+      when is_integer(value) and value <= 0 do
+    {:error, :invalid_value_less_or_equal_than_0}
   end
 
   @doc """
@@ -69,8 +69,8 @@ defmodule FinancialSystem.Core.AccountOperations do
   end
 
   def sum_value_in_balance(_, value, _)
-      when is_integer(value) and value == 0 do
-    {:error, :invalid_value_less_than_0}
+      when is_integer(value) and value <= 0 do
+    {:error, :invalid_value_less_or_equal_than_0}
   end
 
   defp make_operation(value, account) do
