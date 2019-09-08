@@ -30,6 +30,16 @@ defmodule UserRepositoryTest do
       assert user_simulate == user_struct
     end
 
+    test "Should not be able to create a new user if password dont match the minimum requiriments" do
+      {:error, user} = UserRepository.new_user("regular", "Yaxx", "yaxx@gmailsx.com", "Xghnx1234")
+
+      user_errors = user.errors
+
+      error = [password: {"Password does not match the minimun requirements", []}]
+
+      assert user_errors == error
+    end
+
     test "Should not create a new user if pass a invalid email" do
       {:error, user} = UserRepository.new_user("regular", "Yaxx", "yaxx.com", "X@ghnx1234")
 

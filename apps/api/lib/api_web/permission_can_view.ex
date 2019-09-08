@@ -10,10 +10,10 @@ defmodule ApiWeb.PermissionCanView do
   def init(options \\ []), do: options
 
   def call(conn, _options) do
-    with true <-
+    with {:ok, true} <-
            PermissionRepository.can_do_this_action(
-             :can_view,
-             conn.assigns[:role]
+            %{permission: :can_view, role: conn.assigns[:role]}
+
            ) do
       conn
     else

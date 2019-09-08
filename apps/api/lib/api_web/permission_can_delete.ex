@@ -10,10 +10,9 @@ defmodule ApiWeb.PermissionCanDelete do
   def init(options \\ []), do: options
 
   def call(conn, _options) do
-    with true <-
+    with {:ok, true} <-
            PermissionRepository.can_do_this_action(
-             :can_delete,
-             conn.assigns[:role]
+            %{permission: :can_delete, role: conn.assigns[:role]}
            ) do
       conn
     else

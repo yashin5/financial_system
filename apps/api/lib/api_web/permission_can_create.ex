@@ -10,10 +10,11 @@ defmodule ApiWeb.PermissionCanCreate do
   def init(options \\ []), do: options
 
   def call(conn, _options) do
-    with true <-
+    with {:ok, true} <-
            PermissionRepository.can_do_this_action(
-             :can_create,
-             conn.assigns[:role]
+            %{permission: :can_create, role: conn.assigns[:role]}
+             
+             
            ) do
       conn
     else
