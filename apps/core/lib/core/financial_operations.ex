@@ -3,13 +3,12 @@ defmodule FinancialSystem.Core.FinancialOperations do
   This module is responsable to define the operations in this API
   """
 
-  alias FinancialSystem.Core.{
-    AccountOperations,
-    Accounts.AccountRepository,
-    Currency,
-    FinHelper,
-    Split
-  }
+  alias FinancialSystem.Core.AccountOperations
+  alias FinancialSystem.Core.Accounts.AccountRepository
+  alias FinancialSystem.Core.Currency
+  alias FinancialSystem.Core.FinHelper
+  alias FinancialSystem.Core.Split
+  alias FinancialSystem.Core.Users.UserRepository
 
   @behaviour FinancialSystem.Core.Financial
 
@@ -350,10 +349,12 @@ defmodule FinancialSystem.Core.FinancialOperations do
     end
   end
 
-  # def financial_statement(%{"email" => email}) when email is_binary(email) do
-  #   UserRepository.get_user(:auth, email)
-  #   financial_statement(%{"id" => account_id})
-  # end
+  def financial_statement(%{"email" => email}) when is_binary(email) do
+    with {:ok, user} = UserRepository.get_user(:auth, email),
+         {:ok, account} = AccountRepository.find_account(:userid, user.id) do
+      financial_statement(%{"id" => account.id})
+    end
+  end
 
   def financial_statement(_), do: {:error, :invalid_account_id_type}
 

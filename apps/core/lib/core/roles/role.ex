@@ -4,7 +4,6 @@ defmodule FinancialSystem.Core.Roles.Role do
   import Ecto.Changeset
 
   alias FinancialSystem.Core.Permissions.Permission
-  alias FinancialSystem.Core.Users.User
 
   @primary_key {:id, :binary_id, autogenerate: true}
 
