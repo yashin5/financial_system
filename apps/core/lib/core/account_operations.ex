@@ -78,7 +78,7 @@ defmodule FinancialSystem.Core.AccountOperations do
     |> Account.changeset(%{value: value})
     |> Repo.update()
 
-    {_, account_actual_state} = AccountRepository.find_account(account.id)
+    {_, account_actual_state} = AccountRepository.find_account(:accountid, account.id)
 
     account_actual_state
   end

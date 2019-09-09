@@ -143,7 +143,7 @@ defmodule FinancialSystem.Core.Account do
         "id" => account_id
       })
       when is_binary(account_id) do
-    with {:ok, account} <- AccountRepository.find_account(account_id) do
+    with {:ok, account} <- AccountRepository.find_account(:accountid, account_id) do
       AccountRepository.delete_account(account)
     end
   end

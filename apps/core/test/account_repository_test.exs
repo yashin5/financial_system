@@ -33,7 +33,7 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
         }
         |> AccountRepository.register_account(user)
 
-      {_, account_actual_state} = AccountRepository.find_account(account.id)
+      {_, account_actual_state} = AccountRepository.find_account(:accountid, account.id)
 
       assert account_actual_state == account
     end
@@ -91,7 +91,7 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
 
       {:ok, _} = AccountRepository.delete_account(account)
 
-      {:error, message} = AccountRepository.find_account(account.id)
+      {:error, message} = AccountRepository.find_account(:accountid, account.id)
 
       assert ^message = :account_dont_exist
     end

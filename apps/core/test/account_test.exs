@@ -58,7 +58,7 @@ defmodule FinancialSystem.CoreTest do
           "password" => "f1aA678@"
         })
 
-      {_, account_data} = AccountRepository.find_account(account.id)
+      {_, account_data} = AccountRepository.find_account(:accountid, account.id)
 
       account_simulate = %FinancialSystem.Core.Accounts.Account{
         id: "abd",
@@ -86,7 +86,7 @@ defmodule FinancialSystem.CoreTest do
           "password" => "f1aA678@"
         })
 
-      {_, account_data} = AccountRepository.find_account(account.id)
+      {_, account_data} = AccountRepository.find_account(:accountid, account.id)
 
       account_simulate = %FinancialSystem.Core.Accounts.Account{
         id: "abc",
@@ -114,7 +114,7 @@ defmodule FinancialSystem.CoreTest do
           "password" => "f1aA678@"
         })
 
-      {_, account_data} = AccountRepository.find_account(account.id)
+      {_, account_data} = AccountRepository.find_account(:accountid, account.id)
 
       account_simulate = %FinancialSystem.Core.Accounts.Account{
         id: "adb",

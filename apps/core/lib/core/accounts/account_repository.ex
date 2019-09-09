@@ -63,12 +63,20 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
         "password" => "B@xopn123"
       })
 
-    FinancialSystem.Core.AccountRepository.find_account(account.id)
+    FinancialSystem.Core.AccountRepository.find_account(:accountid, account.id)
   """
-  @spec find_account(String.t()) :: {:ok, Account.t()} | {:error, atom()}
-  def find_account(account_id) when is_binary(account_id) do
+  @spec find_account(atom(), String.t()) :: {:ok, Account.t()} | {:error, atom()}
+  def find_account(:accountid, account_id) when is_binary(account_id) do
     Account
     |> Repo.get(account_id)
+    |> do_find_account()
+  rescue
+    Ecto.Query.CastError -> {:error, :invalid_account_id_type}
+  end
+
+  def find_account(:userid, user_id) do
+    Account
+    |> Repo.get_by(user_id: user_id)
     |> do_find_account()
   rescue
     Ecto.Query.CastError -> {:error, :invalid_account_id_type}

@@ -28,7 +28,7 @@ defmodule AccountOperationsTest do
 
       AccountOperations.subtract_value_in_balance(account, 1, "withdraw")
 
-      {_, account_state} = AccountRepository.find_account(account.id)
+      {_, account_state} = AccountRepository.find_account(:accountid, account.id)
       value = account_state.value
 
       assert value == 99
@@ -53,7 +53,7 @@ defmodule AccountOperationsTest do
 
       AccountOperations.sum_value_in_balance(account, 1, "deposit")
 
-      {_, account_state} = AccountRepository.find_account(account.id)
+      {_, account_state} = AccountRepository.find_account(:accountid, account.id)
       value = account_state.value
 
       assert value == 101
