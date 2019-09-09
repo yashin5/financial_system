@@ -16,7 +16,8 @@ defmodule FinancialSystem.MixProject do
       ],
       aliases: [
         test: ["ecto.create", "ecto.migrate", "test"],
-        reset: ["ecto.drop", "ecto.create", "ecto.migrate"]
+        start: ["ecto.create", "ecto.migrate", "run apps/core/priv/repo/seeds.exs"],
+        reset: ["ecto.drop", "ecto.create", "ecto.migrate", "run apps/core/priv/repo/seeds.exs"]
       ]
     ]
   end

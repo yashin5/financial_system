@@ -16,8 +16,6 @@ defmodule FinancialSystem.Core.Currency.CurrencyImpl do
 
   defp do_load_from_config({:ok, body}), do: Jason.decode!(body)
 
-  defp do_load_from_config({:error, reason}), do: reason
-
   defp get_currency_path do
     Application.get_env(:core, :file)
   end
