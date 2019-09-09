@@ -8,6 +8,7 @@ services:
       DB_USER: ysantos
       DB_PASSWORD: "@dmin123"
       DB_HOST: db
+      SECRET_KEY_BASE: "z3UD1p7uhy6c8zTzwiuk+xff4nrKDqikC64S1wCh7wKDxL/BhzhAnONJ9kiYDq+y"
 
   db:
     environment:
