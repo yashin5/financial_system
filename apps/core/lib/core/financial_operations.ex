@@ -168,14 +168,14 @@ defmodule FinancialSystem.Core.FinancialOperations do
 
     FinancialSystem.Core.transfer(%{
         "value" => "15",
-        "account_from" => account,
+        "account_id" => account,
         "account_to" => account2
       })
   """
   @impl true
   def transfer(%{
         "value" => value,
-        "account_from" => account_from,
+        "account_id" => account_from,
         "account_to" => account_to
       })
       when is_binary(account_from) and is_binary(account_to) and is_binary(value) do
@@ -190,7 +190,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
 
   def transfer(%{
         "value" => value,
-        "account_from" => account_from,
+        "account_id" => account_from,
         "account_to" => account_to
       })
       when (not is_binary(account_from) and is_binary(account_to)) or is_binary(value) do
@@ -199,7 +199,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
 
   def transfer(%{
         "value" => value,
-        "account_from" => account_from,
+        "account_id" => account_from,
         "account_to" => account_to
       })
       when is_binary(account_from) and is_binary(account_to) and not is_binary(value) do
@@ -211,7 +211,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
   defp transfer(value, account_from, account_to) do
     %{
       "value" => value,
-      "account_from" => account_from,
+      "account_id" => account_from,
       "account_to" => account_to
     }
     |> transfer()
@@ -248,14 +248,14 @@ defmodule FinancialSystem.Core.FinancialOperations do
     split_list = [%{account: account.id, percent: 50}, %{account: account3.id, percent: 50}]
 
     FinancialSystem.Core.split(%{
-        "account_from" => account2.id,
+        "account_id" => account2.id,
         "split_list" => split_list,
         "value" => "100"
       })
   """
   @impl true
   def split(%{
-        "account_from" => account_from,
+        "account_id" => account_from,
         "split_list" => split_list_another_format,
         "value" => value
       })
@@ -286,7 +286,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
   end
 
   def split(%{
-        "account_from" => account_from,
+        "account_id" => account_from,
         "split_list" => split_list_another_format,
         "value" => value
       })
@@ -295,7 +295,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
   end
 
   def split(%{
-        "account_from" => account_from,
+        "account_id" => account_from,
         "split_list" => split_list_another_format,
         "value" => value
       })
@@ -304,7 +304,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
   end
 
   def split(%{
-        "account_from" => account_from,
+        "account_id" => account_from,
         "split_list" => split_list_another_format,
         "value" => value
       })
