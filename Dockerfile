@@ -11,6 +11,6 @@ WORKDIR /app
 RUN mix local.hex --force
 RUN mix local.rebar
 RUN mix deps.get
-
+RUN mix run apps/core/priv/repo/seeds.exs
 # Compile the project
 RUN mix do compile
