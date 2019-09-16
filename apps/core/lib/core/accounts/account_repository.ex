@@ -1,7 +1,7 @@
 defmodule FinancialSystem.Core.Accounts.AccountRepository do
   @moduledoc false
 
-  alias FinancialSystem.Core.{Accounts.Account, Repo}
+  alias FinancialSystem.Core.{Accounts.Account, Repo, Users.User}
 
   @doc """
     Register the account in system.
@@ -11,8 +11,10 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
 
     FinancialSystem.Core.AccountRepository.register_account(account_struct)
   """
-  def register_account(%Account{} = account) do
-    account
+  def register_account(%Account{} = account, %User{} = user) do
+    query = Ecto.build_assoc(user, :account, account)
+
+    query
     |> Account.changeset()
     |> Repo.insert()
     |> do_register_account()
@@ -26,7 +28,14 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
     Delete an account from system.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(
+      %{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
     FinancialSystem.Core.AccountRepository.delete_account(account)
   """
@@ -45,14 +54,29 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
     Checks if the account exists.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
-    FinancialSystem.Core.AccountRepository.find_account(account.id)
+    FinancialSystem.Core.AccountRepository.find_account(:accountid, account.id)
   """
-  @spec find_account(String.t()) :: {:ok, Account.t()} | {:error, atom()}
-  def find_account(account_id) when is_binary(account_id) do
+  @spec find_account(atom(), String.t()) :: {:ok, Account.t()} | {:error, atom()}
+  def find_account(:accountid, account_id) when is_binary(account_id) do
     Account
     |> Repo.get(account_id)
+    |> do_find_account()
+  rescue
+    Ecto.Query.CastError -> {:error, :invalid_account_id_type}
+  end
+
+  def find_account(:userid, user_id) do
+    Account
+    |> Repo.get_by(user_id: user_id)
     |> do_find_account()
   rescue
     Ecto.Query.CastError -> {:error, :invalid_account_id_type}

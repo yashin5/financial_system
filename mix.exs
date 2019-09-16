@@ -15,7 +15,9 @@ defmodule FinancialSystem.MixProject do
         "coveralls.html": :test
       ],
       aliases: [
-        test: ["ecto.create", "ecto.migrate", "test"]
+        test: ["ecto.create", "ecto.migrate", "test"],
+        start: ["ecto.create", "ecto.migrate", "run apps/core/priv/repo/seeds.exs"],
+        reset: ["ecto.drop", "ecto.create", "ecto.migrate", "run apps/core/priv/repo/seeds.exs"]
       ]
     ]
   end

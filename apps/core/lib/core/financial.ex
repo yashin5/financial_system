@@ -1,22 +1,38 @@
 defmodule FinancialSystem.Core.Financial do
   @moduledoc false
-  alias FinancialSystem.Core.{Accounts.Account, Accounts.Transaction, Split}
+  alias FinancialSystem.Core.{Accounts.Account, Accounts.Transaction}
 
   @callback show(String.t() | any()) :: {:ok, String.t()} | {:error, atom()}
-  @callback deposit(String.t() | any(), String.t() | any(), String.t() | any()) ::
+  @callback deposit(%{
+              account_id: String.t() | any(),
+              currency: String.t() | any(),
+              value: String.t() | any()
+            }) ::
               {:ok, Account.t()}
               | {:error, atom()}
               | no_return()
-  @callback withdraw(String.t() | any(), String.t() | any()) ::
+
+  @callback withdraw(%{
+              account_id: String.t() | any(),
+              value: String.t() | any()
+            }) ::
               {:ok, Account.t()}
               | {:error, atom()}
               | atom()
               | no_return()
-  @callback transfer(String.t() | any(), String.t() | any(), String.t() | any()) ::
+  @callback transfer(%{
+              value: String.t() | any(),
+              account_from: String.t() | any(),
+              account_to: String.t() | any()
+            }) ::
               {:ok, Account.t()}
               | {:error, atom()}
               | no_return()
-  @callback split(String.t() | any(), list(Split.t()) | any(), String.t() | any()) ::
+  @callback split(%{
+              account_id_from: String.t() | any(),
+              split_list: String.t() | any(),
+              value: String.t() | any()
+            }) ::
               {:ok, Account.t()}
               | {:error, atom()}
               | no_return()

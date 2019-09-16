@@ -139,7 +139,7 @@ defmodule FinancialSystem.Core.Currency do
   def convert(currency_from, currency_to, value)
       when is_binary(currency_from) and is_binary(currency_to) and
              not value > 0 and is_binary(value) do
-    {:error, :invalid_value_less_than_0}
+    {:error, :invalid_value_less_or_equal_than_0}
   end
 
   def convert(_, _, _), do: {:error, :invalid_arguments_type}

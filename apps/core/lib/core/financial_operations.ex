@@ -3,7 +3,12 @@ defmodule FinancialSystem.Core.FinancialOperations do
   This module is responsable to define the operations in this API
   """
 
-  alias FinancialSystem.Core.{AccountOperations, Accounts.AccountRepository, Currency, FinHelper}
+  alias FinancialSystem.Core.AccountOperations
+  alias FinancialSystem.Core.Accounts.AccountRepository
+  alias FinancialSystem.Core.Currency
+  alias FinancialSystem.Core.FinHelper
+  alias FinancialSystem.Core.Split
+  alias FinancialSystem.Core.Users.UserRepository
 
   @behaviour FinancialSystem.Core.Financial
 
@@ -13,13 +18,20 @@ defmodule FinancialSystem.Core.FinancialOperations do
     Show the value in account.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
     FinancialSystem.Core.show(account.id)
   """
   @impl true
   def show(account_id) when is_binary(account_id) do
-    with {:ok, account} <- AccountRepository.find_account(account_id) do
+    with {:ok, account} <- AccountRepository.find_account(:accountid, account_id) do
       Currency.amount_do(
         :show,
         account.value,
@@ -34,68 +46,140 @@ defmodule FinancialSystem.Core.FinancialOperations do
     Deposit value in account.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
-    FinancialSystem.Core.deposit(account.id, "BRL", "10")
+    FinancialSystem.Core.deposit(%{
+        "account_id" => account.id,
+        "currency" => "BRL",
+        "value" => "10"
+      })
   """
   @impl true
-  def deposit(account_id, currency_from, value) when is_binary(account_id) and is_binary(value) do
+  def deposit(%{
+        "account_id" => account_id,
+        "currency" => currency_from,
+        "value" => value
+      })
+      when is_binary(account_id) and is_binary(value) and is_binary(currency_from) do
     sum_value(account_id, currency_from, value, "deposit")
   end
 
-  def deposit(account_id, currency_from, value)
+  def deposit(%{
+        "account_id" => account_id,
+        "currency" => currency_from,
+        "value" => value
+      })
       when not is_binary(account_id) and is_binary(currency_from) and is_binary(value) do
     {:error, :invalid_account_id_type}
   end
 
-  def deposit(account_id, currency_from, value)
+  def deposit(%{
+        "account_id" => account_id,
+        "currency" => currency_from,
+        "value" => value
+      })
       when is_binary(account_id) and is_binary(currency_from) and not is_binary(value) do
     {:error, :invalid_value_type}
   end
 
-  def deposit(account_id, currency_from, value)
+  def deposit(%{
+        "account_id" => account_id,
+        "currency" => currency_from,
+        "value" => value
+      })
       when is_binary(account_id) and not is_binary(currency_from) and is_binary(value) do
     {:error, :invalid_currency_type}
   end
 
-  def deposit(_, _, _), do: {:error, :invalid_arguments_type}
+  def deposit(_), do: {:error, :invalid_arguments_type}
 
   @doc """
     Takes out the value of an account.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
-    FinancialSystem.Core.withdraw(account.id, "10")
+    FinancialSystem.Core.withdraw(%{
+        "account_id" => account.id,
+        "value" => "10"
+      })
   """
   @impl true
-  def withdraw(account_id, value) when is_binary(account_id) and is_binary(value) do
+  def withdraw(%{
+        "account_id" => account_id,
+        "value" => value
+      })
+      when is_binary(account_id) and is_binary(value) do
     subtract_value(account_id, value, "withdraw")
   end
 
-  def withdraw(account, value) when not is_binary(account) and is_binary(value) do
+  def withdraw(%{
+        "account_id" => account_id,
+        "value" => value
+      })
+      when not is_binary(account_id) and is_binary(value) do
     {:error, :invalid_account_id_type}
   end
 
-  def withdraw(account, value) when is_binary(account) and not is_binary(value) do
+  def withdraw(%{
+        "account_id" => account_id,
+        "value" => value
+      })
+      when is_binary(account_id) and not is_binary(value) do
     {:error, :invalid_value_type}
   end
 
-  def withdraw(_, _), do: {:error, :invalid_arguments_type}
+  def withdraw(_), do: {:error, :invalid_arguments_type}
 
   @doc """
    Transfer of values ​​between accounts.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
-    {_, account2} = FinancialSystem.Core.create("Antonio Marcos", "BRL", "100")
+    {_, account} = FinancialSystem.Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
+    {_, account2} = FinancialSystem.Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin Santos",
+        "currency" => "BRL",
+        "value" => "100",
+        "email" => "xsx@xx.com",
+        "password" => "B@xopn123"
+      })
 
-    FinancialSystem.Core.transfer("15", account.id, account2.id)
+    FinancialSystem.Core.transfer(%{
+        "value" => "15",
+        "account_id" => account,
+        "account_to" => account2
+      })
   """
   @impl true
-  def transfer(value, account_from, account_to)
+  def transfer(%{
+        "value" => value,
+        "account_id" => account_from,
+        "account_to" => account_to
+      })
       when is_binary(account_from) and is_binary(account_to) and is_binary(value) do
-    with {:ok, account_from_valided} <- AccountRepository.find_account(account_from),
+    with {:ok, account_from_valided} <- AccountRepository.find_account(:accountid, account_from),
          {:ok, _} <- FinHelper.transfer_have_account_from(account_from, account_to),
          {:ok, withdraw_result} <- subtract_value(account_from, value, "transfer >"),
          {:ok, _} <-
@@ -104,33 +188,80 @@ defmodule FinancialSystem.Core.FinancialOperations do
     end
   end
 
-  def transfer(value, account_from, account_to)
+  def transfer(%{
+        "value" => value,
+        "account_id" => account_from,
+        "account_to" => account_to
+      })
       when (not is_binary(account_from) and is_binary(account_to)) or is_binary(value) do
     {:error, :invalid_account_id_type}
   end
 
-  def transfer(value, account_from, account_to)
+  def transfer(%{
+        "value" => value,
+        "account_id" => account_from,
+        "account_to" => account_to
+      })
       when is_binary(account_from) and is_binary(account_to) and not is_binary(value) do
     {:error, :invalid_value_type}
   end
 
-  def transfer(_, _, _), do: {:error, :invalid_arguments_type}
+  def transfer(_), do: {:error, :invalid_arguments_type}
+
+  defp transfer(value, account_from, account_to) do
+    %{
+      "value" => value,
+      "account_id" => account_from,
+      "account_to" => account_to
+    }
+    |> transfer()
+  end
 
   @doc """
    Transfer of values ​​between multiple accounts.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "100")
-    {_, account2} = FinancialSystem.Core.create("Antonio Marcos", "BRL", "100")
-    {_, account3} = FinancialSystem.Core.create("Mateus Mathias", "BRL", "100")
-    split_list = [%FinancialSystem.Core.Split{account: account.id, percent: 50}, %FinancialSystem.Core.Split{account: account3.id, percent: 50}]
+    {_, account} = FinancialSystem.Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
+    {_, account2} = FinancialSystem.Core.create(%{
+        "role" => "regular",
+        "name" => "Antonio Marcos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
+    {_, account3} = FinancialSystem.Core.create(%{
+        "role" => "regular",
+        "name" => "Mateus Mathias",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
+    split_list = [%{account: account.id, percent: 50}, %{account: account3.id, percent: 50}]
 
-    FinancialSystem.Core.split(account2.id, split_list, "100")
+    FinancialSystem.Core.split(%{
+        "account_id" => account2.id,
+        "split_list" => split_list,
+        "value" => "100"
+      })
   """
   @impl true
-  def split(account_from, split_list, value)
-      when is_binary(account_from) and is_list(split_list) and is_binary(value) do
-    with {:ok, account} <- AccountRepository.find_account(account_from),
+  def split(%{
+        "account_id" => account_from,
+        "split_list" => split_list_another_format,
+        "value" => value
+      })
+      when is_binary(account_from) and is_list(split_list_another_format) and is_binary(value) do
+    with {:ok, account} <- AccountRepository.find_account(:accountid, account_from),
+         split_list <- make_split_list(split_list_another_format),
          {:ok, _} <- FinHelper.percent_ok(split_list),
          {:ok, _} <- FinHelper.transfer_have_account_from(account_from, split_list),
          {:ok, united_accounts} <- FinHelper.unite_equal_account_split(split_list),
@@ -148,54 +279,103 @@ defmodule FinancialSystem.Core.FinancialOperations do
         )
       end)
 
-      {_, account_from_state} = AccountRepository.find_account(account_from)
+      {_, account_from_state} = AccountRepository.find_account(:accountid, account_from)
 
       {:ok, account_from_state}
     end
   end
 
-  def split(account_from, split_list, value)
-      when not is_binary(account_from) and is_list(split_list) and is_binary(value) do
+  def split(%{
+        "account_id" => account_from,
+        "split_list" => split_list_another_format,
+        "value" => value
+      })
+      when not is_binary(account_from) and is_list(split_list_another_format) and is_binary(value) do
     {:error, :invalid_account_id_type}
   end
 
-  def split(account_from, split_list, value)
-      when is_binary(account_from) and not is_list(split_list) and is_binary(value) do
+  def split(%{
+        "account_id" => account_from,
+        "split_list" => split_list_another_format,
+        "value" => value
+      })
+      when is_binary(account_from) and not is_list(split_list_another_format) and is_binary(value) do
     {:error, :invalid_split_list_type}
   end
 
-  def split(account_from, split_list, value)
-      when is_binary(account_from) and is_list(split_list) and not is_binary(value) do
+  def split(%{
+        "account_id" => account_from,
+        "split_list" => split_list_another_format,
+        "value" => value
+      })
+      when is_binary(account_from) and is_list(split_list_another_format) and not is_binary(value) do
     {:error, :invalid_value_type}
   end
 
-  def split(_, _, _) do
+  def split(_) do
     {:error, :invalid_arguments_type}
+  end
+
+  defp make_split_list(list) do
+    Enum.map(list, fn item ->
+      %Split{account: item["account"], percent: item["percent"]}
+    end)
   end
 
   @doc """
     Show the financial statement from account.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(%{
+        "role" => "regular",
+        "name" => "Mateus Mathias",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
-    FinancialSystem.Core.withdraw(account.id, "1")
+    FinancialSystem.Core.withdraw(%{
+        "account_id" => account.id,
+        "value" => "1"
+      })
 
-    FinancialSystem.Core.financial_statement(account.id)
+    FinancialSystem.Core.financial_statement(%{"id" => account.id})
   """
   @impl true
-  def financial_statement(account_id) when is_binary(account_id) do
-    with {:ok, _} <- AccountRepository.find_account(account_id) do
-      {:ok, AccountOperations.show_financial_statement(account_id)}
+  def financial_statement(%{"email" => email}) when is_binary(email) do
+    with {:ok, user} = UserRepository.get_user(:auth, email),
+         {:ok, account} = AccountRepository.find_account(:userid, user.id) do
+      {:ok,
+       %{
+         account_id: account.id,
+         transactions: AccountOperations.show_financial_statement(account.id)
+       }}
     end
   end
 
-  def financial_statement(_), do: {:error, :invalid_account_id_type}
+  def financial_statement(%{"email" => email}) when not is_binary(email) do
+    {:error, :invalid_email_type}
+  end
+
+  def financial_statement(%{"id" => account_id}) when is_binary(account_id) do
+    with {:ok, _} <- AccountRepository.find_account(:accountid, account_id) do
+      {:ok,
+       %{
+         account_id: account_id,
+         transactions: AccountOperations.show_financial_statement(account_id)
+       }}
+    end
+  end
+
+  def financial_statement(%{"id" => account_id}) when not is_binary(account_id) do
+    {:error, :invalid_account_id_type}
+  end
 
   defp subtract_value(account_id, value, operation)
        when is_binary(account_id) and is_binary(operation) and
               operation in ["withdraw", "transfer >"] and is_binary(value) do
-    with {:ok, account} <- AccountRepository.find_account(account_id),
+    with {:ok, account} <- AccountRepository.find_account(:accountid, account_id),
          {:ok, value_in_integer} <-
            Currency.amount_do(:store, value, account.currency),
          {:ok, _} <- FinHelper.funds(account, value_in_integer) do
@@ -211,7 +391,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
   defp sum_value(account_id, currency_from, value, operation)
        when is_binary(operation) and operation in ["deposit", "transfer <"] and
               is_binary(account_id) and is_binary(value) do
-    with {:ok, account} <- AccountRepository.find_account(account_id),
+    with {:ok, account} <- AccountRepository.find_account(:accountid, account_id),
          {:ok, _} <- currency_finder().currency_is_valid(currency_from),
          {:ok, value_in_integer} <-
            Currency.convert(currency_from, account.currency, value) do

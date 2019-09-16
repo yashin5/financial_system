@@ -1,5 +1,7 @@
 {
     "skip_files": [
-        "test/"
+        "test/",
+        "lib/core/permissions/permission.ex",
+        "lib/core/roles/role.ex"
     ]
 }
