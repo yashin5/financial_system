@@ -25,5 +25,5 @@ jobs:
 
       - run: mix do local.hex --force, local.rebar --force
       - run: mix deps.get
-      - run: mix run apps/core/priv/repo/seeds.exs
+      - run: mix start
       - run: mix test
