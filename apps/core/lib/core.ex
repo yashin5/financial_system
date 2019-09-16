@@ -3,33 +3,38 @@ defmodule FinancialSystem.Core do
   This module is responsable to implement the financial operations.
   """
 
-  alias FinancialSystem.Core.{Account, Financial, FinancialOperations}
+  alias FinancialSystem.Core.{Account, Financial, FinancialOperations, Users.UserRepository}
 
   @behaviour FinancialSystem.Core.Account
 
   @behaviour FinancialSystem.Core.Financial
 
-  @impl Account
-  defdelegate create(name, currency, value), to: Account
+  @behaviour FinancialSystem.Core.Users.UserRepository
+
+  @impl UserRepository
+  defdelegate authenticate(params), to: UserRepository, as: :authenticate
 
   @impl Account
-  defdelegate delete(account_id), to: Account
+  defdelegate create(params), to: Account
+
+  @impl Account
+  defdelegate delete(param), to: Account
 
   @impl Financial
   defdelegate show(account), to: FinancialOperations
 
   @impl Financial
-  defdelegate deposit(account, currency, value), to: FinancialOperations
+  defdelegate deposit(params), to: FinancialOperations
 
   @impl Financial
-  defdelegate withdraw(account, value), to: FinancialOperations
+  defdelegate withdraw(params), to: FinancialOperations
 
   @impl Financial
-  defdelegate transfer(account_from, account_to, value), to: FinancialOperations
+  defdelegate transfer(params), to: FinancialOperations
 
   @impl Financial
-  defdelegate split(account_from, split_list, value), to: FinancialOperations
+  defdelegate split(params), to: FinancialOperations
 
   @impl Financial
-  defdelegate financial_statement(account_id), to: FinancialOperations
+  defdelegate financial_statement(param), to: FinancialOperations
 end

@@ -1,4 +1,6 @@
 defmodule ApiWeb.OperationsView do
+  @moduledoc false
+
   use ApiWeb, :view
 
   def render("deposit.json", %{deposit: deposit}) do

@@ -15,12 +15,19 @@ defmodule FinancialSystem.Core.AccountOperations do
     Subtracts value in  operations.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(
+      %{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
     FinancialSystem.Core.AccountOperations.subtract_value_in_balance(account, 100, "withdraw")
   """
-  @spec subtract_value_in_balance(Account.t(), pos_integer(), String.t()) ::
-          Account.t() | no_return()
+  @spec subtract_value_in_balance(Account.t() | any(), pos_integer(), String.t() | any()) ::
+          Account.t() | {:error, atom()}
   def subtract_value_in_balance(%Account{id: id} = account, value, operation)
       when is_integer(value) and value > 0 do
     save_transaction(account, value, operation)
@@ -30,15 +37,28 @@ defmodule FinancialSystem.Core.AccountOperations do
     |> make_operation(account)
   end
 
+  def subtract_value_in_balance(_, value, _)
+      when is_integer(value) and value <= 0 do
+    {:error, :invalid_value_less_or_equal_than_0}
+  end
+
   @doc """
     Sum value in operations.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(
+      %{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
     FinancialSystem.Core.AccountOperations.sum_value_in_balance(account, 100, "deposit")
   """
-  @spec sum_value_in_balance(Account.t(), integer(), String.t()) :: Account.t() | no_return()
+  @spec sum_value_in_balance(Account.t() | any(), pos_integer(), String.t() | any()) ::
+          Account.t() | {:error, atom()}
   def sum_value_in_balance(%Account{id: id} = account, value, operation)
       when is_integer(value) and value > 0 do
     save_transaction(account, value, operation)
@@ -48,14 +68,17 @@ defmodule FinancialSystem.Core.AccountOperations do
     |> make_operation(account)
   end
 
-  defp make_operation(value, account) do
-    Repo.transaction(fn ->
-      account
-      |> Account.changeset(%{value: value})
-      |> Repo.update()
-    end)
+  def sum_value_in_balance(_, value, _)
+      when is_integer(value) and value <= 0 do
+    {:error, :invalid_value_less_or_equal_than_0}
+  end
 
-    {_, account_actual_state} = AccountRepository.find_account(account.id)
+  defp make_operation(value, account) do
+    account
+    |> Account.changeset(%{value: value})
+    |> Repo.update()
+
+    {_, account_actual_state} = AccountRepository.find_account(:accountid, account.id)
 
     account_actual_state
   end
@@ -83,7 +106,14 @@ defmodule FinancialSystem.Core.AccountOperations do
     Show the transactions from account.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create("Yashin Santos", "EUR", "220")
+    {_, account} = FinancialSystem.Core.create(
+      %{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
 
     FinancialSystem.Core.deposit(account.id, "brl", "1")
 

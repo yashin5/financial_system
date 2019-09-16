@@ -3,7 +3,10 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
 
   import Mox
 
+  alias FinancialSystem.Core.Accounts.Account
   alias FinancialSystem.Core.Accounts.AccountRepository
+  alias FinancialSystem.Core.Repo
+  alias FinancialSystem.Core.Users.User
 
   setup :verify_on_exit!
 
@@ -11,17 +14,26 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
 
   describe "register_account/1" do
     test "Should be able to registry a account into system" do
+      {_, user} =
+        %User{}
+        |> User.changeset(%{
+          role: "regular",
+          name: "Yashin",
+          email: "teste@gmail.com",
+          password: "f1aA678@"
+        })
+        |> Repo.insert()
+
       {:ok, account} =
-        %FinancialSystem.Core.Accounts.Account{
+        %Account{
           active: true,
-          name: "Yashin Santos",
           currency: "BRL",
           value: 100,
           id: UUID.uuid4()
         }
-        |> AccountRepository.register_account()
+        |> AccountRepository.register_account(user)
 
-      {_, account_actual_state} = AccountRepository.find_account(account.id)
+      {_, account_actual_state} = AccountRepository.find_account(:accountid, account.id)
 
       assert account_actual_state == account
     end
@@ -39,7 +51,15 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "1")
+      {_, account} =
+        FinancialSystem.Core.create(%{
+          "role" => "regular",
+          "name" => "Yashin Santos",
+          "currency" => "BRL",
+          "value" => "1",
+          "email" => "test@gmail.com",
+          "password" => "f1aA678@"
+        })
 
       {:ok, message} = AccountRepository.delete_account(account)
 
@@ -59,11 +79,19 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "1")
+      {_, account} =
+        FinancialSystem.Core.create(%{
+          "role" => "regular",
+          "name" => "Yashin Santos",
+          "currency" => "BRL",
+          "value" => "1",
+          "email" => "test@gmail.com",
+          "password" => "f1aA678@"
+        })
 
       {:ok, _} = AccountRepository.delete_account(account)
 
-      {:error, message} = AccountRepository.find_account(account.id)
+      {:error, message} = AccountRepository.find_account(:accountid, account.id)
 
       assert ^message = :account_dont_exist
     end

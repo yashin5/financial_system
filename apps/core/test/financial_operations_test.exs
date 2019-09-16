@@ -13,7 +13,16 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "1")
+      {_, account} =
+        FinancialSystem.Core.create(%{
+          "role" => "regular",
+          "name" => "Yashin Santos",
+          "currency" => "BRL",
+          "value" => "1",
+          "email" => "test@gmaxxil.com",
+          "password" => "f1aA678@"
+        })
+
       {_, account_value} = FinancialSystem.Core.show(account.id)
 
       assert account_value == "1.00"
@@ -32,7 +41,15 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "1")
+      {_, account} =
+        FinancialSystem.Core.create(%{
+          "role" => "regular",
+          "name" => "Yashin Santos",
+          "currency" => "BRL",
+          "value" => "1",
+          "email" => "test@gmqweail.com",
+          "password" => "f1aA678@"
+        })
 
       on_exit(fn ->
         nil
@@ -46,7 +63,12 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account_actual_state} = FinancialSystem.Core.deposit(account, "brl", "1")
+      {_, account_actual_state} =
+        FinancialSystem.Core.deposit(%{
+          "account_id" => account,
+          "currency" => "brl",
+          "value" => "1"
+        })
 
       account_actual_value = account_actual_state.value
 
@@ -54,19 +76,34 @@ defmodule FinancialOperationsTest do
     end
 
     test "Not should be able to insert a integer value in a account", %{account: account} do
-      {:error, message} = FinancialSystem.Core.deposit(account, "brl", 1)
+      {:error, message} =
+        FinancialSystem.Core.deposit(%{
+          "account_id" => account,
+          "currency" => "brl",
+          "value" => 1
+        })
 
       assert ^message = :invalid_value_type
     end
 
     test "Not should be able to insert a float value in a account", %{account: account} do
-      {:error, message} = FinancialSystem.Core.deposit(account, "brl", 1.0)
+      {:error, message} =
+        FinancialSystem.Core.deposit(%{
+          "account_id" => account,
+          "currency" => "brl",
+          "value" => 1.0
+        })
 
       assert ^message = :invalid_value_type
     end
 
     test "Not should be able to make the deposit inserting a invalid account id" do
-      {:error, message} = FinancialSystem.Core.deposit("account id", "brl", "1")
+      {:error, message} =
+        FinancialSystem.Core.deposit(%{
+          "account_id" => "account",
+          "currency" => "brl",
+          "value" => "1"
+        })
 
       assert ^message = :invalid_account_id_type
     end
@@ -78,7 +115,12 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {:error, message} = FinancialSystem.Core.deposit(account, "brrl", "1")
+      {:error, message} =
+        FinancialSystem.Core.deposit(%{
+          "account_id" => account,
+          "currency" => "brrl",
+          "value" => "1"
+        })
 
       assert ^message = :currency_is_not_valid
     end
@@ -90,7 +132,12 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {:error, message} = FinancialSystem.Core.deposit(account, "brl", "-1")
+      {:error, message} =
+        FinancialSystem.Core.deposit(%{
+          "account_id" => account,
+          "currency" => "brl",
+          "value" => "-1"
+        })
 
       assert ^message = :invalid_value_less_than_0
     end
@@ -102,7 +149,15 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "1")
+      {_, account} =
+        FinancialSystem.Core.create(%{
+          "role" => "regular",
+          "name" => "Yashin Santos",
+          "currency" => "BRL",
+          "value" => "1",
+          "email" => "test@gmssail.com",
+          "password" => "f1aA678@"
+        })
 
       on_exit(fn ->
         nil
@@ -113,7 +168,11 @@ defmodule FinancialOperationsTest do
 
     test "Should be able to take a value of an account inserting a value number in string type",
          %{account: account} do
-      {_, account_actual_state} = FinancialSystem.Core.withdraw(account, "1")
+      {_, account_actual_state} =
+        FinancialSystem.Core.withdraw(%{
+          "account_id" => account,
+          "value" => "1"
+        })
 
       account_actual_value = account_actual_state.value
 
@@ -121,7 +180,11 @@ defmodule FinancialOperationsTest do
     end
 
     test "Not should be able to make the withdraw inserting a invalid account id" do
-      {:error, message} = FinancialSystem.Core.withdraw("account id", "1")
+      {:error, message} =
+        FinancialSystem.Core.withdraw(%{
+          "account_id" => "account",
+          "value" => "1"
+        })
 
       assert ^message = :invalid_account_id_type
     end
@@ -129,7 +192,11 @@ defmodule FinancialOperationsTest do
     test "Not should be able to make the withdraw inserting a value equal or less than 0", %{
       account: account
     } do
-      {:error, message} = FinancialSystem.Core.withdraw(account, "-1")
+      {:error, message} =
+        FinancialSystem.Core.withdraw(%{
+          "account_id" => account,
+          "value" => "-1"
+        })
 
       assert ^message = :invalid_value_less_than_0
     end
@@ -137,7 +204,11 @@ defmodule FinancialOperationsTest do
     test "Not should be able to make the withdraw inserting a integer value", %{
       account: account
     } do
-      {:error, message} = FinancialSystem.Core.withdraw(account, 1)
+      {:error, message} =
+        FinancialSystem.Core.withdraw(%{
+          "account_id" => account,
+          "value" => 1
+        })
 
       assert ^message = :invalid_value_type
     end
@@ -145,7 +216,11 @@ defmodule FinancialOperationsTest do
     test "Not should be able to make the withdraw inserting a float value", %{
       account: account
     } do
-      {:error, message} = FinancialSystem.Core.withdraw(account, 1.0)
+      {:error, message} =
+        FinancialSystem.Core.withdraw(%{
+          "account_id" => account,
+          "value" => 1.0
+        })
 
       assert ^message = :invalid_value_type
     end
@@ -157,8 +232,25 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "1")
-      {_, account2} = FinancialSystem.Core.create("Oliver Tsubasa", "BRL", "2")
+      {_, account} =
+        FinancialSystem.Core.create(%{
+          "role" => "regular",
+          "name" => "Yashin Santos",
+          "currency" => "BRL",
+          "value" => "1",
+          "email" => "test@gmaddil.com",
+          "password" => "f1aA678@"
+        })
+
+      {_, account2} =
+        FinancialSystem.Core.create(%{
+          "role" => "regular",
+          "name" => "Oliver Tsubasa",
+          "currency" => "BRL",
+          "value" => "2",
+          "email" => "test@oufftlook.com",
+          "password" => "f1aA678@"
+        })
 
       on_exit(fn ->
         nil
@@ -176,7 +268,11 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      FinancialSystem.Core.transfer("1", account_id_from, account2_id_to)
+      FinancialSystem.Core.transfer(%{
+        "value" => "1",
+        "account_id" => account_id_from,
+        "account_to" => account2_id_to
+      })
 
       {_, actual_value_from} = FinancialSystem.Core.show(account_id_from)
       {_, actual_value_to} = FinancialSystem.Core.show(account2_id_to)
@@ -188,7 +284,12 @@ defmodule FinancialOperationsTest do
     test "Not should be able to make the transfer inserting a invalid account_id_from", %{
       account2_id: account_id
     } do
-      {:error, message} = FinancialSystem.Core.transfer("1", "account id_from", account_id)
+      {:error, message} =
+        FinancialSystem.Core.transfer(%{
+          "value" => "1",
+          "account_id" => "account_id_from",
+          "account_to" => account_id
+        })
 
       assert ^message = :invalid_account_id_type
     end
@@ -196,7 +297,12 @@ defmodule FinancialOperationsTest do
     test "Not should be able to make the transfer inserting a invalid account_id_to", %{
       account2_id: account_id
     } do
-      {:error, message} = FinancialSystem.Core.transfer("1", account_id, "account id_to")
+      {:error, message} =
+        FinancialSystem.Core.transfer(%{
+          "value" => "1",
+          "account_id" => account_id,
+          "account_to" => "account2_id_to"
+        })
 
       assert ^message = :invalid_account_id_type
     end
@@ -205,7 +311,12 @@ defmodule FinancialOperationsTest do
       account_id: account_id_from,
       account2_id: account2_id_to
     } do
-      {:error, message} = FinancialSystem.Core.transfer(1, account_id_from, account2_id_to)
+      {:error, message} =
+        FinancialSystem.Core.transfer(%{
+          "value" => 1,
+          "account_id" => account_id_from,
+          "account_to" => account2_id_to
+        })
 
       assert ^message = :invalid_value_type
     end
@@ -214,7 +325,12 @@ defmodule FinancialOperationsTest do
       account_id: account_id_from,
       account2_id: account2_id_to
     } do
-      {:error, message} = FinancialSystem.Core.transfer(1.0, account_id_from, account2_id_to)
+      {:error, message} =
+        FinancialSystem.Core.transfer(%{
+          "value" => 1.0,
+          "account_id" => account_id_from,
+          "account_to" => account2_id_to
+        })
 
       assert ^message = :invalid_value_type
     end
@@ -223,7 +339,12 @@ defmodule FinancialOperationsTest do
       account_id: account_id_from,
       account2_id: account2_id_to
     } do
-      {:error, message} = FinancialSystem.Core.transfer("-1", account_id_from, account2_id_to)
+      {:error, message} =
+        FinancialSystem.Core.transfer(%{
+          "value" => "-1",
+          "account_id" => account_id_from,
+          "account_to" => account2_id_to
+        })
 
       assert ^message = :invalid_value_less_than_0
     end
@@ -235,13 +356,39 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "1")
-      {_, account2} = FinancialSystem.Core.create("Oliver Tsubasa", "BRL", "2")
-      {_, account3} = FinancialSystem.Core.create("Inu Yasha", "BRL", "5")
+      {_, account} =
+        FinancialSystem.Core.create(%{
+          "role" => "regular",
+          "name" => "Yashin Santos",
+          "currency" => "BRL",
+          "value" => "1",
+          "email" => "testx@outlqqook.com",
+          "password" => "f1aA678@"
+        })
+
+      {_, account2} =
+        FinancialSystem.Core.create(%{
+          "role" => "regular",
+          "name" => "Oliver Tsubasa",
+          "currency" => "BRL",
+          "value" => "1",
+          "email" => "test@wwgmail.com",
+          "password" => "f1aA678@"
+        })
+
+      {_, account3} =
+        FinancialSystem.Core.create(%{
+          "role" => "regular",
+          "name" => "Inu Yasha",
+          "currency" => "BRL",
+          "value" => "5",
+          "email" => "test@yaheeoo.com",
+          "password" => "f1aA678@"
+        })
 
       list_to = [
-        %FinancialSystem.Core.Split{account: account.id, percent: 20},
-        %FinancialSystem.Core.Split{account: account3.id, percent: 80}
+        %{"account" => account.id, "percent" => 20},
+        %{"account" => account3.id, "percent" => 80}
       ]
 
       on_exit(fn ->
@@ -268,13 +415,17 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      FinancialSystem.Core.split(account2, split_list, "1")
+      FinancialSystem.Core.split(%{
+        "account_id" => account2,
+        "split_list" => split_list,
+        "value" => "1"
+      })
 
       {_, actual_value_account} = FinancialSystem.Core.show(account)
       {_, actual_value_account2} = FinancialSystem.Core.show(account2)
       {_, actual_value_account3} = FinancialSystem.Core.show(account3)
 
-      assert actual_value_account2 == "1.00"
+      assert actual_value_account2 == "0.00"
       assert actual_value_account3 == "5.80"
       assert actual_value_account == "1.20"
     end
@@ -283,7 +434,12 @@ defmodule FinancialOperationsTest do
       account_id: account,
       list: split_list
     } do
-      {:error, message} = FinancialSystem.Core.split(account, split_list, "1")
+      {:error, message} =
+        FinancialSystem.Core.split(%{
+          "account_id" => account,
+          "split_list" => split_list,
+          "value" => "1"
+        })
 
       assert ^message = :cannot_send_to_the_same
     end
@@ -292,7 +448,12 @@ defmodule FinancialOperationsTest do
       account2_id: account,
       list: split_list
     } do
-      {:error, message} = FinancialSystem.Core.split(account, split_list, "-1")
+      {:error, message} =
+        FinancialSystem.Core.split(%{
+          "account_id" => account,
+          "split_list" => split_list,
+          "value" => "-1"
+        })
 
       assert ^message = :invalid_value_less_than_0
     end
@@ -300,7 +461,12 @@ defmodule FinancialOperationsTest do
     test "Not should be able to make the transfer inserting a invalid account id", %{
       list: split_list
     } do
-      {:error, message} = FinancialSystem.Core.split("account id", split_list, "1")
+      {:error, message} =
+        FinancialSystem.Core.split(%{
+          "account_id" => "account2",
+          "split_list" => split_list,
+          "value" => "1"
+        })
 
       assert ^message = :invalid_account_id_type
     end
@@ -309,7 +475,12 @@ defmodule FinancialOperationsTest do
       account_id: account,
       list: split_list
     } do
-      {:error, message} = FinancialSystem.Core.split(account, split_list, 1)
+      {:error, message} =
+        FinancialSystem.Core.split(%{
+          "account_id" => account,
+          "split_list" => split_list,
+          "value" => 1
+        })
 
       assert ^message = :invalid_value_type
     end
@@ -318,7 +489,12 @@ defmodule FinancialOperationsTest do
       account_id: account,
       list: split_list
     } do
-      {:error, message} = FinancialSystem.Core.split(account, split_list, 1.0)
+      {:error, message} =
+        FinancialSystem.Core.split(%{
+          "account_id" => account,
+          "split_list" => split_list,
+          "value" => 1.0
+        })
 
       assert ^message = :invalid_value_type
     end
@@ -330,27 +506,53 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} = FinancialSystem.Core.create("Yashin Santos", "BRL", "1")
+      {_, account} =
+        FinancialSystem.Core.create(%{
+          "role" => "regular",
+          "name" => "Yashin Santos",
+          "currency" => "BRL",
+          "value" => "1",
+          "email" => "test@asd.com",
+          "password" => "f1aA678@"
+        })
 
-      FinancialSystem.Core.deposit(account.id, "brl", "1")
+      FinancialSystem.Core.deposit(%{
+        "account_id" => account.id,
+        "currency" => "brl",
+        "value" => "1"
+      })
 
-      {_, statement_struct} = FinancialSystem.Core.financial_statement(account.id)
+      {_, statement_struct} = FinancialSystem.Core.financial_statement(%{"id" => account.id})
 
-      statement = statement_struct |> List.first()
+      {_, statement_struct_email} =
+        FinancialSystem.Core.financial_statement(%{"email" => "test@asd.com"})
+
+      statement = statement_struct.transactions |> List.first()
 
       assert %{operation: "deposit", value: 100} = statement
+      assert %{operation: "deposit", value: 100} = statement_struct_email.transactions |> List.first()
     end
 
     test "Should not be able inserting a invalid account id type" do
-      {_, message} = FinancialSystem.Core.financial_statement(1)
+      {_, message} = FinancialSystem.Core.financial_statement(%{"id" => 1})
 
       assert ^message = :invalid_account_id_type
     end
 
-    test "Should not be able inserting a invalid account id" do
-      {_, message} = FinancialSystem.Core.financial_statement(UUID.uuid4())
+    test "Should not be able inserting a invalid email type" do
+      {_, message} = FinancialSystem.Core.financial_statement(%{"email" => 1})
 
-      assert ^message = :account_dont_exist
+      error = :invalid_email_type
+
+      assert ^message = error
+    end
+
+    test "Should not be able inserting a invalid account id" do
+      {_, message} = FinancialSystem.Core.financial_statement(%{"id" => UUID.uuid4()})
+
+      error = :account_dont_exist
+
+      assert ^message = error
     end
   end
 end
