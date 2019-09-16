@@ -527,10 +527,10 @@ defmodule FinancialOperationsTest do
       {_, statement_struct_email} =
         FinancialSystem.Core.financial_statement(%{"email" => "test@asd.com"})
 
-      statement = statement_struct |> List.first()
+      statement = statement_struct.transactions |> List.first()
 
       assert %{operation: "deposit", value: 100} = statement
-      assert %{operation: "deposit", value: 100} = statement_struct_email |> List.first()
+      assert %{operation: "deposit", value: 100} = statement_struct_email.transactions |> List.first()
     end
 
     test "Should not be able inserting a invalid account id type" do

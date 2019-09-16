@@ -11,9 +11,10 @@ defmodule ApiWeb.PermissionCanDelete do
 
   def call(conn, _options) do
     with {:ok, true} <-
-           PermissionRepository.can_do_this_action(
-            %{permission: :can_delete, role: conn.assigns[:role]}
-           ) do
+           PermissionRepository.can_do_this_action(%{
+             permission: :can_delete,
+             role: conn.assigns[:role]
+           }) do
       conn
     else
       _ -> send_resp(conn, 401, Jason.encode!(%{message: "unauthorized"}))

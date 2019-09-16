@@ -343,21 +343,29 @@ defmodule FinancialSystem.Core.FinancialOperations do
     FinancialSystem.Core.financial_statement(%{"id" => account.id})
   """
   @impl true
-  def financial_statement(%{"id" => account_id}) when is_binary(account_id) do
-    with {:ok, _} <- AccountRepository.find_account(:accountid, account_id) do
-      {:ok, AccountOperations.show_financial_statement(account_id)}
-    end
-  end
-
   def financial_statement(%{"email" => email}) when is_binary(email) do
     with {:ok, user} = UserRepository.get_user(:auth, email),
          {:ok, account} = AccountRepository.find_account(:userid, user.id) do
-      {:ok, AccountOperations.show_financial_statement(account.id)}
+      {:ok,
+       %{
+         account_id: account.id,
+         transactions: AccountOperations.show_financial_statement(account.id)
+       }}
     end
   end
 
   def financial_statement(%{"email" => email}) when not is_binary(email) do
     {:error, :invalid_email_type}
+  end
+
+  def financial_statement(%{"id" => account_id}) when is_binary(account_id) do
+    with {:ok, _} <- AccountRepository.find_account(:accountid, account_id) do
+      {:ok,
+       %{
+         account_id: account_id,
+         transactions: AccountOperations.show_financial_statement(account_id)
+       }}
+    end
   end
 
   def financial_statement(%{"id" => account_id}) when not is_binary(account_id) do

@@ -32,7 +32,6 @@ defmodule ApiWeb.FallbackController do
     |> render("error.json", %{error: :invalid_currency_type})
   end
 
-
   def call(conn, {:error, :invalid_account_id_type}) do
     conn
     |> put_status(:bad_request)

@@ -11,14 +11,14 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "axsd@gmail.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "axsd@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       {_, token} = Core.authenticate(%{"email" => "axsd@gmail.com", "password" => "fp3@naDSsjh2"})
 
@@ -44,14 +44,14 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "axsd@gmail.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "axsd@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       {_, token} = Core.authenticate(%{"email" => "axsd@gmail.com", "password" => "fp3@naDSsjh2"})
 
@@ -77,14 +77,14 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "asdf@gmail.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "asdf@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       {_, token} = Core.authenticate(%{"email" => "asdf@gmail.com", "password" => "fp3@naDSsjh2"})
 
@@ -166,8 +166,7 @@ defmodule ApiWeb.OperationsControllerTest do
         |> post("/api/operations/deposit", params)
         |> json_response(400)
 
-      expected = %{"error" => "invalid_arguments_type"
-      }
+      expected = %{"error" => "invalid_arguments_type"}
 
       assert response == expected
     end
@@ -275,14 +274,14 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "asdfghh@gmail.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "asdfghh@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       {_, token} =
         Core.authenticate(%{"email" => "asdfghh@gmail.com", "password" => "fp3@naDSsjh2"})
@@ -319,19 +318,17 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "asdfghh@gmail.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "asdfghh@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       {_, token} =
         Core.authenticate(%{"email" => "asdfghh@gmail.com", "password" => "fp3@naDSsjh2"})
-
-     
 
       params = %{account_to: 1, value: "100"}
 
@@ -354,14 +351,14 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "asdfghh@gmail.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "asdfghh@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       {_, token} =
         Core.authenticate(%{"email" => "asdfghh@gmail.com", "password" => "fp3@naDSsjh2"})
@@ -385,14 +382,14 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "0",
-          "email" => "aaaa@gmail.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "0",
+        "email" => "aaaa@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       {_, token} = Core.authenticate(%{"email" => "aaaa@gmail.com", "password" => "fp3@naDSsjh2"})
 
@@ -456,14 +453,14 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "dddd@gmail.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "dddd@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       {_, token} = Core.authenticate(%{"email" => "dddd@gmail.com", "password" => "fp3@naDSsjh2"})
 
@@ -744,7 +741,7 @@ defmodule ApiWeb.OperationsControllerTest do
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
-        |> get("/api/operations/financial_statement/" <> account.id)
+        |> get("/api/operations/financial_statement/")
         |> json_response(201)
 
       expected = %{

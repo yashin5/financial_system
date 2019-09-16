@@ -3,27 +3,31 @@ defmodule FinancialSystem.Core.Permissions.PermissionRepository do
   alias FinancialSystem.Core.Repo
   alias FinancialSystem.Core.Roles.RoleRepository
 
-  def can_do_this_action(%{permission: permission, role: role}) when role in ["admin", "regular"] and
-  permission in [:can_create, :can_delete, :can_view, :can_view_all] do
-    
+  def can_do_this_action(%{permission: permission, role: role})
+      when role in ["admin", "regular"] and
+             permission in [:can_create, :can_delete, :can_view, :can_view_all] do
     {:ok, do_can_do_this_action?(permission, role)}
   end
 
-  def can_do_this_action(%{permission: permission, role: role}) when permission in [:can_create, :can_delete, :can_view, :can_view_all] and role not in ["admin", "regular"] do
+  def can_do_this_action(%{permission: permission, role: role})
+      when permission in [:can_create, :can_delete, :can_view, :can_view_all] and
+             role not in ["admin", "regular"] do
     {:error, :invalid_role}
   end
 
-  def can_do_this_action(%{permission: permission, role: role}) when role in ["admin", "regular"] and permission not in [:can_create, :can_delete, :can_view, :can_view_all] do
+  def can_do_this_action(%{permission: permission, role: role})
+      when role in ["admin", "regular"] and
+             permission not in [:can_create, :can_delete, :can_view, :can_view_all] do
     {:error, :invalid_permission}
   end
 
-  def can_do_this_action(%{permission: permission, role: role}) when role not in ["admin", "regular"] and
-  permission not in [:can_create, :can_delete, :can_view, :can_view_all] do
-  
+  def can_do_this_action(%{permission: permission, role: role})
+      when role not in ["admin", "regular"] and
+             permission not in [:can_create, :can_delete, :can_view, :can_view_all] do
     {:error, :invalid_role_and_permission}
   end
 
-  defp do_can_do_this_action?(:can_create, role)  do
+  defp do_can_do_this_action?(:can_create, role) do
     role_data = RoleRepository.get_role(role)
 
     get_permission(role_data.id)

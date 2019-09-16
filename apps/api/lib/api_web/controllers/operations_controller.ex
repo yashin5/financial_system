@@ -52,13 +52,14 @@ defmodule ApiWeb.OperationsController do
   end
 
   def financial_statement(conn, param) do
-    with IO.inspect(param), {:ok, response} <- Core.financial_statement(param) do
+    with param_with_account_id <- Map.put(param, "id", conn.assigns[:account_id]),
+         {:ok, response} <- Core.financial_statement(param_with_account_id) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
       |> render("financial_statement.json", %{
-        financial_statement: response,
-        account_id: conn.assigns[:account_id]
+        financial_statement: response.transactions,
+        account_id: response.account_id
       })
     end
   end

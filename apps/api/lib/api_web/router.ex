@@ -50,6 +50,18 @@ defmodule ApiWeb.Router do
   scope "/api", ApiWeb do
     pipe_through(:api_can_view)
 
-    get("/operations/financial_statement/:id", OperationsController, :financial_statement)
+    get("/operations/financial_statement", OperationsController, :financial_statement)
+  end
+
+  pipeline :api_can_view_all do
+    plug(:accepts, ["json"])
+    plug(ApiWeb.Auth, [])
+    plug(ApiWeb.PermissionCanViewAll, [])
+  end
+
+  scope "/api", ApiWeb do
+    pipe_through(:api_can_view_all)
+
+    get("/operations/financial_statement/:email", OperationsController, :financial_statement)
   end
 end

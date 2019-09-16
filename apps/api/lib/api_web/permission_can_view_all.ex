@@ -1,4 +1,4 @@
-defmodule ApiWeb.PermissionCanView do
+defmodule ApiWeb.PermissionCanViewAll do
   @moduledoc """
   This module is a Plug responsable to make the authorization in a router pipeline.
   """
@@ -12,7 +12,7 @@ defmodule ApiWeb.PermissionCanView do
   def call(conn, _options) do
     with {:ok, true} <-
            PermissionRepository.can_do_this_action(%{
-             permission: :can_view,
+             permission: :can_view_all,
              role: conn.assigns[:role]
            }) do
       conn
