@@ -22,7 +22,7 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
   """
   @spec generate_token(String.t()) :: {:ok, String.t()} | {:error, atom()}
   def generate_token(id) do
-    with {:ok, user} <- UserRepository.get_user(id),
+    with {:ok, user} <- UserRepository.get_user(%{user_id: id}),
          {:ok, new_token} <- do_generate_token() do
       {_, token} =
         user

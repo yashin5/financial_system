@@ -26,7 +26,7 @@ defmodule ApiWeb.OperationsController do
   end
 
   def transfer(conn, params) do
-    with {:ok, response} <- Core.transfer(params) do
+    with {:ok, response} <- Core.FinancialOperations.make_transfer(params) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")

@@ -54,7 +54,7 @@ defmodule FinancialSystem.Core.Users.UserRepository do
         "password" => password
       })
       when is_binary(password) do
-    with {:ok, user} <- get_user(:auth, email) do
+    with {:ok, user} <- get_user(%{email: email}) do
       password
       |> Argon2.verify_pass(user.password_hash)
       |> do_authenticate(user.id)
@@ -67,8 +67,9 @@ defmodule FinancialSystem.Core.Users.UserRepository do
 
   defp do_authenticate(_, _), do: {:error, :invalid_email_or_password}
 
-  @spec get_user(none() | atom(), String.t()) :: {:ok, User.t()} | {:error, atom()}
-  def get_user(:auth, email) do
+  @spec get_user(none() | %{email: String.t()} | %{user_id: String.t()}) ::
+          {:ok, User.t()} | {:error, atom()}
+  def get_user(%{email: email}) do
     User
     |> Repo.get_by(email: email)
     |> do_get_user()
@@ -76,9 +77,9 @@ defmodule FinancialSystem.Core.Users.UserRepository do
     Ecto.Query.CastError -> {:error, :invalid_email_type}
   end
 
-  def get_user(id) do
+  def get_user(%{user_id: account_id}) do
     User
-    |> Repo.get(id)
+    |> Repo.get(account_id)
     |> do_get_user()
   rescue
     Ecto.Query.CastError -> {:error, :invalid_id_type}

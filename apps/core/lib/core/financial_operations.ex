@@ -217,6 +217,14 @@ defmodule FinancialSystem.Core.FinancialOperations do
     |> transfer()
   end
 
+  def make_transfer(%{"email" => email} = params) do
+    with {:ok, user} <- UserRepository.get_user(%{email: email}),
+         {:ok, account} <- AccountRepository.find_account(:userid, user.id),
+         params_with_accountto <- Map.put(params, "account_to", account.id) do
+      transfer(params_with_accountto)
+    end
+  end
+
   @doc """
    Transfer of values ​​between multiple accounts.
 
@@ -344,8 +352,8 @@ defmodule FinancialSystem.Core.FinancialOperations do
   """
   @impl true
   def financial_statement(%{"email" => email}) when is_binary(email) do
-    with {:ok, user} = UserRepository.get_user(:auth, email),
-         {:ok, account} = AccountRepository.find_account(:userid, user.id) do
+    with {:ok, user} <- UserRepository.get_user(%{email: email}),
+         {:ok, account} <- AccountRepository.find_account(:userid, user.id) do
       {:ok,
        %{
          account_id: account.id,

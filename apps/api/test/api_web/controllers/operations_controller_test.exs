@@ -286,17 +286,16 @@ defmodule ApiWeb.OperationsControllerTest do
       {_, token} =
         Core.authenticate(%{"email" => "asdfghh@gmail.com", "password" => "fp3@naDSsjh2"})
 
-      {_, account2} =
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "yashin@outlook.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "yashin@outlook.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
-      params = %{account_to: account2.id, value: "100"}
+      params = %{email: "yashin@outlook.com", value: "100"}
 
       response =
         conn
@@ -330,17 +329,17 @@ defmodule ApiWeb.OperationsControllerTest do
       {_, token} =
         Core.authenticate(%{"email" => "asdfghh@gmail.com", "password" => "fp3@naDSsjh2"})
 
-      params = %{account_to: 1, value: "100"}
+      params = %{"email" => 1, "value" => "100"}
 
       response =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/transfer", params)
-        |> json_response(400)
+        |> json_response(422)
 
       expected = %{
-        "error" => "invalid_account_id_type"
+        "error" => "invalid_email_type"
       }
 
       assert response == expected
