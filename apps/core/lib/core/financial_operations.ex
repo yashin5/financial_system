@@ -358,7 +358,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
     {:error, :invalid_email_type}
   end
 
-  def financial_statement(%{"id" => account_id}) when is_binary(account_id) do
+  def financial_statement(%{"account_id" => account_id}) when is_binary(account_id) do
     with {:ok, _} <- AccountRepository.find_account(:accountid, account_id) do
       {:ok,
        %{
@@ -368,7 +368,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
     end
   end
 
-  def financial_statement(%{"id" => account_id}) when not is_binary(account_id) do
+  def financial_statement(%{"account_id" => account_id}) when not is_binary(account_id) do
     {:error, :invalid_account_id_type}
   end
 
