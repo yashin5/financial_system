@@ -522,7 +522,8 @@ defmodule FinancialOperationsTest do
         "value" => "1"
       })
 
-      {_, statement_struct} = FinancialSystem.Core.financial_statement(%{"id" => account.id})
+      {_, statement_struct} =
+        FinancialSystem.Core.financial_statement(%{"account_id" => account.id})
 
       {_, statement_struct_email} =
         FinancialSystem.Core.financial_statement(%{"email" => "test@asd.com"})
@@ -530,11 +531,13 @@ defmodule FinancialOperationsTest do
       statement = statement_struct.transactions |> List.first()
 
       assert %{operation: "deposit", value: 100} = statement
-      assert %{operation: "deposit", value: 100} = statement_struct_email.transactions |> List.first()
+
+      assert %{operation: "deposit", value: 100} =
+               statement_struct_email.transactions |> List.first()
     end
 
     test "Should not be able inserting a invalid account id type" do
-      {_, message} = FinancialSystem.Core.financial_statement(%{"id" => 1})
+      {_, message} = FinancialSystem.Core.financial_statement(%{"account_id" => 1})
 
       assert ^message = :invalid_account_id_type
     end
@@ -548,7 +551,7 @@ defmodule FinancialOperationsTest do
     end
 
     test "Should not be able inserting a invalid account id" do
-      {_, message} = FinancialSystem.Core.financial_statement(%{"id" => UUID.uuid4()})
+      {_, message} = FinancialSystem.Core.financial_statement(%{"account_id" => UUID.uuid4()})
 
       error = :account_dont_exist
 
