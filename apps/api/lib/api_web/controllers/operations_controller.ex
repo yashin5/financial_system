@@ -8,9 +8,7 @@ defmodule ApiWeb.OperationsController do
   action_fallback(ApiWeb.FallbackController)
 
   def deposit(conn, params) do
-    with params_with_account_id <-
-           Map.update(params, "account_id", conn.assigns[:account_id], & &1),
-         {:ok, response} <- Core.deposit(params_with_account_id) do
+    with {:ok, response} <- Core.deposit(params) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
@@ -19,9 +17,7 @@ defmodule ApiWeb.OperationsController do
   end
 
   def withdraw(conn, params) do
-    with params_with_account_id <-
-           Map.update(params, "account_id", conn.assigns[:account_id], & &1),
-         {:ok, response} <- Core.withdraw(params_with_account_id) do
+    with {:ok, response} <- Core.withdraw(params) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
@@ -30,9 +26,7 @@ defmodule ApiWeb.OperationsController do
   end
 
   def transfer(conn, params) do
-    with params_with_account_id <-
-           Map.update(params, "account_id", conn.assigns[:account_id], & &1),
-         {:ok, response} <- Core.transfer(params_with_account_id) do
+    with {:ok, response} <- Core.transfer(params) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
@@ -41,9 +35,7 @@ defmodule ApiWeb.OperationsController do
   end
 
   def split(conn, params) do
-    with params_with_account_id <-
-           Map.update(params, "account_id", conn.assigns[:account_id], & &1),
-         {:ok, response} <- Core.split(params_with_account_id) do
+    with {:ok, response} <- Core.split(params) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
@@ -52,8 +44,7 @@ defmodule ApiWeb.OperationsController do
   end
 
   def financial_statement(conn, param) do
-    with param_with_account_id <- Map.put(param, "id", conn.assigns[:account_id]),
-         {:ok, response} <- Core.financial_statement(param_with_account_id) do
+    with {:ok, response} <- Core.financial_statement(param) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
