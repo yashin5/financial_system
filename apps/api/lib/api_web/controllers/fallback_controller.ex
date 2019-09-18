@@ -88,9 +88,7 @@ defmodule ApiWeb.FallbackController do
     |> render("error.json", %{error: :user_dont_exist})
   end
 
-  def call(conn, {:error, :invalid_email_type} = oi) do
-    IO.inspect(oi)
-
+  def call(conn, {:error, :invalid_email_type}) do
     conn
     |> put_status(:unprocessable_entity)
     |> put_view(ApiWeb.ErrorView)
@@ -112,13 +110,6 @@ defmodule ApiWeb.FallbackController do
   end
 
   def call(conn, {:error, :not_found}) do
-    conn
-    |> put_status(:not_found)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :not_found})
-  end
-
-  def call(conn, {:badmatch, {:error, :invalid_email_type}}) do
     conn
     |> put_status(:not_found)
     |> put_view(ApiWeb.ErrorView)
