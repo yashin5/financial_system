@@ -17,7 +17,11 @@ defmodule ApiWeb.Permissions do
            }) do
       conn
     else
-      _ -> send_resp(conn, 401, Jason.encode!(%{message: "unauthorized"}))
+      _ ->
+        conn
+        |> put_resp_header("content-type", "application/json")
+        |> send_resp(401, Jason.encode!(%{message: "unauthorized"}))
+        |> halt()
     end
   end
 end
