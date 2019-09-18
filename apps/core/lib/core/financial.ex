@@ -2,7 +2,8 @@ defmodule FinancialSystem.Core.Financial do
   @moduledoc false
   alias FinancialSystem.Core.{Accounts.Account, Accounts.Transaction, Split}
 
-  @callback show(String.t() | any()) :: {:ok, String.t()} | {:error, atom()}
+  @callback show(%{account_id: String.t()} | %{email: String.t()} | any()) ::
+              {:ok, String.t()} | {:error, atom()}
   @callback deposit(%{
               account_id: String.t() | any(),
               currency: String.t() | any(),

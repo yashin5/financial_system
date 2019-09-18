@@ -40,4 +40,12 @@ defmodule ApiWeb.OperationsView do
       transactions: financial_statement
     }
   end
+
+  def render("show.json", %{
+        show: value_in_account
+      }) do
+    %{
+      value_in_account: value_in_account
+    }
+  end
 end

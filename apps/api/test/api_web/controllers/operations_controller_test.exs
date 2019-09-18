@@ -793,4 +793,72 @@ defmodule ApiWeb.OperationsControllerTest do
       assert response_handled == expected
     end
   end
+
+  describe "show/1" do
+    test "Should be able to get the actual value formated from yourself", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "qwqw@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
+
+      {_, token} = Core.authenticate(%{"email" => "qwqw@gmail.com", "password" => "fp3@naDSsjh2"})
+
+      response =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> get("/api/operations/show/")
+        |> json_response(201)
+
+      expected = %{"value_in_account" => "100.00"}
+
+      assert response == expected
+    end
+
+    test "Should be able to get the actual value formated from an account", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      Core.create(%{
+        "role" => "admin",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "qqwqw@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
+
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "qwqw@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
+
+      {_, token} =
+        Core.authenticate(%{"email" => "qqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
+
+      response =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> get("/api/operations/show/" <> "qwqw@gmail.com")
+        |> json_response(201)
+
+      expected = %{"value_in_account" => "100.00"}
+
+      assert response == expected
+    end
+  end
 end

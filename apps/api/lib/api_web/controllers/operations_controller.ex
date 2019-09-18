@@ -55,4 +55,15 @@ defmodule ApiWeb.OperationsController do
       })
     end
   end
+
+  def show(conn, param) do
+    with {:ok, response} <- Core.show(param) do
+      conn
+      |> put_status(:created)
+      |> put_resp_header("content-type", "application/json")
+      |> render("show.json", %{
+        show: response
+      })
+    end
+  end
 end

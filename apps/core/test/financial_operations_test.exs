@@ -25,13 +25,15 @@ defmodule FinancialOperationsTest do
           "password" => "f1aA678@"
         })
 
-      {_, account_value} = FinancialSystem.Core.show(account.id)
+      {_, account_value_accountid} = FinancialSystem.Core.show(%{"account_id" => account.id})
+      {_, account_value_emailid} = FinancialSystem.Core.show(%{"email" => "test@gmaxxil.com"})
 
-      assert account_value == "1.00"
+      assert account_value_accountid == "1.00"
+      assert account_value_emailid == "1.00"
     end
 
     test "User dont should be able to see the value in account if pass a invalid account id" do
-      {:error, message} = FinancialSystem.Core.show("account")
+      {:error, message} = FinancialSystem.Core.show(%{"account_id" => "account"})
 
       assert ^message = :invalid_account_id_type
     end
@@ -276,8 +278,8 @@ defmodule FinancialOperationsTest do
         "account_to" => account2_id_to
       })
 
-      {_, actual_value_from} = FinancialSystem.Core.show(account_id_from)
-      {_, actual_value_to} = FinancialSystem.Core.show(account2_id_to)
+      {_, actual_value_from} = FinancialSystem.Core.show(%{"account_id" => account_id_from})
+      {_, actual_value_to} = FinancialSystem.Core.show(%{"account_id" => account2_id_to})
 
       assert actual_value_from == "0.00"
       assert actual_value_to == "3.00"
@@ -423,9 +425,9 @@ defmodule FinancialOperationsTest do
         "value" => "1"
       })
 
-      {_, actual_value_account} = FinancialSystem.Core.show(account)
-      {_, actual_value_account2} = FinancialSystem.Core.show(account2)
-      {_, actual_value_account3} = FinancialSystem.Core.show(account3)
+      {_, actual_value_account} = FinancialSystem.Core.show(%{"account_id" => account})
+      {_, actual_value_account2} = FinancialSystem.Core.show(%{"account_id" => account2})
+      {_, actual_value_account3} = FinancialSystem.Core.show(%{"account_id" => account3})
 
       assert actual_value_account2 == "0.00"
       assert actual_value_account3 == "5.80"

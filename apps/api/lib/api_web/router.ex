@@ -57,6 +57,7 @@ defmodule ApiWeb.Router do
     pipe_through(:api_can_view)
 
     get("/operations/financial_statement", OperationsController, :financial_statement)
+    get("/operations/show", OperationsController, :show)
   end
 
   scope "/api", ApiWeb do
@@ -64,5 +65,6 @@ defmodule ApiWeb.Router do
     pipe_through(:api_can_view_all)
 
     get("/operations/financial_statement/:email", OperationsController, :financial_statement)
+    get("/operations/show/:email", OperationsController, :show)
   end
 end
