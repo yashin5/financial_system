@@ -32,13 +32,6 @@ defmodule ApiWeb.FallbackController do
     |> render("error.json", %{error: :invalid_currency_type})
   end
 
-  def call(conn, {:error, :invalid_account_id_type}) do
-    conn
-    |> put_status(:bad_request)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :invalid_account_id_type})
-  end
-
   def call(conn, {:error, :invalid_arguments_type}) do
     conn
     |> put_status(:bad_request)
@@ -74,13 +67,6 @@ defmodule ApiWeb.FallbackController do
     |> render("error.json", %{error: :invalid_total_percent})
   end
 
-  def call(conn, {:error, :account_dont_exist}) do
-    conn
-    |> put_status(:unprocessable_entity)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :account_dont_exist})
-  end
-
   def call(conn, {:error, :user_dont_exist}) do
     conn
     |> put_status(:unprocessable_entity)
@@ -107,12 +93,5 @@ defmodule ApiWeb.FallbackController do
     |> put_status(:unprocessable_entity)
     |> put_view(ApiWeb.ErrorView)
     |> render("error.json", %{error: :currency_is_not_valid})
-  end
-
-  def call(conn, {:error, :not_found}) do
-    conn
-    |> put_status(:not_found)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :not_found})
   end
 end

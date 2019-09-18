@@ -7,7 +7,6 @@ defmodule FinancialSystem.Core.FinancialOperations do
   alias FinancialSystem.Core.Accounts.AccountRepository
   alias FinancialSystem.Core.Currency
   alias FinancialSystem.Core.FinHelper
-  alias FinancialSystem.Core.Split
   alias FinancialSystem.Core.Users.UserRepository
 
   @behaviour FinancialSystem.Core.Financial
