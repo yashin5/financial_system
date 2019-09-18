@@ -26,10 +26,10 @@ defmodule FinancialSystem.Core.FinancialOperations do
         "password" => "B@xopn123"
       })
 
-    FinancialSystem.Core.show(account.id)
+    FinancialSystem.Core.show(%{"account_id" => account.id})
   """
   @impl true
-  def show(account_id) when is_binary(account_id) do
+  def show(%{"account_id" => account_id}) when is_binary(account_id) do
     with {:ok, account} <- AccountRepository.find_account(:accountid, account_id) do
       Currency.amount_do(
         :show,
@@ -39,7 +39,15 @@ defmodule FinancialSystem.Core.FinancialOperations do
     end
   end
 
-  def show(account_id) when not is_binary(account_id), do: {:error, :invalid_account_id_type}
+  def show(%{"account_id" => account_id}) when not is_binary(account_id),
+    do: {:error, :invalid_account_id_type}
+
+  def show(%{"email" => email}) when is_binary(email) do
+    with {:ok, user} <- UserRepository.get_user(%{email: email}),
+         {:ok, account} <- AccountRepository.find_account(:userid, user.id) do
+      show(%{"account_id" => account.id})
+    end
+  end
 
   @doc """
     Deposit value in account.
