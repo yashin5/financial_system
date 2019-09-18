@@ -15,7 +15,7 @@ defmodule ApiWeb.Auth do
   def call(conn, _options) do
     with token when is_binary(token) <- conn |> get_req_header("authorization") |> List.first(),
          {:ok, user_id} <- TokenRepository.validate_token(token),
-         {:ok, user} <- UserRepository.get_user(user_id),
+         {:ok, user} <- UserRepository.get_user(%{user_id: user_id}),
          {:ok, %Account{} = account} <- AccountRepository.find_account(:userid, user_id),
          params_with_account_id <-
            Map.put(conn, :params, Map.merge(conn.params, %{"account_id" => account.id})) do

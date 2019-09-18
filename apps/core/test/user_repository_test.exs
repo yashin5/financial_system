@@ -162,11 +162,11 @@ defmodule UserRepositoryTest do
     end
   end
 
-  describe "get_user/2" do
+  describe "get_user/1" do
     test "Should be able to get user informations if pass a existent user email" do
       UserRepository.new_user("regular", "Yaxx", "yaxx@gmailsx.com", "X@ghnx1234")
 
-      {:ok, user} = UserRepository.get_user(:auth, "yaxx@gmailsx.com")
+      {:ok, user} = UserRepository.get_user(%{email: "yaxx@gmailsx.com"})
 
       user_simulate = %{
         email: "yaxx@gmailsx.com",
@@ -186,27 +186,25 @@ defmodule UserRepositoryTest do
     end
 
     test "Should not be able to get user informations if pass a unexistent user email" do
-      user = UserRepository.get_user(:auth, "yaxx@gmailsx.comm")
+      user = UserRepository.get_user(%{email: "yaxx@gmailsx.comm"})
       error = {:error, :user_dont_exist}
 
       assert user == error
     end
 
     test "Should not be able to get user informations if pass a invalid email type" do
-      user = UserRepository.get_user(:auth, 1)
+      user = UserRepository.get_user(%{email: 1})
 
       error = {:error, :invalid_email_type}
 
       assert user == error
     end
-  end
 
-  describe "get_user/1" do
     test "Should be able to get user informations if pass a existent id of user" do
       {:ok, new_user} =
         UserRepository.new_user("regular", "Yaxx", "yaxx@gmailsx.com", "X@ghnx1234")
 
-      {:ok, user} = UserRepository.get_user(new_user.id)
+      {:ok, user} = UserRepository.get_user(%{user_id: new_user.id})
 
       user_simulate = %{
         email: "yaxx@gmailsx.com",
@@ -226,14 +224,14 @@ defmodule UserRepositoryTest do
     end
 
     test "Should not be able to get user informations if pass a unexistent id" do
-      user = UserRepository.get_user(UUID.uuid4())
+      user = UserRepository.get_user(%{user_id: UUID.uuid4()})
       error = {:error, :user_dont_exist}
 
       assert user == error
     end
 
-    test "Should not be able to get user informations if pass a invalid email type" do
-      user = UserRepository.get_user(123)
+    test "Should not be able to get user informations if pass a invalid id type" do
+      user = UserRepository.get_user(%{user_id: 123})
 
       error = {:error, :invalid_id_type}
 

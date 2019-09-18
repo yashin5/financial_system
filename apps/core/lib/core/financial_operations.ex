@@ -256,12 +256,11 @@ defmodule FinancialSystem.Core.FinancialOperations do
   @impl true
   def split(%{
         "account_id" => account_from,
-        "split_list" => split_list_another_format,
+        "split_list" => split_list,
         "value" => value
       })
-      when is_binary(account_from) and is_list(split_list_another_format) and is_binary(value) do
+      when is_binary(account_from) and is_list(split_list) and is_binary(value) do
     with {:ok, account} <- AccountRepository.find_account(:accountid, account_from),
-         split_list <- make_split_list(split_list_another_format),
          {:ok, _} <- FinHelper.percent_ok(split_list),
          {:ok, _} <- FinHelper.transfer_have_account_from(account_from, split_list),
          {:ok, united_accounts} <- FinHelper.unite_equal_account_split(split_list),
@@ -316,12 +315,6 @@ defmodule FinancialSystem.Core.FinancialOperations do
     {:error, :invalid_arguments_type}
   end
 
-  defp make_split_list(list) do
-    Enum.map(list, fn item ->
-      %Split{account: item["account"], percent: item["percent"]}
-    end)
-  end
-
   @doc """
     Show the financial statement from account.
 
@@ -344,8 +337,8 @@ defmodule FinancialSystem.Core.FinancialOperations do
   """
   @impl true
   def financial_statement(%{"email" => email}) when is_binary(email) do
-    with {:ok, user} = UserRepository.get_user(:auth, email),
-         {:ok, account} = AccountRepository.find_account(:userid, user.id) do
+    with {:ok, user} <- UserRepository.get_user(%{email: email}),
+         {:ok, account} <- AccountRepository.find_account(:userid, user.id) do
       {:ok,
        %{
          account_id: account.id,

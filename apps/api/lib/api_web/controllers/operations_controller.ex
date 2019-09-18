@@ -4,6 +4,7 @@ defmodule ApiWeb.OperationsController do
   use ApiWeb, :controller
 
   alias FinancialSystem.Core
+  alias ApiWeb.FinancialMiddleware
 
   action_fallback(ApiWeb.FallbackController)
 
@@ -26,7 +27,7 @@ defmodule ApiWeb.OperationsController do
   end
 
   def transfer(conn, params) do
-    with {:ok, response} <- Core.transfer(params) do
+    with {:ok, response} <- FinancialMiddleware.make_transfer(params) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
@@ -35,7 +36,7 @@ defmodule ApiWeb.OperationsController do
   end
 
   def split(conn, params) do
-    with {:ok, response} <- Core.split(params) do
+    with {:ok, response} <- FinancialMiddleware.make_split(params) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")

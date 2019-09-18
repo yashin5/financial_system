@@ -3,6 +3,8 @@ defmodule FinancialOperationsTest do
 
   import Mox
 
+  alias FinancialSystem.Core.Split
+
   setup :verify_on_exit!
 
   doctest FinancialSystem.Core.FinancialOperations
@@ -387,8 +389,8 @@ defmodule FinancialOperationsTest do
         })
 
       list_to = [
-        %{"account" => account.id, "percent" => 20},
-        %{"account" => account3.id, "percent" => 80}
+        %Split{account: account.id, percent: 20},
+        %Split{account: account3.id, percent: 80}
       ]
 
       on_exit(fn ->
