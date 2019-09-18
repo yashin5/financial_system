@@ -21,7 +21,11 @@ defmodule ApiWeb.Auth do
            Map.put(conn, :params, Map.merge(conn.params, %{"account_id" => account.id})) do
       assign(params_with_account_id, :role, user.role)
     else
-      _ -> send_resp(conn, 401, Jason.encode!(%{message: "unauthorized"}))
+      _ ->
+        conn
+        |> put_resp_header("content-type", "application/json")
+        |> send_resp(401, Jason.encode!(%{message: "unauthorized"}))
+        |> halt()
     end
   end
 end
