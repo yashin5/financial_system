@@ -7,6 +7,7 @@ defmodule FinancialSystem.Core.Users.User do
   import Ecto.Changeset
 
   alias FinancialSystem.Core.Accounts.Account
+  alias FinancialSystem.Core.Contacts.Contact
   alias FinancialSystem.Core.Tokens.Token
 
   @type t :: %__MODULE__{
@@ -29,6 +30,7 @@ defmodule FinancialSystem.Core.Users.User do
 
     has_one(:account, Account)
     has_many(:tokens, Token)
+    has_many(:contacts, Contact)
 
     timestamps()
   end

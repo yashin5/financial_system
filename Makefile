@@ -4,7 +4,7 @@ build:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml build
 
 up: down
-	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -- build
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 
 down:
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml down -v
