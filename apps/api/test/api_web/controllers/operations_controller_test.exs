@@ -109,20 +109,19 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "asdfg@gmail.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "asdfg@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       {_, token} =
         Core.authenticate(%{"email" => "asdfg@gmail.com", "password" => "fp3@naDSsjh2"})
 
-      params = %{account_id: account.id, currency: "brl", value: "100"}
+      params = %{currency: "brl", value: "100"}
 
       response =
         conn
@@ -144,20 +143,19 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "asdfg@gmail.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "asdfg@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       {_, token} =
         Core.authenticate(%{"email" => "asdfg@gmail.com", "password" => "fp3@naDSsjh2"})
 
-      params = %{account_id: account.id, currency: 1, value: 100}
+      params = %{currency: 1, value: 100}
 
       response =
         conn
@@ -176,20 +174,19 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "asdfg@gmail.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "asdfg@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       {_, token} =
         Core.authenticate(%{"email" => "asdfg@gmail.com", "password" => "fp3@naDSsjh2"})
 
-      params = %{account_id: account.id, currency: 1, value: "100"}
+      params = %{currency: 1, value: "100"}
 
       response =
         conn
@@ -208,20 +205,19 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "asdfg@gmail.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "asdfg@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       {_, token} =
         Core.authenticate(%{"email" => "asdfg@gmail.com", "password" => "fp3@naDSsjh2"})
 
-      params = %{account_id: account.id, currency: "brl", value: "-1"}
+      params = %{currency: "brl", value: "-1"}
 
       response =
         conn
@@ -491,15 +487,14 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "yashin@outlook.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "yashin@outlook.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       Core.create(%{
         "role" => "regular",
@@ -512,19 +507,18 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, token} = Core.authenticate(%{"email" => "gggg@gmail.com", "password" => "fp3@naDSsjh2"})
 
-      {_, account3} =
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "yashin@yahoo.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "yashin@yahoo.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       split_list = [
-        %{account: account.id, percent: 50},
-        %{account: account3.id, percent: 50}
+        %{"email" => "yashin@outlook.com", "percent" => 50},
+        %{"email" => "yashin@yahoo.com", "percent" => 50}
       ]
 
       params = %{split_list: split_list, value: "100"}
@@ -549,15 +543,14 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "yashin@outlook.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "yashin@outlook.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       Core.create(%{
         "role" => "regular",
@@ -570,19 +563,18 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, token} = Core.authenticate(%{"email" => "gggg@gmail.com", "password" => "fp3@naDSsjh2"})
 
-      {_, account3} =
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "yashin@yahoo.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "yashin@yahoo.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       split_list = [
-        %{account: account.id, percent: 40},
-        %{account: account3.id, percent: 50}
+        %{"email" => "yashin@outlook.com", "percent" => 40},
+        %{"email" => "yashin@yahoo.com", "percent" => 50}
       ]
 
       params = %{split_list: split_list, value: "100"}
@@ -604,15 +596,14 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "hhhh@gmail.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "hhhh@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       Core.create(%{
         "role" => "regular",
@@ -625,19 +616,18 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, token} = Core.authenticate(%{"email" => "qqq@yahoo.com", "password" => "fp3@naDSsjh2"})
 
-      {_, account3} =
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "www@outlook.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "www@outlook.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       split_list = [
-        %{account: account.id, percent: 50},
-        %{account: account3.id, percent: 50}
+        %{"email" => "hhhh@gmail.com", "percent" => 50},
+        %{"email" => "www@outlook.com", "percent" => 50}
       ]
 
       params = %{split_list: split_list, value: "100"}
@@ -659,15 +649,14 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "eee@gmail.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "eee@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       Core.create(%{
         "role" => "regular",
@@ -680,19 +669,18 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {_, token} = Core.authenticate(%{"email" => "rrr@yahoo.com", "password" => "fp3@naDSsjh2"})
 
-      {_, account3} =
-        Core.create(%{
-          "role" => "regular",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "qqq@outlook.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "qqq@outlook.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       split_list = [
-        %{account: account.id, percent: 50},
-        %{account: account3.id, percent: 50}
+        %{"email" => "eee@gmail.com", "percent" => 50},
+        %{"email" => "qqq@outlook.com", "percent" => 50}
       ]
 
       params = %{split_list: split_list, value: 100}

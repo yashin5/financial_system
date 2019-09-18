@@ -36,7 +36,7 @@ defmodule ApiWeb.OperationsController do
   end
 
   def split(conn, params) do
-    with {:ok, response} <- Core.split(params) do
+    with {:ok, response} <- FinancialMiddleware.make_split(params) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
