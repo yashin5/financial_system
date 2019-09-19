@@ -1,42 +1,40 @@
 defmodule FinancialSystem.Core.Contacts.Contact do
+  @moduledoc """
+  Schema to table Contact
+  """
   use Ecto.Schema
 
   import Ecto.Changeset
 
-  alias FinancialSystem.Core.Accounts.AccountRepository
   alias FinancialSystem.Core.Users.User
-  alias FinancialSystem.Core.Users.UserRepository
 
-  @email_regex ~r/@/
+  @type t :: %__MODULE__{
+          id: String.t()
+        }
 
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "contacts" do
     field(:nickname, :string)
+    field(:account_id, :binary_id)
     field(:email, :string)
-    field(:account_id, :string)
 
     belongs_to(:user, User, type: :binary_id)
 
     timestamps()
   end
 
-  def changeset(accounts, params \\ %{}) do
-    required_fields = [:email, :nickname]
-
-    accounts
-    |> cast(params, required_fields)
-    |> validate_required(required_fields)
-    |> validate_length(:nickname, min: 2, max: 30)
-    |> validate_format(:email, @email_regex)
-    |> IO.inspect()
-    |> get_account_id()
+  def changeset(contacts, params \\ %{}) do
+    contacts
+    |> cast(params, [:nickname, :email, :user_id])
+    |> validate_required([:nickname, :email, :user_id])
+    |> unique_constraint(:id)
   end
 
-  defp get_account_id(%{valid?: true, changes: %{email: email}} = changeset) do
-    with {:ok, user} <- UserRepository.get_user(%{email: email}),
-         {:ok, account} <- AccountRepository.find_account(:userid, user.id) do
-      change(changeset, %{account_id: account.id})
-    end
+  def changeset_update(accounts, params \\ %{}) do
+    accounts
+    |> cast(params, [:updated_at])
+    |> validate_required([:updated_at])
+    |> unique_constraint(:id)
   end
 end
