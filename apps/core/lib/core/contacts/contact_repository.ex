@@ -29,7 +29,7 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
 
   defp already_in_contact(user_id, email) do
     user_id
-    |> get_contacts()
+    |> get_contacts_emails()
     |> Repo.all()
     |> Enum.member?(email)
     |> IO.inspect()
@@ -40,10 +40,31 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
 
   defp do_already_in_contact(true), do: {:error, :already_in_contacts}
 
-  defp get_contacts(user_id) do
+  defp get_contacts_emails(user_id) do
     from(u in Contact,
       where: u.user_id == type(^user_id, :binary_id),
       select: u.email
+    )
+  end
+
+  def get_contact(account_id, email) do
+    with {:ok, account} <- AccountRepository.find_account(:accountid, account_id) do
+      account.user_id
+      |> get_contacts()
+      |> Repo.all()
+      |> Enum.filter(fn item -> item.email == email end)
+    end
+  end
+
+  def get_all_contacts(account_id) do
+    with {:ok, account} <- AccountRepository.find_account(:accountid, account_id) do
+      account.user_id |> get_contacts() |> Repo.all()
+    end
+  end
+
+  defp get_contacts(user_id) do
+    from(u in Contact,
+      where: u.user_id == type(^user_id, :binary_id)
     )
   end
 end
