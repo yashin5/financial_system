@@ -6,6 +6,8 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
   alias FinancialSystem.Core.Repo
   alias FinancialSystem.Core.Users.UserRepository
 
+  @spec create_contact(%{account_id: String.t(), nickname: String.t(), email: String.t()}) ::
+          {:ok, Contact.t()} | {:error, atom()}
   def create_contact(%{"account_id" => account_id, "nickname" => nickname, "email" => email}) do
     with {:ok, account} <- AccountRepository.find_account(:accountid, account_id),
          {:ok, user} <- UserRepository.get_user(%{user_id: account.user_id}),
@@ -32,7 +34,6 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
     |> get_contacts_emails()
     |> Repo.all()
     |> Enum.member?(email)
-    |> IO.inspect()
     |> do_already_in_contact()
   end
 
@@ -47,7 +48,7 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
     )
   end
 
-  def get_contact(account_id, email) do
+  def get_contact(%{"account_id" => account_id, "email" => email}) do
     with {:ok, account} <- AccountRepository.find_account(:accountid, account_id) do
       account.user_id
       |> get_contacts()
@@ -56,7 +57,7 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
     end
   end
 
-  def get_all_contacts(account_id) do
+  def get_all_contacts(%{"account_id" => account_id}) do
     with {:ok, account} <- AccountRepository.find_account(:accountid, account_id) do
       account.user_id |> get_contacts() |> Repo.all()
     end

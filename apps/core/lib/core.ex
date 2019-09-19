@@ -3,7 +3,13 @@ defmodule FinancialSystem.Core do
   This module is responsable to implement the financial operations.
   """
 
-  alias FinancialSystem.Core.{Account, Financial, FinancialOperations, Users.UserRepository}
+  alias FinancialSystem.Core.{
+    Account,
+    Contacts.ContactRepository,
+    Financial,
+    FinancialOperations,
+    Users.UserRepository
+  }
 
   @behaviour FinancialSystem.Core.Account
 
@@ -37,4 +43,10 @@ defmodule FinancialSystem.Core do
 
   @impl Financial
   defdelegate financial_statement(param), to: FinancialOperations
+
+  defdelegate create_contact(params), to: ContactRepository
+
+  defdelegate get_contact(params), to: ContactRepository
+
+  defdelegate get_all_contacts(params), to: ContactRepository
 end

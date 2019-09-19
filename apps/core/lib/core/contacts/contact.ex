@@ -9,7 +9,9 @@ defmodule FinancialSystem.Core.Contacts.Contact do
   alias FinancialSystem.Core.Users.User
 
   @type t :: %__MODULE__{
-          id: String.t()
+          nickname: String.t(),
+          account_id: String.t(),
+          email: String.t()
         }
 
   @primary_key {:id, :binary_id, autogenerate: true}
