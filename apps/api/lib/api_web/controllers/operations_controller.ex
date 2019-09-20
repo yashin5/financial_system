@@ -66,4 +66,48 @@ defmodule ApiWeb.OperationsController do
       })
     end
   end
+
+  def view_all_accounts(conn, _param) do
+    with {:ok, response} <- Core.view_all_accounts() do
+      conn
+      |> put_status(:created)
+      |> put_resp_header("content-type", "application/json")
+      |> render("view_all_accounts.json", %{
+        accounts: response
+      })
+    end
+  end
+
+  def create_contact(conn, params) do
+    with {:ok, response} <- Core.create_contact(params) do
+      conn
+      |> put_status(:created)
+      |> put_resp_header("content-type", "application/json")
+      |> render("create_contact.json", %{
+        create_contact: response
+      })
+    end
+  end
+
+  def get_all_contacts(conn, param) do
+    with {:ok, response} <- Core.get_all_contacts(param) do
+      conn
+      |> put_status(:created)
+      |> put_resp_header("content-type", "application/json")
+      |> render("get_all_contacts.json", %{
+        contacts: response
+      })
+    end
+  end
+
+  def update_contact_nickname(conn, params) do
+    with {:ok, response} <- Core.update_contact_nickname(params) do
+      conn
+      |> put_status(:created)
+      |> put_resp_header("content-type", "application/json")
+      |> render("update_contact_nickname.json", %{
+        contact: response
+      })
+    end
+  end
 end

@@ -48,4 +48,36 @@ defmodule ApiWeb.OperationsView do
       value_in_account: value_in_account
     }
   end
+
+  def render("view_all_accounts.json", %{
+        all_accounts: accounts
+      }) do
+    %{
+      all_accounts: accounts
+    }
+  end
+
+  def render("create_contact.json", %{
+        contact: new_contact
+      }) do
+    %{
+      contact: new_contact
+    }
+  end
+
+  def render("get_all_contacts.json", %{
+        contacts: all_contacts
+      }) do
+    %{
+      contacts: all_contacts
+    }
+  end
+
+  def render("update_contact_nickname.json", %{
+        contact: contact_actualized
+      }) do
+    %{
+      contact: contact_actualized
+    }
+  end
 end

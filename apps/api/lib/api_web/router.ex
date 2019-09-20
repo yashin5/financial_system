@@ -43,6 +43,8 @@ defmodule ApiWeb.Router do
     post("/operations/withdraw", OperationsController, :withdraw)
     post("/operations/transfer", OperationsController, :transfer)
     post("/operations/split", OperationsController, :split)
+    post("/operations/create_contact", OperationsController, :create_contact)
+    post("/operations/update_contact_nickname", OperationsController, :update_contact_nickname)
   end
 
   scope "/api", ApiWeb do
@@ -58,6 +60,7 @@ defmodule ApiWeb.Router do
 
     get("/operations/financial_statement", OperationsController, :financial_statement)
     get("/operations/show", OperationsController, :show)
+    get("/operations/get_all_contacts", OperationsController, :get_all_contacts)
   end
 
   scope "/api", ApiWeb do
@@ -66,5 +69,6 @@ defmodule ApiWeb.Router do
 
     get("/operations/financial_statement/:email", OperationsController, :financial_statement)
     get("/operations/show/:email", OperationsController, :show)
+    get("/operations/view_all_accounts", OperationsController, :view_all_accounts)
   end
 end
