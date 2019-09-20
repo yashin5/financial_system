@@ -13,6 +13,8 @@ defmodule FinancialSystem.Core do
 
   @behaviour FinancialSystem.Core.Account
 
+  @behaviour FinancialSystem.Core.Contacts.ContactRepository
+
   @behaviour FinancialSystem.Core.Financial
 
   @behaviour FinancialSystem.Core.Users.UserRepository
@@ -44,9 +46,12 @@ defmodule FinancialSystem.Core do
   @impl Financial
   defdelegate financial_statement(param), to: FinancialOperations
 
+  @impl ContactRepository
   defdelegate create_contact(params), to: ContactRepository
 
+  @impl ContactRepository
   defdelegate get_contact(params), to: ContactRepository
 
+  @impl ContactRepository
   defdelegate get_all_contacts(params), to: ContactRepository
 end
