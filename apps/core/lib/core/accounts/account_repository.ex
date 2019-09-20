@@ -74,12 +74,20 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
     Ecto.Query.CastError -> {:error, :invalid_account_id_type}
   end
 
-  def find_account(:userid, user_id) do
+  def find_account(:userid, user_id) when is_binary(user_id) do
     Account
     |> Repo.get_by(user_id: user_id)
     |> do_find_account()
   rescue
     Ecto.Query.CastError -> {:error, :invalid_account_id_type}
+  end
+
+  def find_account(:accountid, account_id) when not is_binary(account_id) do
+    {:error, :invalid_account_id_type}
+  end
+
+  def find_account(:userid, user_id) when not is_binary(user_id) do
+    {:error, :invalid_user_id_type}
   end
 
   defp do_find_account(%Account{active: true} = account), do: {:ok, account}

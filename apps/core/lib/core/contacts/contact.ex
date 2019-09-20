@@ -28,15 +28,15 @@ defmodule FinancialSystem.Core.Contacts.Contact do
 
   def changeset(contacts, params \\ %{}) do
     contacts
-    |> cast(params, [:nickname, :email, :user_id])
-    |> validate_required([:nickname, :email, :user_id])
+    |> cast(params, [:nickname, :email, :user_id, :account_id])
+    |> validate_required([:nickname, :email, :user_id, :account_id])
     |> unique_constraint(:id)
   end
 
   def changeset_update(accounts, params \\ %{}) do
     accounts
-    |> cast(params, [:updated_at])
-    |> validate_required([:updated_at])
+    |> cast(params, [:nickname])
+    |> validate_required([:nickname])
     |> unique_constraint(:id)
   end
 end

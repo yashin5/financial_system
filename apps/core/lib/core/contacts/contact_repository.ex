@@ -48,26 +48,11 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
     )
   end
 
-  @callback get_contact(%{account_id: String.t(), email: String.t()}) ::
-              {:ok, Contact.t()} | {:error, :account_dont_exist | :invalid_account_id_type}
-  def get_contact(%{"account_id" => account_id, "email" => email}) do
-    with {:ok, account} <- AccountRepository.find_account(:accountid, account_id),
-    {:ok, _} <- UserRepository.get_user(%{email: email}) do
-      user =
-        account.user_id
-        |> get_contacts()
-        |> Repo.all()
-        |> Enum.filter(fn item -> item.email == email end)
-        |> List.first()
-
-      {:ok, user}
-    end
-  end
-
-  @callback get_all_contacts(%{account_id: String.t()}) :: {:ok, Contact.t()} | {:error, atom()}
+  @callback get_all_contacts(%{account_id: String.t()}) ::
+              {:ok, list(Contact.t())} | {:error, atom()}
   def get_all_contacts(%{"account_id" => account_id}) do
     with {:ok, account} <- AccountRepository.find_account(:accountid, account_id) do
-      account.user_id |> get_contacts() |> Repo.all()
+      {:ok, account.user_id |> get_contacts() |> Repo.all()}
     end
   end
 
@@ -75,5 +60,38 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
     from(u in Contact,
       where: u.user_id == type(^user_id, :binary_id)
     )
+  end
+
+  def update_contact_nickname(%{
+        "account_id" => account_id,
+        "new_nickname" => nickname,
+        "email" => email
+      }) do
+    with {:ok, account} <- AccountRepository.find_account(:accountid, account_id),
+         contact <- get_contact_by_email(account.user_id, email),
+         %Contact{} = contact_verified <- verify_actual_nickname(contact, nickname) do
+      contact_actualized =
+        contact_verified
+        |> Contact.changeset_update(%{nickname: nickname})
+        |> Repo.update()
+
+      contact_actualized
+    end
+  end
+
+  defp verify_actual_nickname(%Contact{} = contact, new_nickname) do
+    contact.nickname
+    |> Kernel.==(new_nickname)
+    |> do_verify_actual_nickname(contact)
+  end
+
+  defp verify_actual_nickname(nil, _), do: {:error, :user_dont_exist}
+
+  defp do_verify_actual_nickname(false, contact), do: contact
+
+  defp do_verify_actual_nickname(true, _), do: {:error, :contact_actual_name}
+
+  def get_contact_by_email(user_id, email) do
+    user_id |> get_contacts() |> Repo.get_by(email: email)
   end
 end

@@ -3,7 +3,7 @@ defmodule ContactRepositoryTest do
 
   import Mox
 
-  alias FinancialSystem.Core.Contacts.ContactRepository
+  alias FinancialSystem.Core
 
   setup :verify_on_exit!
 
@@ -16,7 +16,7 @@ defmodule ContactRepositoryTest do
       end)
 
       {_, account} =
-        FinancialSystem.Core.create(%{
+        Core.create(%{
           "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
@@ -26,7 +26,7 @@ defmodule ContactRepositoryTest do
         })
 
       {:ok, contact} =
-        ContactRepository.create_contact(%{
+        Core.create_contact(%{
           "account_id" => account.id,
           "email" => "test@gmaxxil.com",
           "nickname" => "test"
@@ -53,14 +53,14 @@ defmodule ContactRepositoryTest do
           "password" => "f1aA678@"
         })
 
-      ContactRepository.create_contact(%{
+      Core.create_contact(%{
         "account_id" => account.id,
         "email" => "test@gmaxxil.com",
         "nickname" => "test"
       })
 
       {:error, error} =
-        ContactRepository.create_contact(%{
+        Core.create_contact(%{
           "account_id" => account.id,
           "email" => "test@gmaxxil.com",
           "nickname" => "test"
@@ -85,7 +85,7 @@ defmodule ContactRepositoryTest do
         })
 
       {:error, error} =
-        ContactRepository.create_contact(%{
+        Core.create_contact(%{
           "account_id" => account.id,
           "email" => 1,
           "nickname" => "test"
@@ -95,8 +95,8 @@ defmodule ContactRepositoryTest do
     end
   end
 
-  describe "get_contact/1" do
-    test "Should be able to search a contact" do
+  describe "get_all_contacts/1" do
+    test "Should be able to get the contacts" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -111,14 +111,13 @@ defmodule ContactRepositoryTest do
           "password" => "f1aA678@"
         })
 
-      ContactRepository.create_contact(%{
+      Core.create_contact(%{
         "account_id" => account.id,
         "email" => "test@gmaxxil.com",
         "nickname" => "test"
       })
 
-      {:ok, contact} =
-        ContactRepository.get_contact(%{"account_id" => account.id, "email" => "test@gmaxxil.com"})
+      {:ok, [contact | _]} = Core.get_all_contacts(%{"account_id" => account.id})
 
       %{nickname: nickname, email: email} = contact
 
@@ -126,7 +125,7 @@ defmodule ContactRepositoryTest do
       assert email == "test@gmaxxil.com"
     end
 
-    test "Should not be able to search a contact if insert a inexistent user" do
+    test "Should not be able to search a contact if insert a invalid email type" do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -141,17 +140,105 @@ defmodule ContactRepositoryTest do
           "password" => "f1aA678@"
         })
 
-      ContactRepository.create_contact(%{
+      Core.create_contact(%{
+        "account_id" => account.id,
+        "email" => "test@gmaxxil.com",
+        "nickname" => "test"
+      })
+
+      {:error, error} = Core.get_all_contacts(%{"account_id" => UUID.uuid4()})
+
+      assert error == :account_dont_exist
+    end
+
+    test "Should  be able to search a contact if insert a invalid account id" do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} =
+        FinancialSystem.Core.create(%{
+          "role" => "regular",
+          "name" => "Yashin Santos",
+          "currency" => "BRL",
+          "value" => "1",
+          "email" => "test@gmaxxil.com",
+          "password" => "f1aA678@"
+        })
+
+      Core.create_contact(%{
+        "account_id" => account.id,
+        "email" => "test@gmaxxil.com",
+        "nickname" => "test"
+      })
+
+      {:error, error_account} = Core.get_all_contacts(%{"account_id" => 1})
+
+      assert error_account == :invalid_account_id_type
+    end
+  end
+
+  describe "update_contact_nickname/1" do
+    test "Should be able to update the contact nickname" do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} =
+        FinancialSystem.Core.create(%{
+          "role" => "regular",
+          "name" => "Yashin Santos",
+          "currency" => "BRL",
+          "value" => "1",
+          "email" => "test@gmaxxil.com",
+          "password" => "f1aA678@"
+        })
+
+      Core.create_contact(%{
+        "account_id" => account.id,
+        "email" => "test@gmaxxil.com",
+        "nickname" => "test"
+      })
+
+      {:ok, contact_actualized} =
+        Core.update_contact_nickname(%{
+          "account_id" => account.id,
+          "email" => "test@gmaxxil.com",
+          "new_nickname" => "testt"
+        })
+
+      assert contact_actualized.nickname == "testt"
+    end
+
+    test "Should not be able to update the contact nickname to the same" do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} =
+        FinancialSystem.Core.create(%{
+          "role" => "regular",
+          "name" => "Yashin Santos",
+          "currency" => "BRL",
+          "value" => "1",
+          "email" => "test@gmaxxil.com",
+          "password" => "f1aA678@"
+        })
+
+      Core.create_contact(%{
         "account_id" => account.id,
         "email" => "test@gmaxxil.com",
         "nickname" => "test"
       })
 
       {:error, error} =
-        ContactRepository.get_contact(%{"account_id" => account.id, "email" => "testgmaxxil.com"})
+        Core.update_contact_nickname(%{
+          "account_id" => account.id,
+          "email" => "test@gmaxxil.com",
+          "new_nickname" => "test"
+        })
 
-
-      assert error == :user_dont_exist
+      assert error == :contact_actual_name
     end
   end
 end

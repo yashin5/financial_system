@@ -50,8 +50,7 @@ defmodule FinancialSystem.Core do
   defdelegate create_contact(params), to: ContactRepository
 
   @impl ContactRepository
-  defdelegate get_contact(params), to: ContactRepository
-
-  @impl ContactRepository
   defdelegate get_all_contacts(params), to: ContactRepository
+
+  defdelegate update_contact_nickname(params), to: ContactRepository
 end
