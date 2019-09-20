@@ -68,12 +68,12 @@ defmodule ApiWeb.OperationsController do
   end
 
   def view_all_accounts(conn, _param) do
-    with {:ok, response} <- Core.view_all_accounts() do
+    with response <- Core.view_all_accounts() do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
       |> render("view_all_accounts.json", %{
-        accounts: response
+        all_accounts: response
       })
     end
   end
@@ -84,7 +84,7 @@ defmodule ApiWeb.OperationsController do
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")
       |> render("create_contact.json", %{
-        create_contact: response
+        contact: response
       })
     end
   end

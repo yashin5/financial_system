@@ -94,4 +94,18 @@ defmodule ApiWeb.FallbackController do
     |> put_view(ApiWeb.ErrorView)
     |> render("error.json", %{error: :currency_is_not_valid})
   end
+
+  def call(conn, {:error, :already_in_contacts}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(ApiWeb.ErrorView)
+    |> render("error.json", %{error: :already_in_contacts})
+  end
+
+  def call(conn, {:error, :contact_actual_name}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(ApiWeb.ErrorView)
+    |> render("error.json", %{error: :contact_actual_name})
+  end
 end
