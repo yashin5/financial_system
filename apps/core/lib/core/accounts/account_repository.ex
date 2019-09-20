@@ -93,4 +93,8 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
   defp do_find_account(%Account{active: true} = account), do: {:ok, account}
 
   defp do_find_account(_), do: {:error, :account_dont_exist}
+
+  def view_all_accounts do
+    Account |> Repo.all()
+  end
 end
