@@ -62,6 +62,11 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
     )
   end
 
+  @callback update_contact_nickname(%{
+              account_id: String.t(),
+              new_nickname: String.t(),
+              email: String.t()
+            }) :: {:ok, Contact.t()} | {:error, atom()}
   def update_contact_nickname(%{
         "account_id" => account_id,
         "new_nickname" => nickname,
@@ -91,7 +96,7 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
 
   defp do_verify_actual_nickname(true, _), do: {:error, :contact_actual_name}
 
-  def get_contact_by_email(user_id, email) do
+  defp get_contact_by_email(user_id, email) do
     user_id |> get_contacts() |> Repo.get_by(email: email)
   end
 end

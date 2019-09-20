@@ -94,6 +94,7 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
 
   defp do_find_account(_), do: {:error, :account_dont_exist}
 
+  @callback view_all_accounts() :: list(Account.t())
   def view_all_accounts do
     Account |> Repo.all()
   end
