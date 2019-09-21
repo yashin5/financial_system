@@ -5,6 +5,7 @@ defmodule FinancialSystem.Core do
 
   alias FinancialSystem.Core.{
     Account,
+    Accounts.AccountRepository,
     Contacts.ContactRepository,
     Financial,
     FinancialOperations,
@@ -12,6 +13,8 @@ defmodule FinancialSystem.Core do
   }
 
   @behaviour FinancialSystem.Core.Account
+
+  @behaviour FinancialSystem.Core.Accounts.AccountRepository
 
   @behaviour FinancialSystem.Core.Contacts.ContactRepository
 
@@ -52,5 +55,9 @@ defmodule FinancialSystem.Core do
   @impl ContactRepository
   defdelegate get_all_contacts(params), to: ContactRepository
 
+  @impl ContactRepository
   defdelegate update_contact_nickname(params), to: ContactRepository
+
+  @impl AccountRepository
+  defdelegate view_all_accounts(), to: AccountRepository
 end

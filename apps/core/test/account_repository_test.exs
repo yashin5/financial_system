@@ -3,6 +3,7 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
 
   import Mox
 
+  alias FinancialSystem.Core
   alias FinancialSystem.Core.Accounts.Account
   alias FinancialSystem.Core.Accounts.AccountRepository
   alias FinancialSystem.Core.Repo
@@ -94,6 +95,27 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
       {:error, message} = AccountRepository.find_account(:accountid, account.id)
 
       assert ^message = :account_dont_exist
+    end
+  end
+
+  describe "view_all_accounts/0" do
+    test "Should be able to get all accounts in the system" do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      FinancialSystem.Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin Santos",
+        "currency" => "BRL",
+        "value" => "1",
+        "email" => "test@gmail.com",
+        "password" => "f1aA678@"
+      })
+
+      [head | _] = Core.view_all_accounts()
+
+      assert %Account{} = head
     end
   end
 end

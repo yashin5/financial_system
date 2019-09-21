@@ -48,4 +48,50 @@ defmodule ApiWeb.OperationsView do
       value_in_account: value_in_account
     }
   end
+
+  def render("view_all_accounts.json", %{
+        all_accounts: accounts
+      }) do
+    Enum.map(accounts, fn account ->
+      %{
+        contact_account_id: account.id,
+        contact_user_id: account.user_id,
+        contact_value: account.value,
+        contact_currency: account.currency,
+        contact_active?: account.active
+      }
+    end)
+  end
+
+  def render("create_contact.json", %{
+        contact: new_contact
+      }) do
+    %{
+      contact: new_contact.email,
+      contact_nickname: new_contact.nickname,
+      contact_account_id: new_contact.account_id
+    }
+  end
+
+  def render("get_all_contacts.json", %{
+        contacts: contacts
+      }) do
+    Enum.map(contacts, fn contact ->
+      %{
+        contact_account_id: contact.account_id,
+        contact_email: contact.email,
+        contact_nickname: contact.nickname
+      }
+    end)
+  end
+
+  def render("update_contact_nickname.json", %{
+        contact: contact_actualized
+      }) do
+    %{
+      contact: contact_actualized.email,
+      contact_nickname: contact_actualized.nickname,
+      contact_account_id: contact_actualized.account_id
+    }
+  end
 end

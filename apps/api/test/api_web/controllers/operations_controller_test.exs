@@ -794,7 +794,7 @@ defmodule ApiWeb.OperationsControllerTest do
     end
   end
 
-  describe "show/1" do
+  describe "GET show/1" do
     test "Should be able to get the actual value formated from yourself", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
@@ -859,6 +859,290 @@ defmodule ApiWeb.OperationsControllerTest do
       expected = %{"value_in_account" => "100.00"}
 
       assert response == expected
+    end
+  end
+
+  describe "POST creact_contact/1" do
+    test "Should be able to create a new contact", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {:ok, account} =
+        Core.create(%{
+          "role" => "admin",
+          "name" => "Yashin",
+          "currency" => "brl",
+          "value" => "100",
+          "email" => "qqwqw@gmail.com",
+          "password" => "fp3@naDSsjh2"
+        })
+
+      {_, token} =
+        Core.authenticate(%{"email" => "qqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
+
+      params = %{"email" => "qqwqw@gmail.com", "nickname" => "qqqw"}
+
+      response =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> post("/api/operations/create_contact/", params)
+        |> json_response(201)
+
+      expected = %{
+        "contact" => "qqwqw@gmail.com",
+        "contact_account_id" => account.id,
+        "contact_nickname" => "qqqw"
+      }
+
+      assert response == expected
+    end
+
+    test "Should not be able to create a new contact if insert a invalid email", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      Core.create(%{
+        "role" => "admin",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "qqwqw@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
+
+      {_, token} =
+        Core.authenticate(%{"email" => "qqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
+
+      params = %{"email" => "qqwqwgmail.com", "nickname" => "qqqw"}
+
+      error =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> post("/api/operations/create_contact/", params)
+        |> json_response(422)
+
+      expected = %{"error" => "user_dont_exist"}
+
+      assert error == expected
+    end
+
+    test "Should not be able to create a same contact two times", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {:ok, account} =
+        Core.create(%{
+          "role" => "admin",
+          "name" => "Yashin",
+          "currency" => "brl",
+          "value" => "100",
+          "email" => "qqwqw@gmail.com",
+          "password" => "fp3@naDSsjh2"
+        })
+
+      {_, token} =
+        Core.authenticate(%{"email" => "qqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
+
+      params = %{"email" => "qqwqw@gmail.com", "nickname" => "qqqw"}
+
+      params |> Map.put("account_id", account.id) |> Core.create_contact()
+
+      error =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> post("/api/operations/create_contact/", params)
+        |> json_response(422)
+
+      expected = %{"error" => "already_in_contacts"}
+
+      assert error == expected
+    end
+  end
+
+  describe "GET get_all_contacts/1" do
+    test "Should be able to get all contacts from a user", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} =
+        Core.create(%{
+          "role" => "admin",
+          "name" => "Yashin",
+          "currency" => "brl",
+          "value" => "100",
+          "email" => "qqwqw@gmail.com",
+          "password" => "fp3@naDSsjh2"
+        })
+
+      {_, token} =
+        Core.authenticate(%{
+          "email" => "qqwqw@gmail.com",
+          "password" => "fp3@naDSsjh2"
+        })
+
+      Core.create_contact(%{
+        "account_id" => account.id,
+        "email" => "qqwqw@gmail.com",
+        "nickname" => "qqqw"
+      })
+
+      response =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> get("/api/operations/get_all_contacts/", %{})
+        |> json_response(201)
+
+      expected = [
+        %{
+          "contact_account_id" => account.id,
+          "contact_email" => "qqwqw@gmail.com",
+          "contact_nickname" => "qqqw"
+        }
+      ]
+
+      assert response == expected
+    end
+  end
+
+  describe "POST update_contact_nickname/1" do
+    test "Should be able to update the nickname from a contact", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} =
+        Core.create(%{
+          "role" => "admin",
+          "name" => "Yashin",
+          "currency" => "brl",
+          "value" => "100",
+          "email" => "qqwqw@gmail.com",
+          "password" => "fp3@naDSsjh2"
+        })
+
+      {_, token} =
+        Core.authenticate(%{
+          "email" => "qqwqw@gmail.com",
+          "password" => "fp3@naDSsjh2"
+        })
+
+      Core.create_contact(%{
+        "account_id" => account.id,
+        "email" => "qqwqw@gmail.com",
+        "nickname" => "qqqw"
+      })
+
+      params = %{"new_nickname" => "eu", "email" => "qqwqw@gmail.com"}
+
+      response =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> post("/api/operations/update_contact_nickname/", params)
+        |> json_response(201)
+
+      expected = %{
+        "contact" => "qqwqw@gmail.com",
+        "contact_account_id" => account.id,
+        "contact_nickname" => "eu"
+      }
+
+      assert response == expected
+    end
+
+    test "Should not be able to update the nickname from a contact to the same name", %{
+      conn: conn
+    } do
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} =
+        Core.create(%{
+          "role" => "admin",
+          "name" => "Yashin",
+          "currency" => "brl",
+          "value" => "100",
+          "email" => "qqwqw@gmail.com",
+          "password" => "fp3@naDSsjh2"
+        })
+
+      {_, token} =
+        Core.authenticate(%{
+          "email" => "qqwqw@gmail.com",
+          "password" => "fp3@naDSsjh2"
+        })
+
+      Core.create_contact(%{
+        "account_id" => account.id,
+        "email" => "qqwqw@gmail.com",
+        "nickname" => "qqqw"
+      })
+
+      params = %{"new_nickname" => "qqqw", "email" => "qqwqw@gmail.com"}
+
+      error =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> post("/api/operations/update_contact_nickname/", params)
+        |> json_response(422)
+
+      expected = %{
+        "error" => "contact_actual_name"
+      }
+
+      assert error == expected
+    end
+  end
+
+  describe "GET view_all_accounts/0" do
+    test "Should be able to get all accounts in system", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {_, account} =
+        Core.create(%{
+          "role" => "admin",
+          "name" => "Yashin",
+          "currency" => "brl",
+          "value" => "100",
+          "email" => "qqwqw@gmail.com",
+          "password" => "fp3@naDSsjh2"
+        })
+
+      {_, token} =
+        Core.authenticate(%{
+          "email" => "qqwqw@gmail.com",
+          "password" => "fp3@naDSsjh2"
+        })
+
+      [response|_] =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> get("/api/operations/view_all_accounts")
+        |> json_response(201)
+
+      expected = %{
+          "contact_account_id" => account.id,
+          "contact_active?" => true,
+          "contact_currency" => "BRL",
+          "contact_user_id" => "test",
+          "contact_value" => 10000
+
+      }
+
+      assert %{response | "contact_user_id" => "test"} == expected
     end
   end
 end
