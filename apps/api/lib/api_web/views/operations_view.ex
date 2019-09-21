@@ -56,9 +56,9 @@ defmodule ApiWeb.OperationsView do
       %{
         contact_account_id: account.id,
         contact_user_id: account.user_id,
-        contact_value: accounts.value,
-        contact_currency: accounts.currency,
-        contact_active?: accounts.active
+        contact_value: account.value,
+        contact_currency: account.currency,
+        contact_active?: account.active
       }
     end)
   end
