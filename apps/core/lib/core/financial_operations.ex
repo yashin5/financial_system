@@ -7,7 +7,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
   alias FinancialSystem.Core.Accounts.AccountRepository
   alias FinancialSystem.Core.Currency
   alias FinancialSystem.Core.FinHelper
-  alias FinancialSystem.Core.Users.UserRepository
+  alias FinancialSystem.Core.Helpers
 
   @behaviour FinancialSystem.Core.Financial
 
@@ -43,8 +43,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
     do: {:error, :invalid_account_id_type}
 
   def show(%{"email" => email}) when is_binary(email) do
-    with {:ok, user} <- UserRepository.get_user(%{email: email}),
-         {:ok, account} <- AccountRepository.find_account(:userid, user.id) do
+    with {:ok, account} <- Helpers.get_account_or_user(:account, :email, email) do
       show(%{"account_id" => account.id})
     end
   end
@@ -344,8 +343,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
   """
   @impl true
   def financial_statement(%{"email" => email}) when is_binary(email) do
-    with {:ok, user} <- UserRepository.get_user(%{email: email}),
-         {:ok, account} <- AccountRepository.find_account(:userid, user.id) do
+    with {:ok, account} <- Helpers.get_account_or_user(:account, :email, email) do
       {:ok,
        %{
          account_id: account.id,

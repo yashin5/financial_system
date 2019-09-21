@@ -1,12 +1,11 @@
 defmodule ApiWeb.FinancialMiddleware do
   alias FinancialSystem.Core
+  alias FinancialSystem.Core.Helpers
   alias FinancialSystem.Core.Split
-  alias FinancialSystem.Core.Users.UserRepository
-  alias FinancialSystem.Core.Accounts.AccountRepository
 
   def make_transfer(params) do
-    with {:ok, account_id} <- get_account_id(params),
-         params_with_accountto <- Map.put(params, "account_to", account_id) do
+    with {:ok, account} <- Helpers.get_account_or_user(:account, :email, params),
+         params_with_accountto <- Map.put(params, "account_to", account.id) do
       Core.transfer(params_with_accountto)
     end
   end
@@ -23,17 +22,10 @@ defmodule ApiWeb.FinancialMiddleware do
       "split_list",
       list["split_list"]
       |> Enum.map(fn item ->
-        {:ok, account_id} = get_account_id(item)
+        {:ok, account} = Helpers.get_account_or_user(:account, :email, item)
 
-        %Split{account: account_id, percent: item["percent"]}
+        %Split{account: account.id, percent: item["percent"]}
       end)
     )
-  end
-
-  defp get_account_id(%{"email" => email}) do
-    with {:ok, user} <- UserRepository.get_user(%{email: email}),
-         {:ok, account} <- AccountRepository.find_account(:userid, user.id) do
-      {:ok, account.id}
-    end
   end
 end
