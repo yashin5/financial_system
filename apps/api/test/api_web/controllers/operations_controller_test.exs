@@ -1126,7 +1126,7 @@ defmodule ApiWeb.OperationsControllerTest do
           "password" => "fp3@naDSsjh2"
         })
 
-      [response|_] =
+      [response | _] =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
@@ -1134,12 +1134,11 @@ defmodule ApiWeb.OperationsControllerTest do
         |> json_response(201)
 
       expected = %{
-          "contact_account_id" => account.id,
-          "contact_active?" => true,
-          "contact_currency" => "BRL",
-          "contact_user_id" => "test",
-          "contact_value" => 10000
-
+        "contact_account_id" => account.id,
+        "contact_active?" => true,
+        "contact_currency" => "BRL",
+        "contact_user_id" => "test",
+        "contact_value" => 10000
       }
 
       assert %{response | "contact_user_id" => "test"} == expected
