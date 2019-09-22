@@ -88,6 +88,13 @@ defmodule ApiWeb.FallbackController do
     |> render("error.json", %{error: :invalid_email_or_password})
   end
 
+  def call(conn, {:error, :invalid_password_type}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(ApiWeb.ErrorView)
+    |> render("error.json", %{error: :invalid_password_type})
+  end
+
   def call(conn, {:error, :currency_is_not_valid}) do
     conn
     |> put_status(:unprocessable_entity)
