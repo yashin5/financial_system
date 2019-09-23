@@ -9,6 +9,14 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
   alias FinancialSystem.Core.Helpers
   alias FinancialSystem.Core.Repo
 
+  @doc """
+    Create a contact
+
+  ## Examples
+    {:ok, account} = FinancialSystem.Core.create(%{"role" => "regular", "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
+
+    FinancialSystem.Core.Contacts.ContactRepository.create_contact(%{"account_id" => account.id, "nickname" => "test", "email" => "xx@xx.com"})
+  """
   @callback create_contact(%{account_id: String.t(), nickname: String.t(), email: String.t()}) ::
               {:ok, Contact.t()} | {:error, atom()}
   def create_contact(%{"account_id" => account_id, "nickname" => nickname, "email" => email}) do
@@ -50,6 +58,14 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
     )
   end
 
+  @doc """
+    Get all contacts from a user
+
+  ## Examples
+    {:ok, account} = FinancialSystem.Core.create(%{"role" => "regular", "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
+
+    FinancialSystem.Core.Contacts.ContactRepository.get_all_contacts(%{"account_id" => account.id})
+  """
   @callback get_all_contacts(%{account_id: String.t()}) ::
               {:ok, list(Contact.t())} | {:error, atom()}
   def get_all_contacts(%{"account_id" => account_id}) do
@@ -64,6 +80,15 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
     )
   end
 
+  @doc """
+    Update a nickname from an contact
+
+  ## Examples
+    {:ok, account} = FinancialSystem.Core.create(%{"role" => "regular", "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
+    FinancialSystem.Core.Contacts.ContactRepository.create_contact(%{"account_id" => account.id, "nickname" => "test", "email" => "xx@xx.com"})
+
+    FinancialSystem.Core.Contacts.ContactRepository.update_contact_nickname(%{"account_id" => account.id, "new_nickname" => "ttest", "email" => "xx@xx.com"})
+  """
   @callback update_contact_nickname(%{
               account_id: String.t(),
               new_nickname: String.t(),
