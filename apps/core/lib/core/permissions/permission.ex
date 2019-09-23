@@ -1,4 +1,8 @@
 defmodule FinancialSystem.Core.Permissions.Permission do
+  @moduledoc """
+    Schema to table Permission
+  """
+
   use Ecto.Schema
 
   import Ecto.Changeset

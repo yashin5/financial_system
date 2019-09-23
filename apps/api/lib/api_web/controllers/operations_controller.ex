@@ -3,8 +3,8 @@ defmodule ApiWeb.OperationsController do
 
   use ApiWeb, :controller
 
-  alias FinancialSystem.Core
   alias ApiWeb.FinancialMiddleware
+  alias FinancialSystem.Core
 
   action_fallback(ApiWeb.FallbackController)
 

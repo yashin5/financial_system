@@ -1,8 +1,21 @@
 defmodule FinancialSystem.Core.Permissions.PermissionRepository do
+  @moduledoc """
+    This module is responsable to validate the permission
+  """
+
   alias FinancialSystem.Core.Permissions.Permission
   alias FinancialSystem.Core.Repo
   alias FinancialSystem.Core.Roles.RoleRepository
 
+  @doc """
+    Verify if user has the necessary permission.
+
+  ## Examples
+    FinancialSystem.Core.Permissions.PermissionRepository.can_do_this_action(%{permission: :can_create, role: "regular"})
+  """
+  @spec can_do_this_action(%{permission: String.t(), role: String.t()}) ::
+          {:error, :invalid_permission | :invalid_role | :invalid_role_and_permission}
+          | {:ok, boolean}
   def can_do_this_action(%{permission: permission, role: role})
       when role in ["admin", "regular"] and
              permission in [:can_create, :can_delete, :can_view, :can_view_all] do

@@ -1,4 +1,7 @@
 defmodule ApiWeb.FinancialMiddleware do
+  @moduledoc """
+    handles parameters to call core functions
+  """
   alias FinancialSystem.Core
   alias FinancialSystem.Core.Helpers
   alias FinancialSystem.Core.Split
@@ -10,8 +13,8 @@ defmodule ApiWeb.FinancialMiddleware do
     end
   end
 
-  def make_split(list) do
-    list
+  def make_split(params) do
+    params
     |> make_split_list
     |> Core.split()
   end

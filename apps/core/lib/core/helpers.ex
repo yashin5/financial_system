@@ -1,7 +1,19 @@
 defmodule FinancialSystem.Core.Helpers do
-  alias FinancialSystem.Core.Users.UserRepository
-  alias FinancialSystem.Core.Accounts.AccountRepository
+  @moduledoc """
+    Help to get user and account with base in email and account_id
+  """
 
+  alias FinancialSystem.Core.Accounts.Account
+  alias FinancialSystem.Core.Accounts.AccountRepository
+  alias FinancialSystem.Core.Users.User
+  alias FinancialSystem.Core.Users.UserRepository
+
+  @spec get_account_or_user(
+          :user | :account,
+          :account_id | :email,
+          %{account_id: String.t()} | %{email: String.t()}
+        ) ::
+          {:ok, User.t() | Account.t()} | {:error, atom()}
   def get_account_or_user(:user, :account_id, %{"account_id" => account_id}) do
     get_account_or_user(:user, :account_id, account_id)
   end
