@@ -41,5 +41,6 @@ defmodule ApiWeb.Endpoint do
     signing_salt: "7FAtFluN"
   )
 
+  plug(CORSPlug, origin: "*")
   plug(ApiWeb.Router)
 end
