@@ -90,16 +90,16 @@ defmodule ApiWeb.PermissionsTest do
       {:ok, token} =
         Core.authenticate(%{"email" => "qqxwqw@gmail.com", "password" => "fp3@naDSsjh2"})
 
-      response =
+      %{"message" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> get("/api/operations/financial_statement/" <> "cqwqw@gmail.com")
         |> json_response(401)
 
-      expected = %{"message" => "unauthorized"}
+      error = "unauthorized"
 
-      assert response == expected
+      assert ^response = error
     end
   end
 end

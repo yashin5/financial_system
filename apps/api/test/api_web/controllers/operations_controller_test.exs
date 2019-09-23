@@ -20,7 +20,8 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} = Core.authenticate(%{"email" => "axsd@gmail.com", "password" => "fp3@naDSsjh2"})
+      {:ok, token} =
+        Core.authenticate(%{"email" => "axsd@gmail.com", "password" => "fp3@naDSsjh2"})
 
       params = %{value: "100"}
 
@@ -53,7 +54,8 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} = Core.authenticate(%{"email" => "axsd@gmail.com", "password" => "fp3@naDSsjh2"})
+      {:ok, token} =
+        Core.authenticate(%{"email" => "axsd@gmail.com", "password" => "fp3@naDSsjh2"})
 
       params = %{value: "100"}
 
@@ -86,20 +88,21 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} = Core.authenticate(%{"email" => "asdf@gmail.com", "password" => "fp3@naDSsjh2"})
+      {:ok, token} =
+        Core.authenticate(%{"email" => "asdf@gmail.com", "password" => "fp3@naDSsjh2"})
 
       params = %{value: 100}
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/withdraw", params)
         |> json_response(400)
 
-      expected = %{"error" => "invalid_value_type"}
+      error = "invalid_value_type"
 
-      assert response == expected
+      assert ^response = error
     end
   end
 
@@ -118,7 +121,7 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{"email" => "asdfg@gmail.com", "password" => "fp3@naDSsjh2"})
 
       params = %{currency: "brl", value: "100"}
@@ -152,21 +155,21 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{"email" => "asdfg@gmail.com", "password" => "fp3@naDSsjh2"})
 
       params = %{currency: 1, value: 100}
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/deposit", params)
         |> json_response(400)
 
-      expected = %{"error" => "invalid_arguments_type"}
+      error = "invalid_arguments_type"
 
-      assert response == expected
+      assert ^response = error
     end
 
     test "when currency is not invalid type, should return 400", %{conn: conn} do
@@ -183,21 +186,21 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{"email" => "asdfg@gmail.com", "password" => "fp3@naDSsjh2"})
 
       params = %{currency: 1, value: "100"}
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/deposit", params)
         |> json_response(400)
 
-      expected = %{"error" => "invalid_currency_type"}
+      error = "invalid_currency_type"
 
-      assert response == expected
+      assert ^response = error
     end
 
     test "when value ins equal or less than 0, should return 400", %{conn: conn} do
@@ -214,21 +217,21 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{"email" => "asdfg@gmail.com", "password" => "fp3@naDSsjh2"})
 
       params = %{currency: "brl", value: "-1"}
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/deposit", params)
         |> json_response(400)
 
-      expected = %{"error" => "invalid_value_less_than_0"}
+      error = "invalid_value_less_than_0"
 
-      assert response == expected
+      assert ^response = error
     end
 
     test "when params is not valid, should return 400 and error message", %{conn: conn} do
@@ -236,7 +239,7 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         Core.create(%{
           "role" => "regular",
           "name" => "Yashin",
@@ -246,19 +249,19 @@ defmodule ApiWeb.OperationsControllerTest do
           "password" => "fp3@naDSsjh2"
         })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{"email" => "asdfgh@gmail.com", "password" => "fp3@naDSsjh2"})
 
       params = %{account_id: account.id, currency: "brl", value: 100}
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/deposit", params)
         |> json_response(400)
 
-      expected = %{"error" => "invalid_value_type"}
+      expected = "invalid_value_type"
 
       assert response == expected
     end
@@ -279,7 +282,7 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{"email" => "asdfghh@gmail.com", "password" => "fp3@naDSsjh2"})
 
       Core.create(%{
@@ -322,23 +325,21 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{"email" => "asdfghh@gmail.com", "password" => "fp3@naDSsjh2"})
 
       params = %{"email" => 1, "value" => "100"}
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/transfer", params)
         |> json_response(422)
 
-      expected = %{
-        "error" => "invalid_email_type"
-      }
+      error = "invalid_email_type"
 
-      assert response == expected
+      assert ^response = error
     end
 
     test "Should not be able to transfer to an inexistenting account", %{conn: conn} do
@@ -355,21 +356,21 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{"email" => "asdfghh@gmail.com", "password" => "fp3@naDSsjh2"})
 
       params = %{"email" => UUID.uuid4(), "value" => "100"}
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/transfer", params)
         |> json_response(422)
 
-      expected = %{"error" => "user_dont_exist"}
+      error = "user_dont_exist"
 
-      assert response == expected
+      assert ^response = error
     end
 
     test "when params are valid but the action cannot  be taken, should return 422", %{conn: conn} do
@@ -386,7 +387,8 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} = Core.authenticate(%{"email" => "aaaa@gmail.com", "password" => "fp3@naDSsjh2"})
+      {:ok, token} =
+        Core.authenticate(%{"email" => "aaaa@gmail.com", "password" => "fp3@naDSsjh2"})
 
       Core.create(%{
         "role" => "regular",
@@ -399,16 +401,16 @@ defmodule ApiWeb.OperationsControllerTest do
 
       params = %{"email" => "ssss@outloil.com", "value" => "100"}
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/transfer", params)
         |> json_response(422)
 
-      expected = %{"error" => "do_not_have_funds"}
+      error = "do_not_have_funds"
 
-      assert response == expected
+      assert ^response = error
     end
 
     test "should not be able to transfer to yourself, should return 422", %{conn: conn} do
@@ -425,20 +427,21 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} = Core.authenticate(%{"email" => "aaaa@gmail.com", "password" => "fp3@naDSsjh2"})
+      {:ok, token} =
+        Core.authenticate(%{"email" => "aaaa@gmail.com", "password" => "fp3@naDSsjh2"})
 
       params = %{"email" => "aaaa@gmail.com", "value" => "100"}
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/transfer", params)
         |> json_response(422)
 
-      expected = %{"error" => "cannot_send_to_the_same"}
+      error = "cannot_send_to_the_same"
 
-      assert response == expected
+      assert ^response = error
     end
 
     test "when params is not valid, should return 400", %{conn: conn} do
@@ -455,7 +458,8 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} = Core.authenticate(%{"email" => "dddd@gmail.com", "password" => "fp3@naDSsjh2"})
+      {:ok, token} =
+        Core.authenticate(%{"email" => "dddd@gmail.com", "password" => "fp3@naDSsjh2"})
 
       Core.create(%{
         "role" => "regular",
@@ -468,16 +472,16 @@ defmodule ApiWeb.OperationsControllerTest do
 
       params = %{"email" => "fffff@outlook.com", "value" => 100}
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/transfer", params)
         |> json_response(400)
 
-      expected = %{"error" => "invalid_value_type"}
+      error = "invalid_value_type"
 
-      assert response == expected
+      assert ^response = error
     end
   end
 
@@ -505,7 +509,8 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} = Core.authenticate(%{"email" => "gggg@gmail.com", "password" => "fp3@naDSsjh2"})
+      {:ok, token} =
+        Core.authenticate(%{"email" => "gggg@gmail.com", "password" => "fp3@naDSsjh2"})
 
       Core.create(%{
         "role" => "regular",
@@ -561,7 +566,8 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} = Core.authenticate(%{"email" => "gggg@gmail.com", "password" => "fp3@naDSsjh2"})
+      {:ok, token} =
+        Core.authenticate(%{"email" => "gggg@gmail.com", "password" => "fp3@naDSsjh2"})
 
       Core.create(%{
         "role" => "regular",
@@ -579,16 +585,16 @@ defmodule ApiWeb.OperationsControllerTest do
 
       params = %{split_list: split_list, value: "100"}
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/split", params)
         |> json_response(422)
 
-      expected = %{"error" => "invalid_total_percent"}
+      error = "invalid_total_percent"
 
-      assert response == expected
+      assert ^response = error
     end
 
     test "when params are valid but the action cannot  be taken, should return 422", %{conn: conn} do
@@ -614,7 +620,8 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} = Core.authenticate(%{"email" => "qqq@yahoo.com", "password" => "fp3@naDSsjh2"})
+      {:ok, token} =
+        Core.authenticate(%{"email" => "qqq@yahoo.com", "password" => "fp3@naDSsjh2"})
 
       Core.create(%{
         "role" => "regular",
@@ -632,16 +639,16 @@ defmodule ApiWeb.OperationsControllerTest do
 
       params = %{split_list: split_list, value: "100"}
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/split", params)
         |> json_response(422)
 
-      expected = %{"error" => "do_not_have_funds"}
+      error = "do_not_have_funds"
 
-      assert response == expected
+      assert ^response = error
     end
 
     test "when params is not valid, should return 400", %{conn: conn} do
@@ -667,7 +674,8 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} = Core.authenticate(%{"email" => "rrr@yahoo.com", "password" => "fp3@naDSsjh2"})
+      {:ok, token} =
+        Core.authenticate(%{"email" => "rrr@yahoo.com", "password" => "fp3@naDSsjh2"})
 
       Core.create(%{
         "role" => "regular",
@@ -685,16 +693,16 @@ defmodule ApiWeb.OperationsControllerTest do
 
       params = %{split_list: split_list, value: 100}
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/split", params)
         |> json_response(400)
 
-      expected = %{"error" => "invalid_value_type"}
+      error = "invalid_value_type"
 
-      assert response == expected
+      assert ^response = error
     end
   end
 
@@ -704,7 +712,7 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         Core.create(%{
           "role" => "regular",
           "name" => "Yashin",
@@ -719,7 +727,8 @@ defmodule ApiWeb.OperationsControllerTest do
         "value" => "10"
       })
 
-      {_, token} = Core.authenticate(%{"email" => "qwqw@gmail.com", "password" => "fp3@naDSsjh2"})
+      {:ok, token} =
+        Core.authenticate(%{"email" => "qwqw@gmail.com", "password" => "fp3@naDSsjh2"})
 
       response =
         conn
@@ -755,7 +764,7 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, account} =
+      {:ok, account} =
         Core.create(%{
           "role" => "regular",
           "name" => "Yashin",
@@ -770,7 +779,7 @@ defmodule ApiWeb.OperationsControllerTest do
         "value" => "10"
       })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{"email" => "qqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
 
       response =
@@ -809,7 +818,8 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} = Core.authenticate(%{"email" => "qwqw@gmail.com", "password" => "fp3@naDSsjh2"})
+      {:ok, token} =
+        Core.authenticate(%{"email" => "qwqw@gmail.com", "password" => "fp3@naDSsjh2"})
 
       response =
         conn
@@ -846,7 +856,7 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{"email" => "qqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
 
       response =
@@ -878,7 +888,7 @@ defmodule ApiWeb.OperationsControllerTest do
           "password" => "fp3@naDSsjh2"
         })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{"email" => "qqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
 
       params = %{"email" => "qqwqw@gmail.com", "nickname" => "qqqw"}
@@ -913,21 +923,21 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{"email" => "qqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
 
       params = %{"email" => "qqwqwgmail.com", "nickname" => "qqqw"}
 
-      error =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/create_contact/", params)
         |> json_response(422)
 
-      expected = %{"error" => "user_dont_exist"}
+      error = "user_dont_exist"
 
-      assert error == expected
+      assert ^response = error
     end
 
     test "Should not be able to create a same contact two times", %{conn: conn} do
@@ -945,23 +955,23 @@ defmodule ApiWeb.OperationsControllerTest do
           "password" => "fp3@naDSsjh2"
         })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{"email" => "qqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
 
       params = %{"email" => "qqwqw@gmail.com", "nickname" => "qqqw"}
 
       params |> Map.put("account_id", account.id) |> Core.create_contact()
 
-      error =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/create_contact/", params)
         |> json_response(422)
 
-      expected = %{"error" => "already_in_contacts"}
+      error = "already_in_contacts"
 
-      assert error == expected
+      assert ^response = error
     end
   end
 
@@ -971,7 +981,7 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         Core.create(%{
           "role" => "admin",
           "name" => "Yashin",
@@ -981,7 +991,7 @@ defmodule ApiWeb.OperationsControllerTest do
           "password" => "fp3@naDSsjh2"
         })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{
           "email" => "qqwqw@gmail.com",
           "password" => "fp3@naDSsjh2"
@@ -1018,7 +1028,7 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         Core.create(%{
           "role" => "admin",
           "name" => "Yashin",
@@ -1028,7 +1038,7 @@ defmodule ApiWeb.OperationsControllerTest do
           "password" => "fp3@naDSsjh2"
         })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{
           "email" => "qqwqw@gmail.com",
           "password" => "fp3@naDSsjh2"
@@ -1065,7 +1075,7 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         Core.create(%{
           "role" => "admin",
           "name" => "Yashin",
@@ -1075,7 +1085,7 @@ defmodule ApiWeb.OperationsControllerTest do
           "password" => "fp3@naDSsjh2"
         })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{
           "email" => "qqwqw@gmail.com",
           "password" => "fp3@naDSsjh2"
@@ -1089,18 +1099,16 @@ defmodule ApiWeb.OperationsControllerTest do
 
       params = %{"new_nickname" => "qqqw", "email" => "qqwqw@gmail.com"}
 
-      error =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/update_contact_nickname/", params)
         |> json_response(422)
 
-      expected = %{
-        "error" => "contact_actual_name"
-      }
+      error = "contact_actual_name"
 
-      assert error == expected
+      assert ^response = error
     end
   end
 
@@ -1119,7 +1127,7 @@ defmodule ApiWeb.OperationsControllerTest do
         "password" => "fp3@naDSsjh2"
       })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{
           "email" => "qqwqw@gmail.com",
           "password" => "fp3@naDSsjh2"
