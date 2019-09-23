@@ -15,7 +15,7 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
 
   describe "register_account/1" do
     test "Should be able to registry a account into system" do
-      {_, user} =
+      {:ok, user} =
         %User{}
         |> User.changeset(%{
           role: "regular",
@@ -52,7 +52,7 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Yashin Santos",

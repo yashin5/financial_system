@@ -114,7 +114,7 @@ defmodule FinancialSystem.CoreTest do
           "password" => "f1aA678@"
         })
 
-      {_, account_data} = AccountRepository.find_account(:accountid, account.id)
+      {:ok, account_data} = AccountRepository.find_account(:accountid, account.id)
 
       account_simulate = %FinancialSystem.Core.Accounts.Account{
         id: "adb",
@@ -158,7 +158,7 @@ defmodule FinancialSystem.CoreTest do
     end
 
     test "Should not be able to create a account if not have the valid keys" do
-      {:error, response} =
+      {:error, message} =
         FinancialSystem.Core.create(%{
           "name" => "Yashin Santos",
           "currency" => "BRL",
@@ -169,7 +169,7 @@ defmodule FinancialSystem.CoreTest do
 
       error = :invalid_arguments
 
-      assert response == error
+      assert ^message = error
     end
 
     test "Not should be able to create a account with a value in integer format" do

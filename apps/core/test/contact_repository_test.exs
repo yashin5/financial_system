@@ -15,7 +15,7 @@ defmodule ContactRepositoryTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         Core.create(%{
           "role" => "regular",
           "name" => "Yashin Santos",
@@ -43,7 +43,7 @@ defmodule ContactRepositoryTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Yashin Santos",
@@ -59,14 +59,16 @@ defmodule ContactRepositoryTest do
         "nickname" => "test"
       })
 
-      {:error, error} =
+      {:error, message} =
         Core.create_contact(%{
           "account_id" => account.id,
           "email" => "test@gmaxxil.com",
           "nickname" => "test"
         })
 
-      assert error == :already_in_contacts
+      error = :already_in_contacts
+
+      assert ^message = error
     end
 
     test "Should not be able to create a contact with invalid email" do
@@ -74,7 +76,7 @@ defmodule ContactRepositoryTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Yashin Santos",
@@ -84,14 +86,16 @@ defmodule ContactRepositoryTest do
           "password" => "f1aA678@"
         })
 
-      {:error, error} =
+      {:error, message} =
         Core.create_contact(%{
           "account_id" => account.id,
           "email" => 1,
           "nickname" => "test"
         })
 
-      assert error == :invalid_email_type
+      error = :invalid_email_type
+
+      assert ^message = error
     end
   end
 
@@ -101,7 +105,7 @@ defmodule ContactRepositoryTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Yashin Santos",
@@ -130,7 +134,7 @@ defmodule ContactRepositoryTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Yashin Santos",
@@ -146,9 +150,10 @@ defmodule ContactRepositoryTest do
         "nickname" => "test"
       })
 
-      {:error, error} = Core.get_all_contacts(%{"account_id" => UUID.uuid4()})
+      {:error, message} = Core.get_all_contacts(%{"account_id" => UUID.uuid4()})
+      error = :account_dont_exist
 
-      assert error == :account_dont_exist
+      assert ^message = error
     end
 
     test "Should  be able to search a contact if insert a invalid account id" do
@@ -156,7 +161,7 @@ defmodule ContactRepositoryTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Yashin Santos",
@@ -172,9 +177,10 @@ defmodule ContactRepositoryTest do
         "nickname" => "test"
       })
 
-      {:error, error_account} = Core.get_all_contacts(%{"account_id" => 1})
+      {:error, message} = Core.get_all_contacts(%{"account_id" => 1})
+      error = :invalid_account_id_type
 
-      assert error_account == :invalid_account_id_type
+      assert ^message = error
     end
   end
 
@@ -184,7 +190,7 @@ defmodule ContactRepositoryTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Yashin Santos",
@@ -215,7 +221,7 @@ defmodule ContactRepositoryTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Yashin Santos",
@@ -231,14 +237,16 @@ defmodule ContactRepositoryTest do
         "nickname" => "test"
       })
 
-      {:error, error} =
+      {:error, message} =
         Core.update_contact_nickname(%{
           "account_id" => account.id,
           "email" => "test@gmaxxil.com",
           "new_nickname" => "test"
         })
 
-      assert error == :contact_actual_name
+      error = :contact_actual_name
+
+      assert ^message = error
     end
   end
 end
