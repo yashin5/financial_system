@@ -115,6 +115,8 @@ defmodule FinancialSystem.Core.Account do
     {:error, :invalid_role_type}
   end
 
+  def create(_), do: {:error, :invalid_arguments}
+
   defp new(currency, value) do
     %Account{
       active: true,

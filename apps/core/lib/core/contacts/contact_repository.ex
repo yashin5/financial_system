@@ -9,7 +9,8 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
   @callback create_contact(%{account_id: String.t(), nickname: String.t(), email: String.t()}) ::
               {:ok, Contact.t()} | {:error, atom()}
   def create_contact(%{"account_id" => account_id, "nickname" => nickname, "email" => email}) do
-    with {:ok, user} <- Helpers.get_account_or_user(:user, :account_id, account_id),
+    with {:ok, user} <-
+           Helpers.get_account_or_user(:user, :account_id, %{"account_id" => account_id}),
          :ok <-
            already_in_contact(user.id, email),
          {:ok, new_contact} <-
@@ -22,7 +23,7 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
   end
 
   defp new_contact(nickname, email) do
-    with {:ok, account} <- Helpers.get_account_or_user(:account, :email, email) do
+    with {:ok, account} <- Helpers.get_account_or_user(:account, :email, %{"email" => email}) do
       {:ok, %{nickname: nickname, email: email, account_id: account.id}}
     end
   end

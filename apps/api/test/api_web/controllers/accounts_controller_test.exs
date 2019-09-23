@@ -89,6 +89,33 @@ defmodule ApiWeb.AccountsControllerTest do
 
       assert response["error"] == expected_error
     end
+
+    test "when password is in invalid type, shoulg return a message", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      Core.create(%{
+        "role" => "regular",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "qwauhqqqw@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
+
+      params = %{email: "qwauhqqqw@gmail.com", password: 12_345_678}
+
+      response =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> post("/api/accounts/authenticate", params)
+        |> json_response(422)
+
+      expected_error = "invalid_password_type"
+
+      assert response["error"] == expected_error
+    end
   end
 
   describe "POST /api/accounts" do
@@ -121,6 +148,26 @@ defmodule ApiWeb.AccountsControllerTest do
       }
 
       assert response == expected
+    end
+
+    test "when params are not valid, should return 422", %{conn: conn} do
+      params = %{
+        name: "Yashin",
+        currency: "brl",
+        value: "100",
+        email: "yaxxxxxshin@gmail.com",
+        password: "fp3@naDSsjh2"
+      }
+
+      %{"error" => response} =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> post("/api/accounts", params)
+        |> json_response(422)
+
+      error = "invalid_arguments"
+
+      assert response == error
     end
 
     test "when currency dont exist, should return 422", %{conn: conn} do

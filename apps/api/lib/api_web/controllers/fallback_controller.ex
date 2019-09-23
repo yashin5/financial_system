@@ -115,4 +115,11 @@ defmodule ApiWeb.FallbackController do
     |> put_view(ApiWeb.ErrorView)
     |> render("error.json", %{error: :contact_actual_name})
   end
+
+  def call(conn, {:error, :invalid_arguments}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(ApiWeb.ErrorView)
+    |> render("error.json", %{error: :invalid_arguments})
+  end
 end

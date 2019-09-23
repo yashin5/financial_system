@@ -43,7 +43,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
     do: {:error, :invalid_account_id_type}
 
   def show(%{"email" => email}) when is_binary(email) do
-    with {:ok, account} <- Helpers.get_account_or_user(:account, :email, email) do
+    with {:ok, account} <- Helpers.get_account_or_user(:account, :email, %{"email" => email}) do
       show(%{"account_id" => account.id})
     end
   end
@@ -343,7 +343,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
   """
   @impl true
   def financial_statement(%{"email" => email}) when is_binary(email) do
-    with {:ok, account} <- Helpers.get_account_or_user(:account, :email, email) do
+    with {:ok, account} <- Helpers.get_account_or_user(:account, :email, %{"email" => email}) do
       {:ok,
        %{
          account_id: account.id,

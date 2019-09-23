@@ -1110,15 +1110,14 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
-        Core.create(%{
-          "role" => "admin",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "qqwqw@gmail.com",
-          "password" => "fp3@naDSsjh2"
-        })
+      Core.create(%{
+        "role" => "admin",
+        "name" => "Yashin",
+        "currency" => "brl",
+        "value" => "100",
+        "email" => "qqwqw@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
 
       {_, token} =
         Core.authenticate(%{
@@ -1134,14 +1133,14 @@ defmodule ApiWeb.OperationsControllerTest do
         |> json_response(201)
 
       expected = %{
-        "contact_account_id" => account.id,
+        "contact_account_id" => "test",
         "contact_active?" => true,
         "contact_currency" => "BRL",
         "contact_user_id" => "test",
         "contact_value" => 10000
       }
 
-      assert %{response | "contact_user_id" => "test"} == expected
+      assert %{response | "contact_user_id" => "test", "contact_account_id" => "test"} == expected
     end
   end
 end
