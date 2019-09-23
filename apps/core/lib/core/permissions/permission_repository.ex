@@ -1,4 +1,8 @@
 defmodule FinancialSystem.Core.Permissions.PermissionRepository do
+  @moduledoc """
+    This module is responsable to validate the permission
+  """
+
   alias FinancialSystem.Core.Permissions.Permission
   alias FinancialSystem.Core.Repo
   alias FinancialSystem.Core.Roles.RoleRepository

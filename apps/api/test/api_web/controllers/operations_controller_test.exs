@@ -1137,7 +1137,7 @@ defmodule ApiWeb.OperationsControllerTest do
         "contact_active?" => true,
         "contact_currency" => "BRL",
         "contact_user_id" => "test",
-        "contact_value" => 10000
+        "contact_value" => 10_000
       }
 
       assert %{response | "contact_user_id" => "test", "contact_account_id" => "test"} == expected

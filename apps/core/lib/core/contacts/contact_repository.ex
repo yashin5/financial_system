@@ -1,4 +1,7 @@
 defmodule FinancialSystem.Core.Contacts.ContactRepository do
+  @moduledoc """
+    This module is responsable to create, update and get contacts
+  """
   import Ecto.Query, only: [from: 2]
 
   alias FinancialSystem.Core.Accounts.AccountRepository

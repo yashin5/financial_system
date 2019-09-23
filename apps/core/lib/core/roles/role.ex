@@ -1,4 +1,8 @@
 defmodule FinancialSystem.Core.Roles.Role do
+  @moduledoc """
+    Schema to table Role
+  """
+
   use Ecto.Schema
 
   import Ecto.Changeset

@@ -1,7 +1,7 @@
 defmodule FinancialSystem.Core.Repo.Seeds do
+  alias FinancialSystem.Core.Permissions.Permission
   alias FinancialSystem.Core.Repo
   alias FinancialSystem.Core.Roles.Role
-  alias FinancialSystem.Core.Permissions.Permission
 
   admin_role =
     %Role{}

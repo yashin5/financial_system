@@ -21,11 +21,18 @@ defmodule FinancialSystem.Core.Financial do
               | {:error, atom()}
               | atom()
               | no_return()
-  @callback transfer(%{
-              value: String.t() | any(),
-              account_from: String.t() | any(),
-              account_to: String.t() | any()
-            }) ::
+  @callback transfer(
+              %{
+                value: String.t() | any(),
+                account_from: String.t() | any(),
+                account_to: String.t() | any()
+              }
+              | %{
+                  value: String.t(),
+                  account_id: String.t(),
+                  email: String.t()
+                }
+            ) ::
               {:ok, Account.t()}
               | {:error, atom()}
               | no_return()

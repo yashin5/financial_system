@@ -1,6 +1,6 @@
 defmodule FinancialSystem.Core.Contacts.Contact do
   @moduledoc """
-  Schema to table Contact
+    Schema to table Contact
   """
   use Ecto.Schema
 
