@@ -30,30 +30,30 @@ defmodule PermissionRepositoryTest do
     end
 
     test "should not be able to validate if insert a invalid role" do
-      {:error, invalid_role} =
+      {:error, message} =
         PermissionRepository.can_do_this_action(%{permission: :can_create, role: "rregular"})
 
       error = :invalid_role
 
-      assert invalid_role == error
+      assert ^message = error
     end
 
     test "should not be able to validate if insert a invalid permission" do
-      {:error, invalid_permission} =
+      {:error, message} =
         PermissionRepository.can_do_this_action(%{permission: :not_create, role: "regular"})
 
       error = :invalid_permission
 
-      assert invalid_permission == error
+      assert ^message = error
     end
 
     test "should not be able to validate if insert a invalid permission and role" do
-      {:error, invalid_permission_role} =
+      {:error, message} =
         PermissionRepository.can_do_this_action(%{permission: :not_create, role: "rsegular"})
 
       error = :invalid_role_and_permission
 
-      assert invalid_permission_role == error
+      assert ^message = error
     end
   end
 end

@@ -52,15 +52,15 @@ defmodule ApiWeb.AccountsControllerTest do
 
       params = %{email: "qwauhqqqw@gmail.com", password: "f3@naDSsjh2"}
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> post("/api/accounts/authenticate", params)
         |> json_response(422)
 
-      expected_error = "invalid_email_or_password"
+      error = "invalid_email_or_password"
 
-      assert response["error"] == expected_error
+      assert ^response = error
     end
 
     test "when user dont exist, shoulg return a message", %{conn: conn} do
@@ -79,15 +79,15 @@ defmodule ApiWeb.AccountsControllerTest do
 
       params = %{email: "qauhqqqw@gmail.com", password: "fp3@naDSsjh2"}
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> post("/api/accounts/authenticate", params)
         |> json_response(422)
 
-      expected_error = "user_dont_exist"
+      error = "user_dont_exist"
 
-      assert response["error"] == expected_error
+      assert ^response = error
     end
 
     test "when password is in invalid type, shoulg return a message", %{conn: conn} do
@@ -106,15 +106,15 @@ defmodule ApiWeb.AccountsControllerTest do
 
       params = %{email: "qwauhqqqw@gmail.com", password: 12_345_678}
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> post("/api/accounts/authenticate", params)
         |> json_response(422)
 
-      expected_error = "invalid_password_type"
+      error = "invalid_password_type"
 
-      assert response["error"] == expected_error
+      assert ^response = error
     end
   end
 
@@ -167,7 +167,7 @@ defmodule ApiWeb.AccountsControllerTest do
 
       error = "invalid_arguments"
 
-      assert response == error
+      assert ^response = error
     end
 
     test "when currency dont exist, should return 422", %{conn: conn} do
@@ -184,15 +184,15 @@ defmodule ApiWeb.AccountsControllerTest do
         password: "fp3@naDSsjh2"
       }
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> post("/api/accounts", params)
         |> json_response(422)
 
-      expected = %{"error" => "currency_is_not_valid"}
+      error = "currency_is_not_valid"
 
-      assert response == expected
+      assert ^response = error
     end
 
     test "when name has less than 2 character, should return 400", %{conn: conn} do
@@ -209,15 +209,15 @@ defmodule ApiWeb.AccountsControllerTest do
         password: "fp3@naDSsjh2"
       }
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> post("/api/accounts", params)
         |> json_response(422)
 
-      expected = %{"error" => %{"name" => ["should be at least 2 character(s)"]}}
+      error = %{"name" => ["should be at least 2 character(s)"]}
 
-      assert response == expected
+      assert ^response = error
     end
 
     test "when params is not valid, should return 400", %{conn: conn} do
@@ -230,15 +230,15 @@ defmodule ApiWeb.AccountsControllerTest do
         password: "Fp3@nasjh2"
       }
 
-      response =
+      %{"error" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> post("/api/accounts", params)
         |> json_response(400)
 
-      expected = %{"error" => "invalid_value_type"}
+      error = "invalid_value_type"
 
-      assert response == expected
+      assert ^response = error
     end
   end
 
@@ -248,7 +248,7 @@ defmodule ApiWeb.AccountsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         Core.create(%{
           "role" => "regular",
           "name" => "Yashin",
@@ -258,7 +258,7 @@ defmodule ApiWeb.AccountsControllerTest do
           "password" => "fp3@naDSsjh2"
         })
 
-      {_, token} =
+      {:ok, token} =
         Core.authenticate(%{"email" => "yashfffffffin@gmail.com", "password" => "fp3@naDSsjh2"})
 
       response =

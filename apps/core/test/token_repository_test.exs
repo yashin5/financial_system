@@ -30,19 +30,18 @@ defmodule TokenRepositoryTest do
     end
 
     test "Should not be able to create a token for an unexistent user" do
-      token = TokenRepository.generate_token(UUID.uuid4())
+      {:error, message} = TokenRepository.generate_token(UUID.uuid4())
+      error = :user_dont_exist
 
-      error = {:error, :user_dont_exist}
-
-      assert token == error
+      assert ^message = error
     end
 
     test "Should not be able to create a token if insert a invalid id type" do
-      token = TokenRepository.generate_token(12)
+      {:error, message} = TokenRepository.generate_token(12)
 
-      error = {:error, :invalid_id_type}
+      error = :invalid_id_type
 
-      assert token == error
+      assert ^message = error
     end
   end
 
@@ -66,18 +65,21 @@ defmodule TokenRepositoryTest do
     end
 
     test "Should not be able to verify if token is valid if insert a invalid token" do
-      {:error, token_validated} =
+      {:error, message} =
         TokenRepository.validate_token(
           "aasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasasdasadasdas"
         )
 
-      assert token_validated == :token_dont_exist
+      error = :token_dont_exist
+
+      assert ^message = error
     end
 
     test "Should not be able to verify if token is valid if insert a invalid token type" do
-      {:error, token_validated} = TokenRepository.validate_token(123)
+      {:error, message} = TokenRepository.validate_token(123)
+      error = :invalid_token_type
 
-      assert token_validated == :invalid_token_type
+      assert ^message = error
     end
   end
 end
