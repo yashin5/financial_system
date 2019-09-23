@@ -8,7 +8,7 @@ defmodule ApiWeb.AccountsController do
   action_fallback(ApiWeb.FallbackController)
 
   def authenticate(conn, params) do
-    with {:ok, response} <- Core.authenticate(params |> IO.inspect) do
+    with {:ok, response} <- Core.authenticate(params) do
       conn
       |> put_status(:created)
       |> put_resp_header("content-type", "application/json")

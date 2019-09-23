@@ -48,7 +48,7 @@ defmodule FinancialSystem.CoreTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Yashin Santos",
@@ -58,7 +58,7 @@ defmodule FinancialSystem.CoreTest do
           "password" => "f1aA678@"
         })
 
-      {_, account_data} = AccountRepository.find_account(:accountid, account.id)
+      {:ok, account_data} = AccountRepository.find_account(:accountid, account.id)
 
       account_simulate = %FinancialSystem.Core.Accounts.Account{
         id: "abd",
@@ -76,7 +76,7 @@ defmodule FinancialSystem.CoreTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Oliver Tsubasa",
@@ -86,7 +86,7 @@ defmodule FinancialSystem.CoreTest do
           "password" => "f1aA678@"
         })
 
-      {_, account_data} = AccountRepository.find_account(:accountid, account.id)
+      {:ok, account_data} = AccountRepository.find_account(:accountid, account.id)
 
       account_simulate = %FinancialSystem.Core.Accounts.Account{
         id: "abc",
@@ -104,7 +104,7 @@ defmodule FinancialSystem.CoreTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Inu Yasha",
@@ -155,6 +155,21 @@ defmodule FinancialSystem.CoreTest do
         })
 
       assert ^message = :invalid_value_less_than_0
+    end
+
+    test "Should not be able to create a account if not have the valid keys" do
+      {:error, response} =
+        FinancialSystem.Core.create(%{
+          "name" => "Yashin Santos",
+          "currency" => "BRL",
+          "value" => "0.10",
+          "email" => "test@gmail.com",
+          "password" => "f1aA678@"
+        })
+
+      error = :invalid_arguments
+
+      assert response == error
     end
 
     test "Not should be able to create a account with a value in integer format" do
@@ -230,7 +245,7 @@ defmodule FinancialSystem.CoreTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Oliver Tsubasa",
