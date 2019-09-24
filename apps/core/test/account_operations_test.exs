@@ -16,7 +16,7 @@ defmodule AccountOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Yashin Santos",
@@ -41,7 +41,7 @@ defmodule AccountOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Yashin Santos",

@@ -58,16 +58,16 @@ defmodule ApiWeb.AuthTest do
 
       params = %{currency: "brl", value: "100"}
 
-      response =
+      %{"message" => response} =
         conn
         |> put_req_header("content-type", "application/json")
         |> put_req_header("authorization", token)
         |> post("/api/operations/deposit", params)
         |> json_response(401)
 
-      expected = %{"message" => "unauthorized"}
+      error = "unauthorized"
 
-      assert response == expected
+      assert ^response = error
     end
   end
 end

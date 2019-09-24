@@ -59,7 +59,7 @@ defmodule CurrencyTest do
 
   describe "amount_do/3" do
     test "Should be able to transform a number in string type in integer to store the value in state" do
-      {_, value} = Currency.amount_do(:store, "1.0", "BTC")
+      {:ok, value} = Currency.amount_do(:store, "1.0", "BTC")
       assert value == 100_000_000
     end
 
@@ -88,13 +88,13 @@ defmodule CurrencyTest do
     end
 
     test "Should be able to transform a integer value in decimal to show the value to user" do
-      {_, value} = Currency.amount_do(:show, 1, "BTC")
+      {:ok, value} = Currency.amount_do(:show, 1, "BTC")
 
       assert value == "1E-8"
     end
 
     test "Should be able to transform a float value in decimal to show the value to user" do
-      {_, value} = Currency.amount_do(:show, 1, "BTC")
+      {:ok, value} = Currency.amount_do(:show, 1, "BTC")
       assert value == "1E-8"
     end
 

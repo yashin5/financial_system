@@ -31,39 +31,32 @@ defmodule UserRepositoryTest do
     end
 
     test "Should not be able to create a new user if password dont match the minimum requiriments" do
-      {:error, user} = UserRepository.new_user("regular", "Yaxx", "yaxx@gmailsx.com", "Xghnx1234")
-
-      user_errors = user.errors
+      {:error, message} =
+        UserRepository.new_user("regular", "Yaxx", "yaxx@gmailsx.com", "Xghnx1234")
 
       error = [password: {"Password does not match the minimun requirements", []}]
 
-      assert user_errors == error
+      assert message.errors == error
     end
 
     test "Should not create a new user if pass a invalid email" do
-      {:error, user} = UserRepository.new_user("regular", "Yaxx", "yaxx.com", "X@ghnx1234")
-
-      user_errors = user.errors
+      {:error, message} = UserRepository.new_user("regular", "Yaxx", "yaxx.com", "X@ghnx1234")
 
       error = [{:email, {"has invalid format", [validation: :format]}}]
 
-      assert user_errors == error
+      assert message.errors == error
     end
 
     test "Should not create a new user if pass a invalid email type" do
-      {:error, user} = UserRepository.new_user("regular", "Yaxx", 11, "X@ghnx1234")
-
-      user_errors = user.errors
+      {:error, message} = UserRepository.new_user("regular", "Yaxx", 11, "X@ghnx1234")
 
       error = [{:email, {"is invalid", [type: :string, validation: :cast]}}]
 
-      assert user_errors == error
+      assert message.errors == error
     end
 
     test "Should not create a new user if pass a invalid name" do
-      {:error, user} = UserRepository.new_user("regular", "Y", "yaxx@g.com", "X@ghnx1234")
-
-      user_errors = user.errors
+      {:error, message} = UserRepository.new_user("regular", "Y", "yaxx@g.com", "X@ghnx1234")
 
       error = [
         {:name,
@@ -71,23 +64,19 @@ defmodule UserRepositoryTest do
           [count: 2, validation: :length, kind: :min, type: :string]}}
       ]
 
-      assert user_errors == error
+      assert message.errors == error
     end
 
     test "Should not create a new user if pass a invalid name type" do
-      {:error, user} = UserRepository.new_user("regular", 12, "yaxx@g.com", "X@ghnx1234")
-
-      user_errors = user.errors
+      {:error, message} = UserRepository.new_user("regular", 12, "yaxx@g.com", "X@ghnx1234")
 
       error = [{:name, {"is invalid", [type: :string, validation: :cast]}}]
 
-      assert user_errors == error
+      assert message.errors == error
     end
 
     test "Should not create a new user if pass a invalid password" do
-      {:error, user} = UserRepository.new_user("regular", "Yaxx", "yaxx@g.com", "X@23")
-
-      user_errors = user.errors
+      {:error, message} = UserRepository.new_user("regular", "Yaxx", "yaxx@g.com", "X@23")
 
       error = [
         {:password,
@@ -95,23 +84,19 @@ defmodule UserRepositoryTest do
           [count: 6, validation: :length, kind: :min, type: :string]}}
       ]
 
-      assert user_errors == error
+      assert message.errors == error
     end
 
     test "Should not create a new user if pass a invalid password type" do
-      {:error, user} = UserRepository.new_user("regular", "Yaxx", "yaxx@g.com", 1)
-
-      user_errors = user.errors
+      {:error, message} = UserRepository.new_user("regular", "Yaxx", "yaxx@g.com", 1)
 
       error = [password: {"is invalid", [type: :string, validation: :cast]}]
 
-      assert user_errors == error
+      assert message.errors == error
     end
 
     test "Should not create a new user if pass a invalid password length" do
-      {:error, user} = UserRepository.new_user("regular", "Yaxx", "yaxx@g.com", "X@")
-
-      user_errors = user.errors
+      {:error, message} = UserRepository.new_user("regular", "Yaxx", "yaxx@g.com", "X@")
 
       error = [
         {:password,
@@ -119,7 +104,7 @@ defmodule UserRepositoryTest do
           [count: 6, validation: :length, kind: :min, type: :string]}}
       ]
 
-      assert user_errors == error
+      assert message.errors == error
     end
   end
 
@@ -137,28 +122,26 @@ defmodule UserRepositoryTest do
     end
 
     test "Should not be able to authenticate if pass data from unexistent user" do
-      authenticate =
+      {:error, message} =
         UserRepository.authenticate(%{"email" => "yaxx@gmailsx.com", "password" => "X@ghnx1234"})
 
-      error = {:error, :user_dont_exist}
+      error = :user_dont_exist
 
-      assert authenticate == error
+      assert ^message = error
     end
 
     test "Should not be able to authenticate if pass invalid email type" do
-      authenticate = UserRepository.authenticate(%{"email" => 1, "password" => "X@ghnx1234"})
+      {:error, message} = UserRepository.authenticate(%{"email" => 1, "password" => "X@ghnx1234"})
+      error = :invalid_email_type
 
-      error = {:error, :invalid_email_type}
-
-      assert authenticate == error
+      assert ^message = error
     end
 
     test "Should not be able to authenticate if pass invalid password type" do
-      authenticate = UserRepository.authenticate(%{"email" => "yaxx@g.xom", "password" => 1})
+      {:error, message} = UserRepository.authenticate(%{"email" => "yaxx@g.xom", "password" => 1})
+      error = :invalid_password_type
 
-      error = {:error, :invalid_password_type}
-
-      assert authenticate == error
+      assert ^message = error
     end
   end
 
@@ -186,18 +169,18 @@ defmodule UserRepositoryTest do
     end
 
     test "Should not be able to get user informations if pass a unexistent user email" do
-      user = UserRepository.get_user(%{email: "yaxx@gmailsx.comm"})
-      error = {:error, :user_dont_exist}
+      {:error, message} = UserRepository.get_user(%{email: "yaxx@gmailsx.comm"})
+      error = :user_dont_exist
 
-      assert user == error
+      assert ^message = error
     end
 
     test "Should not be able to get user informations if pass a invalid email type" do
-      user = UserRepository.get_user(%{email: 1})
+      {:error, message} = UserRepository.get_user(%{email: 1})
 
-      error = {:error, :invalid_email_type}
+      error = :invalid_email_type
 
-      assert user == error
+      assert ^message = error
     end
 
     test "Should be able to get user informations if pass a existent id of user" do
@@ -224,18 +207,17 @@ defmodule UserRepositoryTest do
     end
 
     test "Should not be able to get user informations if pass a unexistent id" do
-      user = UserRepository.get_user(%{user_id: UUID.uuid4()})
-      error = {:error, :user_dont_exist}
+      {:error, message} = UserRepository.get_user(%{user_id: UUID.uuid4()})
+      error = :user_dont_exist
 
-      assert user == error
+      assert ^message = error
     end
 
     test "Should not be able to get user informations if pass a invalid id type" do
-      user = UserRepository.get_user(%{user_id: 123})
+      {:error, message} = UserRepository.get_user(%{user_id: 123})
+      error = :invalid_id_type
 
-      error = {:error, :invalid_id_type}
-
-      assert user == error
+      assert ^message = error
     end
   end
 end

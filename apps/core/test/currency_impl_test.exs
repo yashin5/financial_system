@@ -23,7 +23,7 @@ defmodule CurrencyImplTest do
 
   describe "get_from_currency/2" do
     test "Should be able to get a decimal places of a currency" do
-      {_, decimal_precision} = CurrencyImpl.get_from_currency(:precision, "BRL")
+      {:ok, decimal_precision} = CurrencyImpl.get_from_currency(:precision, "BRL")
 
       assert decimal_precision == 2
     end
@@ -34,7 +34,7 @@ defmodule CurrencyImplTest do
     end
 
     test "Should be able to get a current value of a currency" do
-      {_, currency_value} = CurrencyImpl.get_from_currency(:value, "BRL")
+      {:ok, currency_value} = CurrencyImpl.get_from_currency(:value, "BRL")
 
       assert currency_value == 3.702199
     end

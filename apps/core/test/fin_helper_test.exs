@@ -15,7 +15,7 @@ defmodule FinHelperTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Roberta Santos",
@@ -61,7 +61,7 @@ defmodule FinHelperTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Yashin Santos",
@@ -71,7 +71,7 @@ defmodule FinHelperTest do
           "password" => "f1aA678@"
         })
 
-      {_, account2} =
+      {:ok, account2} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Oliver Tsubasa",
@@ -81,7 +81,7 @@ defmodule FinHelperTest do
           "password" => "f1aA678@"
         })
 
-      {_, account3} =
+      {:ok, account3} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Inu Yasha",
@@ -152,7 +152,7 @@ defmodule FinHelperTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Yashin Santos",
@@ -162,7 +162,7 @@ defmodule FinHelperTest do
           "password" => "f1aA678@"
         })
 
-      {_, account3} =
+      {:ok, account3} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Inu Yasha",
@@ -216,7 +216,7 @@ defmodule FinHelperTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {_, account} =
+      {:ok, account} =
         FinancialSystem.Core.create(%{
           "role" => "regular",
           "name" => "Yashin Santos",
@@ -240,7 +240,7 @@ defmodule FinHelperTest do
 
     test "Should be able to verify if have a duplicated account in split list and unity it.",
          %{account_id: account, list: split_list} do
-      {_, list_return} = FinHelper.unite_equal_account_split(split_list)
+      {:ok, list_return} = FinHelper.unite_equal_account_split(split_list)
       list_return_simulate = [%FinancialSystem.Core.Split{account: account, percent: 100}]
 
       assert list_return_simulate == list_return
