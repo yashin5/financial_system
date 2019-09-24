@@ -24,18 +24,18 @@ defmodule FinancialSystem.Core.Permissions.PermissionRepository do
 
   def can_do_this_action(%{permission: permission, role: role})
       when permission in [:can_create, :can_delete, :can_view, :can_view_all] and
-             role not in ["admin", "regular"] do
+             role not in ["regular"] do
     {:error, :invalid_role}
   end
 
   def can_do_this_action(%{permission: permission, role: role})
-      when role in ["admin", "regular"] and
+      when role in ["regular"] and
              permission not in [:can_create, :can_delete, :can_view, :can_view_all] do
     {:error, :invalid_permission}
   end
 
   def can_do_this_action(%{permission: permission, role: role})
-      when role not in ["admin", "regular"] and
+      when role not in ["regular"] and
              permission not in [:can_create, :can_delete, :can_view, :can_view_all] do
     {:error, :invalid_role_and_permission}
   end

@@ -4,6 +4,8 @@ defmodule ApiWeb.OperationsControllerTest do
   import Mox
 
   alias FinancialSystem.Core
+  alias FinancialSystem.Core.Accounts.Account
+  alias FinancialSystem.Core.Users.User
 
   describe "POST /api/operations/withdraw" do
     test "when params is not valid, should return 201 and the response", %{conn: conn} do
@@ -12,9 +14,8 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "axsd@gmail.com",
         "password" => "fp3@naDSsjh2"
@@ -46,9 +47,8 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "axsd@gmail.com",
         "password" => "fp3@naDSsjh2"
@@ -80,9 +80,8 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "asdf@gmail.com",
         "password" => "fp3@naDSsjh2"
@@ -113,9 +112,8 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "asdfg@gmail.com",
         "password" => "fp3@naDSsjh2"
@@ -124,7 +122,7 @@ defmodule ApiWeb.OperationsControllerTest do
       {:ok, token} =
         Core.authenticate(%{"email" => "asdfg@gmail.com", "password" => "fp3@naDSsjh2"})
 
-      params = %{currency: "brl", value: "100"}
+      params = %{currency: "BRL", value: "100"}
 
       response =
         conn
@@ -147,9 +145,8 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "asdfg@gmail.com",
         "password" => "fp3@naDSsjh2"
@@ -178,9 +175,8 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "asdfg@gmail.com",
         "password" => "fp3@naDSsjh2"
@@ -209,9 +205,8 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "asdfg@gmail.com",
         "password" => "fp3@naDSsjh2"
@@ -220,7 +215,7 @@ defmodule ApiWeb.OperationsControllerTest do
       {:ok, token} =
         Core.authenticate(%{"email" => "asdfg@gmail.com", "password" => "fp3@naDSsjh2"})
 
-      params = %{currency: "brl", value: "-1"}
+      params = %{currency: "BRL", value: "-1"}
 
       %{"error" => response} =
         conn
@@ -241,9 +236,8 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {:ok, account} =
         Core.create(%{
-          "role" => "regular",
           "name" => "Yashin",
-          "currency" => "brl",
+          "currency" => "BRL",
           "value" => "100",
           "email" => "asdfgh@gmail.com",
           "password" => "fp3@naDSsjh2"
@@ -252,7 +246,7 @@ defmodule ApiWeb.OperationsControllerTest do
       {:ok, token} =
         Core.authenticate(%{"email" => "asdfgh@gmail.com", "password" => "fp3@naDSsjh2"})
 
-      params = %{account_id: account.id, currency: "brl", value: 100}
+      params = %{account_id: account.id, currency: "BRL", value: 100}
 
       %{"error" => response} =
         conn
@@ -274,9 +268,8 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "asdfghh@gmail.com",
         "password" => "fp3@naDSsjh2"
@@ -286,9 +279,8 @@ defmodule ApiWeb.OperationsControllerTest do
         Core.authenticate(%{"email" => "asdfghh@gmail.com", "password" => "fp3@naDSsjh2"})
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "yashin@outlook.com",
         "password" => "fp3@naDSsjh2"
@@ -317,9 +309,8 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "asdfghh@gmail.com",
         "password" => "fp3@naDSsjh2"
@@ -348,9 +339,8 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "asdfghh@gmail.com",
         "password" => "fp3@naDSsjh2"
@@ -379,9 +369,8 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "0",
         "email" => "aaaa@gmail.com",
         "password" => "fp3@naDSsjh2"
@@ -391,9 +380,8 @@ defmodule ApiWeb.OperationsControllerTest do
         Core.authenticate(%{"email" => "aaaa@gmail.com", "password" => "fp3@naDSsjh2"})
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "ssss@outloil.com",
         "password" => "fp3@naDSsjh2"
@@ -419,9 +407,8 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "aaaa@gmail.com",
         "password" => "fp3@naDSsjh2"
@@ -450,9 +437,8 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "dddd@gmail.com",
         "password" => "fp3@naDSsjh2"
@@ -462,9 +448,8 @@ defmodule ApiWeb.OperationsControllerTest do
         Core.authenticate(%{"email" => "dddd@gmail.com", "password" => "fp3@naDSsjh2"})
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "fffff@outlook.com",
         "password" => "fp3@naDSsjh2"
@@ -492,18 +477,16 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "yashin@outlook.com",
         "password" => "fp3@naDSsjh2"
       })
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "gggg@gmail.com",
         "password" => "fp3@naDSsjh2"
@@ -513,9 +496,8 @@ defmodule ApiWeb.OperationsControllerTest do
         Core.authenticate(%{"email" => "gggg@gmail.com", "password" => "fp3@naDSsjh2"})
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "yashin@yahoo.com",
         "password" => "fp3@naDSsjh2"
@@ -549,18 +531,16 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "yashin@outlook.com",
         "password" => "fp3@naDSsjh2"
       })
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "gggg@gmail.com",
         "password" => "fp3@naDSsjh2"
@@ -570,9 +550,8 @@ defmodule ApiWeb.OperationsControllerTest do
         Core.authenticate(%{"email" => "gggg@gmail.com", "password" => "fp3@naDSsjh2"})
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "yashin@yahoo.com",
         "password" => "fp3@naDSsjh2"
@@ -603,18 +582,16 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "hhhh@gmail.com",
         "password" => "fp3@naDSsjh2"
       })
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "0",
         "email" => "qqq@yahoo.com",
         "password" => "fp3@naDSsjh2"
@@ -624,9 +601,8 @@ defmodule ApiWeb.OperationsControllerTest do
         Core.authenticate(%{"email" => "qqq@yahoo.com", "password" => "fp3@naDSsjh2"})
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "www@outlook.com",
         "password" => "fp3@naDSsjh2"
@@ -657,18 +633,16 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "eee@gmail.com",
         "password" => "fp3@naDSsjh2"
       })
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "rrr@yahoo.com",
         "password" => "fp3@naDSsjh2"
@@ -678,9 +652,8 @@ defmodule ApiWeb.OperationsControllerTest do
         Core.authenticate(%{"email" => "rrr@yahoo.com", "password" => "fp3@naDSsjh2"})
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "qqq@outlook.com",
         "password" => "fp3@naDSsjh2"
@@ -714,9 +687,8 @@ defmodule ApiWeb.OperationsControllerTest do
 
       {:ok, account} =
         Core.create(%{
-          "role" => "regular",
           "name" => "Yashin",
-          "currency" => "brl",
+          "currency" => "BRL",
           "value" => "100",
           "email" => "qwqw@gmail.com",
           "password" => "fp3@naDSsjh2"
@@ -755,20 +727,29 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      Core.create(%{
-        "role" => "admin",
-        "name" => "Yashin",
-        "currency" => "brl",
-        "value" => "100",
-        "email" => "qqwqw@gmail.com",
-        "password" => "fp3@naDSsjh2"
+      {:ok, user} =
+        %User{}
+        |> User.changeset(%{
+          role: "admin",
+          name: "Yashin",
+          email: "qqqwqw@gmail.com",
+          password: "fp3@naDSsjh2"
+        })
+        |> Repo.insert()
+
+      user
+      |> Ecto.build_assoc(:account, %{})
+      |> Account.changeset(%{
+        active: true,
+        currency: "BRL",
+        value: "10000"
       })
+      |> Repo.insert()
 
       {:ok, account} =
         Core.create(%{
-          "role" => "regular",
           "name" => "Yashin",
-          "currency" => "brl",
+          "currency" => "BRL",
           "value" => "100",
           "email" => "qwqw@gmail.com",
           "password" => "fp3@naDSsjh2"
@@ -780,7 +761,7 @@ defmodule ApiWeb.OperationsControllerTest do
       })
 
       {:ok, token} =
-        Core.authenticate(%{"email" => "qqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
+        Core.authenticate(%{"email" => "qqqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
 
       response =
         conn
@@ -810,9 +791,8 @@ defmodule ApiWeb.OperationsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "qwqw@gmail.com",
         "password" => "fp3@naDSsjh2"
@@ -838,26 +818,35 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      Core.create(%{
-        "role" => "admin",
-        "name" => "Yashin",
-        "currency" => "brl",
-        "value" => "100",
-        "email" => "qqwqw@gmail.com",
-        "password" => "fp3@naDSsjh2"
+      {:ok, user} =
+        %User{}
+        |> User.changeset(%{
+          role: "admin",
+          name: "Yashin",
+          email: "wqqwqw@gmail.com",
+          password: "fp3@naDSsjh2"
+        })
+        |> Repo.insert()
+
+      user
+      |> Ecto.build_assoc(:account, %{})
+      |> Account.changeset(%{
+        active: true,
+        currency: "BRL",
+        value: "10000"
       })
+      |> Repo.insert()
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
-        "currency" => "brl",
+        "currency" => "BRL",
         "value" => "100",
         "email" => "qwqw@gmail.com",
         "password" => "fp3@naDSsjh2"
       })
 
       {:ok, token} =
-        Core.authenticate(%{"email" => "qqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
+        Core.authenticate(%{"email" => "wqqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
 
       response =
         conn
@@ -878,20 +867,30 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {:ok, account} =
-        Core.create(%{
-          "role" => "admin",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "qqwqw@gmail.com",
-          "password" => "fp3@naDSsjh2"
+      {:ok, user} =
+        %User{}
+        |> User.changeset(%{
+          role: "admin",
+          name: "Yashin",
+          email: "qqwqrw@gmail.com",
+          password: "fp3@naDSsjh2"
         })
+        |> Repo.insert()
+
+      {:ok, account} =
+        user
+        |> Ecto.build_assoc(:account, %{})
+        |> Account.changeset(%{
+          active: true,
+          currency: "BRL",
+          value: "10000"
+        })
+        |> Repo.insert()
 
       {:ok, token} =
-        Core.authenticate(%{"email" => "qqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
+        Core.authenticate(%{"email" => "qqwqrw@gmail.com", "password" => "fp3@naDSsjh2"})
 
-      params = %{"email" => "qqwqw@gmail.com", "nickname" => "qqqw"}
+      params = %{"email" => "qqwqrw@gmail.com", "nickname" => "qqqw"}
 
       response =
         conn
@@ -901,7 +900,7 @@ defmodule ApiWeb.OperationsControllerTest do
         |> json_response(201)
 
       expected = %{
-        "contact" => "qqwqw@gmail.com",
+        "contact" => "qqwqrw@gmail.com",
         "contact_account_id" => account.id,
         "contact_nickname" => "qqqw"
       }
@@ -914,19 +913,29 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      Core.create(%{
-        "role" => "admin",
-        "name" => "Yashin",
-        "currency" => "brl",
-        "value" => "100",
-        "email" => "qqwqw@gmail.com",
-        "password" => "fp3@naDSsjh2"
+      {:ok, user} =
+        %User{}
+        |> User.changeset(%{
+          role: "admin",
+          name: "Yashin",
+          email: "qqxwqw@gmail.com",
+          password: "fp3@naDSsjh2"
+        })
+        |> Repo.insert()
+
+      user
+      |> Ecto.build_assoc(:account, %{})
+      |> Account.changeset(%{
+        active: true,
+        currency: "BRL",
+        value: "10000"
       })
+      |> Repo.insert()
 
       {:ok, token} =
-        Core.authenticate(%{"email" => "qqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
+        Core.authenticate(%{"email" => "qqxwqw@gmail.com", "password" => "fp3@naDSsjh2"})
 
-      params = %{"email" => "qqwqwgmail.com", "nickname" => "qqqw"}
+      params = %{"email" => "qqxwqw.com", "nickname" => "qqqw"}
 
       %{"error" => response} =
         conn
@@ -945,20 +954,30 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {:ok, account} =
-        Core.create(%{
-          "role" => "admin",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "qqwqw@gmail.com",
-          "password" => "fp3@naDSsjh2"
+      {:ok, user} =
+        %User{}
+        |> User.changeset(%{
+          role: "admin",
+          name: "Yashin",
+          email: "qcqwqw@gmail.com",
+          password: "fp3@naDSsjh2"
         })
+        |> Repo.insert()
+
+      {:ok, account} =
+        user
+        |> Ecto.build_assoc(:account, %{})
+        |> Account.changeset(%{
+          active: true,
+          currency: "BRL",
+          value: "10000"
+        })
+        |> Repo.insert()
 
       {:ok, token} =
-        Core.authenticate(%{"email" => "qqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
+        Core.authenticate(%{"email" => "qcqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
 
-      params = %{"email" => "qqwqw@gmail.com", "nickname" => "qqqw"}
+      params = %{"email" => "qcqwqw@gmail.com", "nickname" => "qqqw"}
 
       params |> Map.put("account_id", account.id) |> Core.create_contact()
 
@@ -981,25 +1000,35 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {:ok, account} =
-        Core.create(%{
-          "role" => "admin",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "qqwqw@gmail.com",
-          "password" => "fp3@naDSsjh2"
+      {:ok, user} =
+        %User{}
+        |> User.changeset(%{
+          role: "admin",
+          name: "Yashin",
+          email: "qrrqwqw@gmail.com",
+          password: "fp3@naDSsjh2"
         })
+        |> Repo.insert()
+
+      {:ok, account} =
+        user
+        |> Ecto.build_assoc(:account, %{})
+        |> Account.changeset(%{
+          active: true,
+          currency: "BRL",
+          value: "10000"
+        })
+        |> Repo.insert()
 
       {:ok, token} =
         Core.authenticate(%{
-          "email" => "qqwqw@gmail.com",
+          "email" => "qrrqwqw@gmail.com",
           "password" => "fp3@naDSsjh2"
         })
 
       Core.create_contact(%{
         "account_id" => account.id,
-        "email" => "qqwqw@gmail.com",
+        "email" => "qrrqwqw@gmail.com",
         "nickname" => "qqqw"
       })
 
@@ -1013,7 +1042,7 @@ defmodule ApiWeb.OperationsControllerTest do
       expected = [
         %{
           "contact_account_id" => account.id,
-          "contact_email" => "qqwqw@gmail.com",
+          "contact_email" => "qrrqwqw@gmail.com",
           "contact_nickname" => "qqqw"
         }
       ]
@@ -1028,29 +1057,39 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {:ok, account} =
-        Core.create(%{
-          "role" => "admin",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "qqwqw@gmail.com",
-          "password" => "fp3@naDSsjh2"
+      {:ok, user} =
+        %User{}
+        |> User.changeset(%{
+          role: "admin",
+          name: "Yashin",
+          email: "qqxxwqw@gmail.com",
+          password: "fp3@naDSsjh2"
         })
+        |> Repo.insert()
+
+      {:ok, account} =
+        user
+        |> Ecto.build_assoc(:account, %{})
+        |> Account.changeset(%{
+          active: true,
+          currency: "BRL",
+          value: "10000"
+        })
+        |> Repo.insert()
 
       {:ok, token} =
         Core.authenticate(%{
-          "email" => "qqwqw@gmail.com",
+          "email" => "qqxxwqw@gmail.com",
           "password" => "fp3@naDSsjh2"
         })
 
       Core.create_contact(%{
         "account_id" => account.id,
-        "email" => "qqwqw@gmail.com",
+        "email" => "qqxxwqw@gmail.com",
         "nickname" => "qqqw"
       })
 
-      params = %{"new_nickname" => "eu", "email" => "qqwqw@gmail.com"}
+      params = %{"new_nickname" => "eu", "email" => "qqxxwqw@gmail.com"}
 
       response =
         conn
@@ -1060,7 +1099,7 @@ defmodule ApiWeb.OperationsControllerTest do
         |> json_response(201)
 
       expected = %{
-        "contact" => "qqwqw@gmail.com",
+        "contact" => "qqxxwqw@gmail.com",
         "contact_account_id" => account.id,
         "contact_nickname" => "eu"
       }
@@ -1075,29 +1114,39 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      {:ok, account} =
-        Core.create(%{
-          "role" => "admin",
-          "name" => "Yashin",
-          "currency" => "brl",
-          "value" => "100",
-          "email" => "qqwqw@gmail.com",
-          "password" => "fp3@naDSsjh2"
+      {:ok, user} =
+        %User{}
+        |> User.changeset(%{
+          role: "admin",
+          name: "Yashin",
+          email: "qqwzzqw@gmail.com",
+          password: "fp3@naDSsjh2"
         })
+        |> Repo.insert()
+
+      {:ok, account} =
+        user
+        |> Ecto.build_assoc(:account, %{})
+        |> Account.changeset(%{
+          active: true,
+          currency: "BRL",
+          value: "10000"
+        })
+        |> Repo.insert()
 
       {:ok, token} =
         Core.authenticate(%{
-          "email" => "qqwqw@gmail.com",
+          "email" => "qqwzzqw@gmail.com",
           "password" => "fp3@naDSsjh2"
         })
 
       Core.create_contact(%{
         "account_id" => account.id,
-        "email" => "qqwqw@gmail.com",
+        "email" => "qqwzzqw@gmail.com",
         "nickname" => "qqqw"
       })
 
-      params = %{"new_nickname" => "qqqw", "email" => "qqwqw@gmail.com"}
+      params = %{"new_nickname" => "qqqw", "email" => "qqwzzqw@gmail.com"}
 
       %{"error" => response} =
         conn
@@ -1118,20 +1167,31 @@ defmodule ApiWeb.OperationsControllerTest do
         {:ok, String.upcase(currency)}
       end)
 
-      Core.create(%{
-        "role" => "admin",
-        "name" => "Yashin",
-        "currency" => "brl",
-        "value" => "100",
-        "email" => "qqwqw@gmail.com",
-        "password" => "fp3@naDSsjh2"
+      {:ok, user} =
+        %User{}
+        |> User.changeset(%{
+          role: "admin",
+          name: "Yashin",
+          email: "qqwqwq@gmail.com",
+          password: "fp3@naDSsjh2"
+        })
+        |> Repo.insert()
+
+      user
+      |> Ecto.build_assoc(:account, %{})
+      |> Account.changeset(%{
+        active: true,
+        currency: "BRL",
+        value: "10000"
       })
+      |> Repo.insert()
 
       {:ok, token} =
         Core.authenticate(%{
-          "email" => "qqwqw@gmail.com",
+          "email" => "qqwqwq@gmail.com",
           "password" => "fp3@naDSsjh2"
         })
+
 
       [response | _] =
         conn

@@ -4,6 +4,8 @@ defmodule ApiWeb.PermissionsTest do
   import Mox
 
   alias FinancialSystem.Core
+  alias FinancialSystem.Core.Accounts.Account
+  alias FinancialSystem.Core.Users.User
 
   describe "POST" do
     test "When is a admin user, can do the action", %{conn: conn} do
@@ -11,18 +13,27 @@ defmodule ApiWeb.PermissionsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      Core.create(%{
-        "role" => "admin",
-        "name" => "Yashin",
-        "currency" => "brl",
-        "value" => "100",
-        "email" => "qqwqw@gmail.com",
-        "password" => "fp3@naDSsjh2"
+      {:ok, user} =
+        %User{}
+        |> User.changeset(%{
+          role: "admin",
+          name: "Yashin",
+          email: "qqqwqw@gmail.com",
+          password: "fp3@naDSsjh2"
+        })
+        |> Repo.insert()
+
+      user
+      |> Ecto.build_assoc(:account, %{})
+      |> Account.changeset(%{
+        active: true,
+        currency: "BRL",
+        value: "10000"
       })
+      |> Repo.insert()
 
       {_, account} =
         Core.create(%{
-          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",
@@ -36,7 +47,7 @@ defmodule ApiWeb.PermissionsTest do
       })
 
       {_, token} =
-        Core.authenticate(%{"email" => "qqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
+        Core.authenticate(%{"email" => "qqqwqw@gmail.com", "password" => "fp3@naDSsjh2"})
 
       response =
         conn
@@ -64,7 +75,6 @@ defmodule ApiWeb.PermissionsTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
         "currency" => "brl",
         "value" => "100",
@@ -74,7 +84,6 @@ defmodule ApiWeb.PermissionsTest do
 
       {_, account} =
         Core.create(%{
-          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",

@@ -17,7 +17,6 @@ defmodule ContactRepositoryTest do
 
       {:ok, account} =
         Core.create(%{
-          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -45,7 +44,6 @@ defmodule ContactRepositoryTest do
 
       {:ok, account} =
         FinancialSystem.Core.create(%{
-          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -78,7 +76,6 @@ defmodule ContactRepositoryTest do
 
       {:ok, account} =
         FinancialSystem.Core.create(%{
-          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -107,7 +104,6 @@ defmodule ContactRepositoryTest do
 
       {:ok, account} =
         FinancialSystem.Core.create(%{
-          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -136,7 +132,6 @@ defmodule ContactRepositoryTest do
 
       {:ok, account} =
         FinancialSystem.Core.create(%{
-          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -163,7 +158,6 @@ defmodule ContactRepositoryTest do
 
       {:ok, account} =
         FinancialSystem.Core.create(%{
-          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -192,7 +186,6 @@ defmodule ContactRepositoryTest do
 
       {:ok, account} =
         FinancialSystem.Core.create(%{
-          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -223,7 +216,6 @@ defmodule ContactRepositoryTest do
 
       {:ok, account} =
         FinancialSystem.Core.create(%{
-          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",

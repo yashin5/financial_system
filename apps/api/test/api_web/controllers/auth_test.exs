@@ -12,7 +12,6 @@ defmodule ApiWeb.AuthTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
         "currency" => "brl",
         "value" => "100",
@@ -46,7 +45,6 @@ defmodule ApiWeb.AuthTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
         "currency" => "brl",
         "value" => "100",

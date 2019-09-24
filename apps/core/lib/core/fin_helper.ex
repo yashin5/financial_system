@@ -15,7 +15,7 @@ defmodule FinancialSystem.Core.FinHelper do
 
   ## Examples
       {_, account} = FinancialSystem.Core.create(%{
-        "role" => "regular",
+
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -54,7 +54,7 @@ defmodule FinancialSystem.Core.FinHelper do
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
-        "role" => "regular",
+
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -62,7 +62,7 @@ defmodule FinancialSystem.Core.FinHelper do
         "password" => "B@xopn123"
       })
     {_, account2} = FinancialSystem.Core.create(%{
-        "role" => "regular",
+
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -70,7 +70,7 @@ defmodule FinancialSystem.Core.FinHelper do
         "password" => "B@xopn123"
       })
     {_, account3} = FinancialSystem.Core.create(%{
-        "role" => "regular",
+
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -98,7 +98,7 @@ defmodule FinancialSystem.Core.FinHelper do
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
-        "role" => "regular",
+
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -106,7 +106,7 @@ defmodule FinancialSystem.Core.FinHelper do
         "password" => "B@xopn123"
       })
     {_, account2} = FinancialSystem.Core.create(%{
-        "role" => "regular",
+
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -152,7 +152,7 @@ defmodule FinancialSystem.Core.FinHelper do
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
-        "role" => "regular",
+
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -160,7 +160,7 @@ defmodule FinancialSystem.Core.FinHelper do
         "password" => "B@xopn123"
       })
     {_, account3} = FinancialSystem.Core.create(%{
-        "role" => "regular",
+
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -191,7 +191,7 @@ defmodule FinancialSystem.Core.FinHelper do
 
   ## Examples
     {_, account2} = FinancialSystem.Core.create(%{
-        "role" => "regular",
+
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -199,7 +199,7 @@ defmodule FinancialSystem.Core.FinHelper do
         "password" => "B@xopn123"
       })
     {_, account3} = FinancialSystem.Core.create(%{
-        "role" => "regular",
+
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -229,7 +229,7 @@ defmodule FinancialSystem.Core.FinHelper do
 
   ## Examples
     {_, account2} = FinancialSystem.Core.create(%{
-        "role" => "regular",
+
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -237,7 +237,7 @@ defmodule FinancialSystem.Core.FinHelper do
         "password" => "B@xopn123"
       })
     {_, account3} = FinancialSystem.Core.create(%{
-        "role" => "regular",
+
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",

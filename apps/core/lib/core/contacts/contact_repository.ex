@@ -15,7 +15,7 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
     Create a contact
 
   ## Examples
-    {:ok, account} = FinancialSystem.Core.create(%{"role" => "regular", "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
+    {:ok, account} = FinancialSystem.Core.create(%{ "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
 
     FinancialSystem.Core.Contacts.ContactRepository.create_contact(%{"account_id" => account.id, "nickname" => "test", "email" => "xx@xx.com"})
   """
@@ -70,7 +70,7 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
     Get all contacts from a user
 
   ## Examples
-    {:ok, account} = FinancialSystem.Core.create(%{"role" => "regular", "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
+    {:ok, account} = FinancialSystem.Core.create(%{ "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
 
     FinancialSystem.Core.Contacts.ContactRepository.get_all_contacts(%{"account_id" => account.id})
   """
@@ -92,7 +92,7 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
     Update a nickname from an contact
 
   ## Examples
-    {:ok, account} = FinancialSystem.Core.create(%{"role" => "regular", "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
+    {:ok, account} = FinancialSystem.Core.create(%{ "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
     FinancialSystem.Core.Contacts.ContactRepository.create_contact(%{"account_id" => account.id, "nickname" => "test", "email" => "xx@xx.com"})
 
     FinancialSystem.Core.Contacts.ContactRepository.update_contact_nickname(%{"account_id" => account.id, "new_nickname" => "ttest", "email" => "xx@xx.com"})
