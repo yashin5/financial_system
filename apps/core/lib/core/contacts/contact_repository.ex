@@ -4,10 +4,12 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
   """
   import Ecto.Query, only: [from: 2]
 
+  alias FinancialSystem.Core.Accounts.Account
   alias FinancialSystem.Core.Accounts.AccountRepository
   alias FinancialSystem.Core.Contacts.Contact
   alias FinancialSystem.Core.Helpers
   alias FinancialSystem.Core.Repo
+  alias FinancialSystem.Core.Users.User
 
   @doc """
     Create a contact
@@ -39,23 +41,29 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
     end
   end
 
-  defp already_in_contact(user_id, email) do
+  defp already_in_contact(user_id, email) when is_binary(email) do
     user_id
-    |> get_contacts_emails()
-    |> Repo.all()
-    |> Enum.member?(email)
+    |> get_contacts_emails(email)
     |> do_already_in_contact()
   end
 
-  defp do_already_in_contact(false), do: :ok
+  defp already_in_contact(_, _), do: {:error, :invalid_email_type}
 
-  defp do_already_in_contact(true), do: {:error, :already_in_contacts}
+  defp do_already_in_contact(nil), do: :ok
 
-  defp get_contacts_emails(user_id) do
-    from(u in Contact,
-      where: u.user_id == type(^user_id, :binary_id),
-      select: u.email
-    )
+  defp do_already_in_contact(_), do: {:error, :already_in_contacts}
+
+  defp get_contacts_emails(user_id, email) do
+    query =
+      from(c in Contact,
+        inner_join: a in Account,
+        on: c.account_id == a.id,
+        inner_join: u in User,
+        on: a.user_id == u.id,
+        where: a.user_id == type(^user_id, :binary_id)
+      )
+
+    Repo.get_by(query, email: email)
   end
 
   @doc """
