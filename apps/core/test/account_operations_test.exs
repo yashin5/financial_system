@@ -18,7 +18,6 @@ defmodule AccountOperationsTest do
 
       {:ok, account} =
         FinancialSystem.Core.create(%{
-          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -43,7 +42,6 @@ defmodule AccountOperationsTest do
 
       {:ok, account} =
         FinancialSystem.Core.create(%{
-          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",

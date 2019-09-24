@@ -7,7 +7,7 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
     Register the account in system.
 
   ## Examples
-    account_struct = %FinancialSystem.Core.Accounts.Account{name: "Oliver Tsubasa", currency: "BRL", value: 100 }
+    account_struct = %FinancialSystem.Core.Accounts.Account{active: true, currency: "BRL", value: 100 }
 
     FinancialSystem.Core.AccountRepository.register_account(account_struct)
   """
@@ -55,7 +55,7 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
-        "role" => "regular",
+
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",

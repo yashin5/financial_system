@@ -17,7 +17,7 @@ defmodule FinancialSystem.Core.Account do
     Create user accounts
 
   ## Examples
-    FinancialSystem.Core.create(%{"role" => "regular", "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
+    FinancialSystem.Core.create(%{ "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
   """
   @callback create(%{
               role: String.t() | any(),
@@ -30,18 +30,17 @@ defmodule FinancialSystem.Core.Account do
               {:ok, Account.t()} | {:error, atom()}
 
   def create(%{
-        "role" => role,
         "name" => name,
         "currency" => currency,
         "value" => value,
         "email" => email,
         "password" => password
       })
-      when is_binary(role) and role in ["admin", "regular"] and is_binary(name) and
+      when is_binary(name) and
              is_binary(currency) and is_binary(value) do
     with {:ok, currency_upcase} <- currency_finder().currency_is_valid(currency),
          {:ok, value_in_integer} <- Currency.amount_do(:store, value, currency_upcase),
-         {:ok, user_created} <- UserRepository.new_user(role, name, email, password),
+         {:ok, user_created} <- UserRepository.new_user("regular", name, email, password),
          {:ok, account_created} <-
            currency_upcase
            |> new(value_in_integer)
@@ -51,68 +50,51 @@ defmodule FinancialSystem.Core.Account do
   end
 
   def create(%{
-        "role" => role,
         "name" => name,
         "currency" => currency,
         "value" => value,
         "email" => _email,
         "password" => _password
       })
-      when is_binary(role) and role in ["admin", "regular"] and not is_binary(name) and
+      when not is_binary(name) and
              is_binary(currency) and is_binary(value) do
     {:error, :invalid_name}
   end
 
   def create(%{
-        "role" => role,
         "name" => name,
         "currency" => currency,
         "value" => value,
         "email" => _email,
         "password" => _password
       })
-      when is_binary(role) and role in ["admin", "regular"] and is_binary(name) and
+      when is_binary(name) and
              not is_binary(currency) and is_binary(value) do
     {:error, :invalid_currency_type}
   end
 
   def create(%{
-        "role" => role,
         "name" => name,
         "currency" => currency,
         "value" => value,
         "email" => _email,
         "password" => _password
       })
-      when is_binary(role) and role in ["admin", "regular"] and is_binary(name) and
+      when is_binary(name) and
              is_binary(currency) and not is_binary(value) do
     {:error, :invalid_value_type}
   end
 
   def create(%{
-        "role" => role,
         "name" => name,
         "currency" => currency,
         "value" => value,
         "email" => _email,
         "password" => _password
       })
-      when is_binary(role) and role not in ["admin", "regular"] and is_binary(name) and
+      when is_binary(name) and
              is_binary(currency) and is_binary(value) do
     {:error, :invalid_role}
-  end
-
-  def create(%{
-        "role" => role,
-        "name" => name,
-        "currency" => currency,
-        "value" => value,
-        "email" => _email,
-        "password" => _password
-      })
-      when not is_binary(role) and role not in ["admin", "regular"] and is_binary(name) and
-             is_binary(currency) and is_binary(value) do
-    {:error, :invalid_role_type}
   end
 
   def create(_), do: {:error, :invalid_arguments}
@@ -130,7 +112,7 @@ defmodule FinancialSystem.Core.Account do
 
   ## Examples
     {:ok, account} = FinancialSystem.Core.create(%{
-        "role" => "regular",
+
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",

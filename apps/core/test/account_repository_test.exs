@@ -54,7 +54,6 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
 
       {:ok, account} =
         FinancialSystem.Core.create(%{
-          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -82,7 +81,6 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
 
       {_, account} =
         FinancialSystem.Core.create(%{
-          "role" => "regular",
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -105,7 +103,6 @@ defmodule FinancialSystem.Core.AccountRepositoryTest do
       end)
 
       FinancialSystem.Core.create(%{
-        "role" => "regular",
         "name" => "Yashin Santos",
         "currency" => "BRL",
         "value" => "1",

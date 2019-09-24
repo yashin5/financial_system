@@ -14,7 +14,6 @@ defmodule ApiWeb.AccountsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
         "currency" => "brl",
         "value" => "100",
@@ -42,7 +41,6 @@ defmodule ApiWeb.AccountsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
         "currency" => "brl",
         "value" => "100",
@@ -69,7 +67,6 @@ defmodule ApiWeb.AccountsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
         "currency" => "brl",
         "value" => "100",
@@ -96,7 +93,6 @@ defmodule ApiWeb.AccountsControllerTest do
       end)
 
       Core.create(%{
-        "role" => "regular",
         "name" => "Yashin",
         "currency" => "brl",
         "value" => "100",
@@ -154,7 +150,6 @@ defmodule ApiWeb.AccountsControllerTest do
       params = %{
         name: "Yashin",
         currency: "brl",
-        value: "100",
         email: "yaxxxxxshin@gmail.com",
         password: "fp3@naDSsjh2"
       }
@@ -250,7 +245,6 @@ defmodule ApiWeb.AccountsControllerTest do
 
       {:ok, account} =
         Core.create(%{
-          "role" => "regular",
           "name" => "Yashin",
           "currency" => "brl",
           "value" => "100",

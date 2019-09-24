@@ -56,7 +56,7 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
 
   ## Examples
     {:ok, account} = FinancialSystem.Core.create(%{
-        "role" => "regular",
+
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
