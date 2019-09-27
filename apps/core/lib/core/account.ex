@@ -20,7 +20,6 @@ defmodule FinancialSystem.Core.Account do
     FinancialSystem.Core.create(%{ "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
   """
   @callback create(%{
-              role: String.t() | any(),
               name: String.t() | any(),
               currency: String.t() | any(),
               value: String.t() | any(),
