@@ -267,4 +267,19 @@ defmodule ApiWeb.AccountsControllerTest do
       assert response == expected
     end
   end
+
+  describe "GET /api/accounts/get_currencies" do
+    test "Should get all currencies from application", %{conn: conn} do
+      %{"currencies" => response} =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> get("/api/accounts/get_currencies")
+        |> json_response(201)
+
+      handle_response = response |> List.first()
+      expected = "MZN"
+
+      assert handle_response == expected
+    end
+  end
 end

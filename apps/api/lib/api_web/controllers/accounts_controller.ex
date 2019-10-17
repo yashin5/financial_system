@@ -33,4 +33,13 @@ defmodule ApiWeb.AccountsController do
       |> render("delete.json", delete: response)
     end
   end
+
+  def get_currencies(conn, _param) do
+    with response <- Core.get_currencies() do
+      conn
+      |> put_status(:created)
+      |> put_resp_header("content-type", "application/json")
+      |> render("get_currencies.json", currencies: response)
+    end
+  end
 end
