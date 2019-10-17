@@ -1192,7 +1192,6 @@ defmodule ApiWeb.OperationsControllerTest do
           "password" => "fp3@naDSsjh2"
         })
 
-
       [response | _] =
         conn
         |> put_req_header("content-type", "application/json")

@@ -9,6 +9,7 @@ defmodule FinancialSystem.Core do
     Contacts.ContactRepository,
     Financial,
     FinancialOperations,
+    Tokens.TokenRepository,
     Users.UserRepository
   }
 
@@ -60,4 +61,6 @@ defmodule FinancialSystem.Core do
 
   @impl AccountRepository
   defdelegate view_all_accounts(), to: AccountRepository
+
+  defdelegate validate_token(param), to: TokenRepository
 end

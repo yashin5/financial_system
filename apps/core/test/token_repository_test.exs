@@ -66,8 +66,8 @@ defmodule TokenRepositoryTest do
 
     test "Should not be able to verify if token is valid if insert a invalid token" do
       {:error, message} =
-        TokenRepository.validate_token(%{"token" =>
-          "aasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasasdasadasdas"
+        TokenRepository.validate_token(%{
+          "token" => "aasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasasdasadasdas"
         })
 
       error = :token_dont_exist

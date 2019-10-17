@@ -122,4 +122,18 @@ defmodule ApiWeb.FallbackController do
     |> put_view(ApiWeb.ErrorView)
     |> render("error.json", %{error: :invalid_arguments})
   end
+
+  def call(conn, {:error, :token_dont_exist}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(ApiWeb.ErrorView)
+    |> render("error.json", %{error: :token_dont_exist})
+  end
+
+  def call(conn, {:error, :invalid_token_type}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(ApiWeb.ErrorView)
+    |> render("error.json", %{error: :invalid_token_type})
+  end
 end
