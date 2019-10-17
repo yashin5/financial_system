@@ -45,4 +45,12 @@ defmodule CurrencyImplTest do
       assert ^message = :currency_is_not_valid
     end
   end
+
+  describe "get_currencies/0" do
+    test "Should get all currencies from application" do
+      currencies = CurrencyImpl.get_currencies() |> List.first()
+
+      assert currencies == "MZN"
+    end
+  end
 end
