@@ -7,6 +7,7 @@ defmodule FinancialSystem.Core do
     Account,
     Accounts.AccountRepository,
     Contacts.ContactRepository,
+    Currency.CurrencyImpl,
     Financial,
     FinancialOperations,
     Tokens.TokenRepository,
@@ -19,7 +20,11 @@ defmodule FinancialSystem.Core do
 
   @behaviour FinancialSystem.Core.Contacts.ContactRepository
 
+  @behaviour FinancialSystem.Core.Currency.CurrencyImpl
+
   @behaviour FinancialSystem.Core.Financial
+
+  @behaviour FinancialSystem.Core.Tokens.TokenRepository
 
   @behaviour FinancialSystem.Core.Users.UserRepository
 
@@ -62,5 +67,9 @@ defmodule FinancialSystem.Core do
   @impl AccountRepository
   defdelegate view_all_accounts(), to: AccountRepository
 
+  @impl TokenRepository
   defdelegate validate_token(param), to: TokenRepository
+
+  @impl CurrencyImpl
+  defdelegate get_currencies(), to: CurrencyImpl
 end

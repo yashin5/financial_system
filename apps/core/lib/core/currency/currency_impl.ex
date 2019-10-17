@@ -6,6 +6,10 @@ defmodule FinancialSystem.Core.Currency.CurrencyImpl do
 
   alias FinancialSystem.Core.Currency.CurrencyBehaviour
 
+  defp get_currency_path do
+    Application.get_env(:core, :file)
+  end
+
   defp load_from_config do
     :core
     |> :code.priv_dir()
@@ -16,8 +20,13 @@ defmodule FinancialSystem.Core.Currency.CurrencyImpl do
 
   defp do_load_from_config({:ok, body}), do: Jason.decode!(body)
 
-  defp get_currency_path do
-    Application.get_env(:core, :file)
+  @doc """
+    Get all currencies from application
+  """
+  @callback get_currencies :: [String.t()]
+  def get_currencies do
+    Map.keys(load_from_config()["quotes"])
+    |> Enum.map(fn item -> String.slice(item, 3..-1) end)
   end
 
   @doc """

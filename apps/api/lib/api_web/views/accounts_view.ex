@@ -18,4 +18,10 @@ defmodule ApiWeb.AccountsView do
       msg: response
     }
   end
+
+  def render("get_currencies.json", %{currencies: response}) do
+    %{
+      currencies: response
+    }
+  end
 end

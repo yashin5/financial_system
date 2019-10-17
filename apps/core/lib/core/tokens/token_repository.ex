@@ -68,7 +68,7 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
 
     FinancialSystem.Core.Tokens.TokenRepository.validate_token(%{"token" => token})
   """
-  @spec validate_token(String.t()) :: {:ok, String.t()} | {:error, atom()}
+  @callback validate_token(String.t()) :: {:ok, String.t()} | {:error, atom()}
   def validate_token(%{"token" => token}) when is_binary(token) do
     token
     |> query_retrieve_token()

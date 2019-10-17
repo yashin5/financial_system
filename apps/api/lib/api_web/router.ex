@@ -34,6 +34,7 @@ defmodule ApiWeb.Router do
     post("/accounts", AccountsController, :create)
     post("/accounts/authenticate", AccountsController, :authenticate)
     post("/auth/validate_token", AuthController, :validate_token)
+    get("/accounts/get_currencies", AccountsController, :get_currencies)
   end
 
   scope "/api", ApiWeb do
