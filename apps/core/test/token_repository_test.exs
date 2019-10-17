@@ -61,14 +61,14 @@ defmodule TokenRepositoryTest do
           "password" => "X@ghnx1234"
         })
 
-      assert {:ok, user.id} == TokenRepository.validate_token(token)
+      assert {:ok, user.id} == TokenRepository.validate_token(%{"token" => token})
     end
 
     test "Should not be able to verify if token is valid if insert a invalid token" do
       {:error, message} =
-        TokenRepository.validate_token(
-          "aasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasasdasadasdas"
-        )
+        TokenRepository.validate_token(%{
+          "token" => "aasdasdasdasdasdasdasdasdasdasdasdasdasdasdasdasasdasadasdas"
+        })
 
       error = :token_dont_exist
 
@@ -76,7 +76,7 @@ defmodule TokenRepositoryTest do
     end
 
     test "Should not be able to verify if token is valid if insert a invalid token type" do
-      {:error, message} = TokenRepository.validate_token(123)
+      {:error, message} = TokenRepository.validate_token(%{"token" => 123})
       error = :invalid_token_type
 
       assert ^message = error

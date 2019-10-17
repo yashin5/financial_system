@@ -66,10 +66,10 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
 
     {:ok, token} = generate_token(account.id)
 
-    FinancialSystem.Core.Tokens.TokenRepository.validate_token(token)
+    FinancialSystem.Core.Tokens.TokenRepository.validate_token(%{"token" => token})
   """
   @spec validate_token(String.t()) :: {:ok, String.t()} | {:error, atom()}
-  def validate_token(token) when is_binary(token) do
+  def validate_token(%{"token" => token}) when is_binary(token) do
     token
     |> query_retrieve_token()
     |> last(:inserted_at)

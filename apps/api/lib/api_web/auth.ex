@@ -5,16 +5,16 @@ defmodule ApiWeb.Auth do
 
   import Plug.Conn
 
+  alias FinancialSystem.Core
   alias FinancialSystem.Core.Accounts.Account
   alias FinancialSystem.Core.Accounts.AccountRepository
-  alias FinancialSystem.Core.Tokens.TokenRepository
   alias FinancialSystem.Core.Users.UserRepository
 
   def init(options \\ []), do: options
 
   def call(conn, _options) do
     with token when is_binary(token) <- conn |> get_req_header("authorization") |> List.first(),
-         {:ok, user_id} <- TokenRepository.validate_token(token),
+         {:ok, user_id} <- Core.validate_token(%{"token" => token}),
          {:ok, user} <- UserRepository.get_user(%{user_id: user_id}),
          {:ok, %Account{} = account} <-
            AccountRepository.find_account(:userid, user_id),
