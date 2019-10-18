@@ -125,15 +125,15 @@ defmodule ApiWeb.FallbackController do
 
   def call(conn, {:error, :token_dont_exist}) do
     conn
-    |> put_status(:unprocessable_entity)
+    |> put_status(:unauthorized)
     |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :token_dont_exist})
+    |> render("error.json", %{error: :unauthorized})
   end
 
   def call(conn, {:error, :invalid_token_type}) do
     conn
-    |> put_status(:unprocessable_entity)
+    |> put_status(:unauthorized)
     |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :invalid_token_type})
+    |> render("error.json", %{error: :unauthorized})
   end
 end
