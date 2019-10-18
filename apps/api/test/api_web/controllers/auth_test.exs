@@ -124,10 +124,10 @@ defmodule ApiWeb.AuthTest do
         conn
         |> put_req_header("content-type", "application/json")
         |> post("/api/auth/validate_token", params)
-        |> json_response(422)
+        |> json_response(401)
 
       expected = %{
-        "error" => "invalid_token_type"
+        "error" => "unauthorized"
       }
 
       assert response == expected
