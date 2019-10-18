@@ -18,119 +18,41 @@ defmodule ApiWeb.FallbackController do
     |> render("error.json", %{error: errors})
   end
 
-  def call(conn, {:error, :invalid_value_type}) do
+  def call(conn, {:error, error})
+      when error in [
+             :invalid_value_type,
+             :invalid_currency_type,
+             :invalid_value_less_than_0,
+             :invalid_arguments_type
+           ] do
     conn
     |> put_status(:bad_request)
     |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :invalid_value_type})
+    |> render("error.json", %{error: error})
   end
 
-  def call(conn, {:error, :invalid_currency_type}) do
-    conn
-    |> put_status(:bad_request)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :invalid_currency_type})
-  end
-
-  def call(conn, {:error, :invalid_arguments_type}) do
-    conn
-    |> put_status(:bad_request)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :invalid_arguments_type})
-  end
-
-  def call(conn, {:error, :invalid_value_less_than_0}) do
-    conn
-    |> put_status(:bad_request)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :invalid_value_less_than_0})
-  end
-
-  def call(conn, {:error, :do_not_have_funds}) do
+  def call(conn, {:error, error})
+      when error in [
+             :do_not_have_funds,
+             :cannot_send_to_the_same,
+             :invalid_total_percent,
+             :user_dont_exist,
+             :invalid_email_type,
+             :invalid_email_or_password,
+             :invalid_password_type,
+             :currency_is_not_valid,
+             :invalid_arguments,
+             :contact_actual_name,
+             :already_in_contacts
+           ] do
     conn
     |> put_status(:unprocessable_entity)
     |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :do_not_have_funds})
+    |> render("error.json", %{error: error})
   end
 
-  def call(conn, {:error, :cannot_send_to_the_same}) do
-    conn
-    |> put_status(:unprocessable_entity)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :cannot_send_to_the_same})
-  end
-
-  def call(conn, {:error, :invalid_total_percent}) do
-    conn
-    |> put_status(:unprocessable_entity)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :invalid_total_percent})
-  end
-
-  def call(conn, {:error, :user_dont_exist}) do
-    conn
-    |> put_status(:unprocessable_entity)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :user_dont_exist})
-  end
-
-  def call(conn, {:error, :invalid_email_type}) do
-    conn
-    |> put_status(:unprocessable_entity)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :invalid_email_type})
-  end
-
-  def call(conn, {:error, :invalid_email_or_password}) do
-    conn
-    |> put_status(:unprocessable_entity)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :invalid_email_or_password})
-  end
-
-  def call(conn, {:error, :invalid_password_type}) do
-    conn
-    |> put_status(:unprocessable_entity)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :invalid_password_type})
-  end
-
-  def call(conn, {:error, :currency_is_not_valid}) do
-    conn
-    |> put_status(:unprocessable_entity)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :currency_is_not_valid})
-  end
-
-  def call(conn, {:error, :already_in_contacts}) do
-    conn
-    |> put_status(:unprocessable_entity)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :already_in_contacts})
-  end
-
-  def call(conn, {:error, :contact_actual_name}) do
-    conn
-    |> put_status(:unprocessable_entity)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :contact_actual_name})
-  end
-
-  def call(conn, {:error, :invalid_arguments}) do
-    conn
-    |> put_status(:unprocessable_entity)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :invalid_arguments})
-  end
-
-  def call(conn, {:error, :token_dont_exist}) do
-    conn
-    |> put_status(:unauthorized)
-    |> put_view(ApiWeb.ErrorView)
-    |> render("error.json", %{error: :unauthorized})
-  end
-
-  def call(conn, {:error, :invalid_token_type}) do
+  def call(conn, {:error, error})
+      when error in [:invalid_token_type, :season_expired, :token_dont_exist] do
     conn
     |> put_status(:unauthorized)
     |> put_view(ApiWeb.ErrorView)
