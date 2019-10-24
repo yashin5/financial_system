@@ -61,7 +61,7 @@ defmodule ApiWeb.AccountsControllerTest do
       assert ^response = error
     end
 
-    test "when user dont exist, shoulg return a message", %{conn: conn} do
+    test "when user dont exist, shoulg return a error", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)

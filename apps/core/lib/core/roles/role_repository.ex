@@ -7,7 +7,7 @@ defmodule FinancialSystem.Core.Roles.RoleRepository do
   alias FinancialSystem.Core.Roles.Role
 
   @doc """
-    Get the role
+  Get the role
 
   ## Examples
     FinancialSystem.Core.Roles.RoleRepository.get_role("regular")

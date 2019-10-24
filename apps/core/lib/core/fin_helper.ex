@@ -11,11 +11,10 @@ defmodule FinancialSystem.Core.FinHelper do
   }
 
   @doc """
-    Verify if the account have funds for the operation.
+  Verify if the account have funds for the operation.
 
   ## Examples
       {_, account} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -50,11 +49,10 @@ defmodule FinancialSystem.Core.FinHelper do
     do: {:error, :do_not_have_funds}
 
   @doc """
-    Verify if the list of split have a account from inside him.
+  Verify if the list of split have a account from inside him.
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -62,7 +60,6 @@ defmodule FinancialSystem.Core.FinHelper do
         "password" => "B@xopn123"
       })
     {_, account2} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -70,7 +67,6 @@ defmodule FinancialSystem.Core.FinHelper do
         "password" => "B@xopn123"
       })
     {_, account3} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -94,11 +90,10 @@ defmodule FinancialSystem.Core.FinHelper do
   end
 
   @doc """
-    Verify if the accounts are the same.
+  Verify if the accounts are the same.
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -106,7 +101,6 @@ defmodule FinancialSystem.Core.FinHelper do
         "password" => "B@xopn123"
       })
     {_, account2} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -148,11 +142,10 @@ defmodule FinancialSystem.Core.FinHelper do
   end
 
   @doc """
-    Verify if the total percent is 100.
+  Verify if the total percent is 100.
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -160,7 +153,6 @@ defmodule FinancialSystem.Core.FinHelper do
         "password" => "B@xopn123"
       })
     {_, account3} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -174,7 +166,7 @@ defmodule FinancialSystem.Core.FinHelper do
   @spec percent_ok(list(Split.t()) | any()) :: {:ok, boolean()} | {:error, atom()}
   def percent_ok(split_list) when is_list(split_list) do
     split_list
-    |> Enum.reduce(0, fn %Split{percent: percent}, acc -> acc + percent end)
+    |> Enum.reduce(0, fn %{percent: percent}, acc -> acc + percent end)
     |> Kernel.==(100)
     |> do_percent_ok()
   end
@@ -187,11 +179,10 @@ defmodule FinancialSystem.Core.FinHelper do
     do: {:error, :invalid_total_percent}
 
   @doc """
-    Unite the duplicated accounts in split_list.
+  Unite the duplicated accounts in split_list.
 
   ## Examples
     {_, account2} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -199,7 +190,6 @@ defmodule FinancialSystem.Core.FinHelper do
         "password" => "B@xopn123"
       })
     {_, account3} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -225,11 +215,10 @@ defmodule FinancialSystem.Core.FinHelper do
     do: {:error, :invalid_split_list_type}
 
   @doc """
-    Divides the amount to be transferred to each account in a split.
+  Divides the amount to be transferred to each account in a split.
 
   ## Examples
     {_, account2} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -237,7 +226,6 @@ defmodule FinancialSystem.Core.FinHelper do
         "password" => "B@xopn123"
       })
     {_, account3} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",

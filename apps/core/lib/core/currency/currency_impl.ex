@@ -21,7 +21,7 @@ defmodule FinancialSystem.Core.Currency.CurrencyImpl do
   defp do_load_from_config({:ok, body}), do: Jason.decode!(body)
 
   @doc """
-    Get all currencies from application
+  Get all currencies from application
   """
   @callback get_currencies :: [String.t()]
   def get_currencies do
@@ -30,7 +30,7 @@ defmodule FinancialSystem.Core.Currency.CurrencyImpl do
   end
 
   @doc """
-    Verify if currency is valid.
+  Verify if currency is valid.
 
   ## Examples
     FinancialSystem.Core.Currency.CurrencyImpl.currency_is_valid("BRL")
@@ -51,7 +51,7 @@ defmodule FinancialSystem.Core.Currency.CurrencyImpl do
   end
 
   @doc """
-    Get the decimal precision of a currency.
+  Get the decimal precision of a currency.
 
   ## Examples
     FinancialSystem.Core.Currency.CurrencyImpl.get_from_currency(:precision, "BRL")
@@ -65,7 +65,7 @@ defmodule FinancialSystem.Core.Currency.CurrencyImpl do
   end
 
   @doc """
-    Get the current value of currency.
+  Get the current value of currency.
 
   ## Examples
     FinancialSystem.Core.Currency.CurrencyImpl.get_from_currency(:value, "BRL")

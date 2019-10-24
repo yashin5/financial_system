@@ -12,7 +12,7 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
   alias FinancialSystem.Core.Users.User
 
   @doc """
-    Create a contact
+  Create a contact
 
   ## Examples
     {:ok, account} = FinancialSystem.Core.create(%{ "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
@@ -67,7 +67,7 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
   end
 
   @doc """
-    Get all contacts from a user
+  Get all contacts from a user
 
   ## Examples
     {:ok, account} = FinancialSystem.Core.create(%{ "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
@@ -89,7 +89,7 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
   end
 
   @doc """
-    Update a nickname from an contact
+  Update a nickname from an contact
 
   ## Examples
     {:ok, account} = FinancialSystem.Core.create(%{ "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})

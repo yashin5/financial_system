@@ -9,7 +9,7 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
   alias FinancialSystem.Core.Users.UserRepository
 
   @doc """
-    Generate a token
+  Generate a token
 
   ## Examples
     {:ok, account} = FinancialSystem.Core.create(
@@ -52,7 +52,7 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
   end
 
   @doc """
-    Validate the token
+  Validate the token
 
   ## Examples
     {:ok, account} = FinancialSystem.Core.create(%{

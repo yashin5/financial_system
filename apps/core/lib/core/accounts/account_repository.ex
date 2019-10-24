@@ -4,7 +4,7 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
   alias FinancialSystem.Core.{Accounts.Account, Repo, Users.User}
 
   @doc """
-    Register the account in system.
+  Register the account in system.
 
   ## Examples
     account_struct = %FinancialSystem.Core.Accounts.Account{active: true, currency: "BRL", value: 100 }
@@ -25,7 +25,7 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
   defp do_register_account({:ok, result}), do: {:ok, result}
 
   @doc """
-    Delete an account from system.
+  Delete an account from system.
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(
@@ -51,7 +51,7 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
   defp do_delete_account({:ok, _}), do: {:ok, :account_deleted}
 
   @doc """
-    Checks if the account exists.
+  Checks if the account exists.
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{

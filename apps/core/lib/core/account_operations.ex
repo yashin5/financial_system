@@ -12,7 +12,7 @@ defmodule FinancialSystem.Core.AccountOperations do
   }
 
   @doc """
-    Subtracts value in  operations.
+  Subtracts value in  operations.
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(
@@ -43,7 +43,7 @@ defmodule FinancialSystem.Core.AccountOperations do
   end
 
   @doc """
-    Sum value in operations.
+  Sum value in operations.
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(
@@ -103,7 +103,7 @@ defmodule FinancialSystem.Core.AccountOperations do
   end
 
   @doc """
-    Show the transactions from account.
+  Show the transactions from account.
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(
