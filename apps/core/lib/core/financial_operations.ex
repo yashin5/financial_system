@@ -14,11 +14,10 @@ defmodule FinancialSystem.Core.FinancialOperations do
   defp currency_finder, do: Application.get_env(:core, :currency_finder)
 
   @doc """
-    Show the value in account.
+  Shows current formatted balance.
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -49,11 +48,10 @@ defmodule FinancialSystem.Core.FinancialOperations do
   end
 
   @doc """
-    Deposit value in account.
+  Deposit value in account.
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -107,11 +105,10 @@ defmodule FinancialSystem.Core.FinancialOperations do
   def deposit(_), do: {:error, :invalid_arguments_type}
 
   @doc """
-    Takes out the value of an account.
+  Takes out the value of an account.
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -152,11 +149,10 @@ defmodule FinancialSystem.Core.FinancialOperations do
   def withdraw(_), do: {:error, :invalid_arguments_type}
 
   @doc """
-   Transfer of values ​​between accounts.
+  Transfer of values ​​between accounts.
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -164,7 +160,6 @@ defmodule FinancialSystem.Core.FinancialOperations do
         "password" => "B@xopn123"
       })
     {_, account2} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "BRL",
         "value" => "100",
@@ -224,11 +219,10 @@ defmodule FinancialSystem.Core.FinancialOperations do
   end
 
   @doc """
-   Transfer of values ​​between multiple accounts.
+  Transfer of values ​​between multiple accounts.
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
-
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -236,22 +230,21 @@ defmodule FinancialSystem.Core.FinancialOperations do
         "password" => "B@xopn123"
       })
     {_, account2} = FinancialSystem.Core.create(%{
-
         "name" => "Antonio Marcos",
         "currency" => "EUR",
         "value" => "220",
-        "email" => "xx@xx.com",
+        "email" => "xxx@xx.com",
         "password" => "B@xopn123"
       })
     {_, account3} = FinancialSystem.Core.create(%{
-
         "name" => "Mateus Mathias",
         "currency" => "EUR",
         "value" => "220",
-        "email" => "xx@xx.com",
+        "email" => "xxxx@xx.com",
         "password" => "B@xopn123"
       })
-    split_list = [%{account: account.id, percent: 50}, %{account: account3.id, percent: 50}]
+
+    split_list = [%{account: account.id, percent: 49.9}, %{account: account3.id, percent: 50.1}]
 
     FinancialSystem.Core.split(%{
         "account_id" => account2.id,
@@ -322,11 +315,10 @@ defmodule FinancialSystem.Core.FinancialOperations do
   end
 
   @doc """
-    Show the financial statement from account.
+  Show the financial statement from account.
 
   ## Examples
     {_, account} = FinancialSystem.Core.create(%{
-
         "name" => "Mateus Mathias",
         "currency" => "EUR",
         "value" => "220",

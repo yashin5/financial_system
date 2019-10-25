@@ -8,7 +8,7 @@ defmodule FinancialSystem.Core.Permissions.PermissionRepository do
   alias FinancialSystem.Core.Roles.RoleRepository
 
   @doc """
-    Verify if user has the necessary permission.
+  Verify if user has the necessary permission.
 
   ## Examples
     FinancialSystem.Core.Permissions.PermissionRepository.can_do_this_action(%{permission: :can_create, role: "regular"})

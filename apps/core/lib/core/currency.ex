@@ -6,7 +6,7 @@ defmodule FinancialSystem.Core.Currency do
   alias FinancialSystem.Core.Currency.CurrencyImpl
 
   @doc """
-    Convert a number in type string to decimal.
+  Convert a number in type string to decimal.
 
   ## Examples
     FinancialSystem.Core.Currency.to_decimal("10.502323")
@@ -20,7 +20,7 @@ defmodule FinancialSystem.Core.Currency do
   end
 
   @doc """
-    Convert a number in integer type to decimal.
+  Convert a number in integer type to decimal.
 
   ## Examples
     FinancialSystem.Core.Currency.to_decimal(10)
@@ -30,7 +30,7 @@ defmodule FinancialSystem.Core.Currency do
   end
 
   @doc """
-    Convert a number in float type to decimal.
+  Convert a number in float type to decimal.
 
   ## Examples
     FinancialSystem.Core.Currency.to_decimal(10.502323)
@@ -65,7 +65,7 @@ defmodule FinancialSystem.Core.Currency do
     do: {:error, :invalid_value_less_than_0}
 
   @doc """
-    converts the values from USD ​​based on the currency.
+  converts the values from USD ​​based on the currency.
 
   ## Examples
     FinancialSystem.Core.Currency.convert("USD", "BRL", "10")
@@ -89,7 +89,7 @@ defmodule FinancialSystem.Core.Currency do
   end
 
   @doc """
-    converts the values ​based on the currency and transform them in
+  converts the values ​based on the currency and transform them in
     integers.
 
   ## Examples
@@ -145,7 +145,7 @@ defmodule FinancialSystem.Core.Currency do
   def convert(_, _, _), do: {:error, :invalid_arguments_type}
 
   @doc """
-    converts the value to string based in currency to show to the user.
+  converts the value to string based in currency to show to the user.
 
   ## Examples
     FinancialSystem.Core.Currency.amount_do(:show, 10, "BRL")
@@ -161,7 +161,7 @@ defmodule FinancialSystem.Core.Currency do
   end
 
   @doc """
-    converts the value to integer to store in the state.
+  converts the value to integer to store in the state.
 
   ## Examples
     FinancialSystem.Core.Currency.amount_do(:store, "10", "BRL")

@@ -8,7 +8,7 @@ defmodule FinancialSystem.Core.Users.UserRepository do
   alias FinancialSystem.Core.Users.User
 
   @doc """
-    Create a user
+  Create a user
 
   ## Examples
     FinancialSystem.Core.Users.UserRepository.new_user("Yashin Santos",  "y@gmail.com", "B@kxin123")
@@ -32,7 +32,7 @@ defmodule FinancialSystem.Core.Users.UserRepository do
   end
 
   @doc """
-    Verify if email and password is valid
+  Verify if email and password is valid
 
   ## Examples
     {:ok, account} = FinancialSystem.Core.create(

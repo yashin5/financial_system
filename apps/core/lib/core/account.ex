@@ -14,7 +14,7 @@ defmodule FinancialSystem.Core.Account do
   defp currency_finder, do: Application.get_env(:core, :currency_finder)
 
   @doc """
-    Create user accounts
+  Create user accounts
 
   ## Examples
     FinancialSystem.Core.create(%{ "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
@@ -107,7 +107,7 @@ defmodule FinancialSystem.Core.Account do
   end
 
   @doc """
-    Delete a existent account.
+  Delete a existent account.
 
   ## Examples
     {:ok, account} = FinancialSystem.Core.create(%{
