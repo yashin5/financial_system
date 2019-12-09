@@ -100,7 +100,8 @@ defmodule FinancialOperationsTest do
       assert ^message = :invalid_value_type
     end
 
-    test "Not should be able to insert a value that is equal a zero after the conversion to the currency", %{account: account} do
+    test "Not should be able to insert a value that is equal a zero after the conversion to the currency",
+         %{account: account} do
       expect(CurrencyMock, :currency_is_valid, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -562,8 +563,7 @@ defmodule FinancialOperationsTest do
     end
 
     test "Should not be able inserting a invalid account id" do
-      {:error, message} =
-        FinancialOperations.financial_statement(%{"account_id" => UUID.uuid4()})
+      {:error, message} = FinancialOperations.financial_statement(%{"account_id" => UUID.uuid4()})
 
       error = :account_dont_exist
 

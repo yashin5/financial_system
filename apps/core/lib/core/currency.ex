@@ -64,7 +64,6 @@ defmodule FinancialSystem.Core.Currency do
   defp do_is_greater_or_equal_than_0(:lt, _),
     do: {:error, :invalid_value_less_than_0}
 
-
   @doc """
   converts the values ​based on the currency and transform them in
   integers.
@@ -74,14 +73,16 @@ defmodule FinancialSystem.Core.Currency do
       FinancialSystem.Core.Currency.convert("EUR", "BRL", "10")
   """
   @spec convert(String.t(), String.t(), String.t()) :: {:ok, integer()} | {:error, atom()}
-  def convert(currency_from, currency_to, value) when is_binary(currency_from) and is_binary(currency_to) and is_binary(value) and currency_from == currency_to do
+  def convert(currency_from, currency_to, value)
+      when is_binary(currency_from) and is_binary(currency_to) and is_binary(value) and
+             currency_from == currency_to do
     with {:ok, currency_to_upcase} <- CurrencyImpl.currency_is_valid(currency_to),
-      {:ok, decimal_not_evaluated} <- to_decimal(value),
-      {:ok, currency_to_decimal_precision} <-
-        CurrencyImpl.get_from_currency(:precision, currency_to_upcase),
-      {:ok, decimal_evaluated} <- is_greater_or_equal_than_0(decimal_not_evaluated) do
-    decimal_evaluated
-    |> amount_do(currency_to_decimal_precision)
+         {:ok, decimal_not_evaluated} <- to_decimal(value),
+         {:ok, currency_to_decimal_precision} <-
+           CurrencyImpl.get_from_currency(:precision, currency_to_upcase),
+         {:ok, decimal_evaluated} <- is_greater_or_equal_than_0(decimal_not_evaluated) do
+      decimal_evaluated
+      |> amount_do(currency_to_decimal_precision)
     end
   end
 
@@ -180,7 +181,7 @@ defmodule FinancialSystem.Core.Currency do
          {:ok, decimal_evaluated} <- is_greater_or_equal_than_0(decimal_not_evaluated),
          {:ok, currency_precision} <- CurrencyImpl.get_from_currency(:precision, currency_upcase),
          {:ok, value_in_integer} <- make_integer(decimal_evaluated, currency_precision, :store) do
-      {:ok, value_in_integer }
+      {:ok, value_in_integer}
     end
   end
 
@@ -202,7 +203,7 @@ defmodule FinancialSystem.Core.Currency do
   def amount_do(_, _, _), do: {:error, :invalid_arguments_type}
 
   defp amount_do(value, precision) do
-    with {:ok, value_in_integer} <- make_integer(value, precision, :do_operation)  do
+    with {:ok, value_in_integer} <- make_integer(value, precision, :do_operation) do
       {:ok, value_in_integer}
     end
   end
@@ -223,7 +224,8 @@ defmodule FinancialSystem.Core.Currency do
     |> Kernel.trunc()
   end
 
-  defp do_to_integer(value)when value > 0, do: {:ok, value}
+  defp do_to_integer(value) when value > 0, do: {:ok, value}
 
-  defp do_to_integer(value) when value <= 0, do: {:error, :value_is_too_low_to_convert_to_the_currency}
+  defp do_to_integer(value) when value <= 0,
+    do: {:error, :value_is_too_low_to_convert_to_the_currency}
 end
