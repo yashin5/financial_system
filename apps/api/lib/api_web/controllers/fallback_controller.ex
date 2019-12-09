@@ -23,7 +23,8 @@ defmodule ApiWeb.FallbackController do
              :invalid_value_type,
              :invalid_currency_type,
              :invalid_value_less_than_0,
-             :invalid_arguments_type
+             :invalid_arguments_type,
+             :value_is_too_low_to_convert_to_the_currency
            ] do
     conn
     |> put_status(:bad_request)
