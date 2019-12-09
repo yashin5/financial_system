@@ -92,10 +92,24 @@ defmodule FinancialSystem.Core.Contacts.ContactRepository do
   Update a nickname from an contact
 
   ## Examples
-    {:ok, account} = FinancialSystem.Core.create(%{ "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
-    FinancialSystem.Core.Contacts.ContactRepository.create_contact(%{"account_id" => account.id, "nickname" => "test", "email" => "xx@xx.com"})
+      {:ok, account} = FinancialSystem.Core.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
+      FinancialSystem.Core.Contacts.ContactRepository.create_contact(%{
+        "account_id" => account.id,
+        "nickname" => "test",
+        "email" => "xx@xx.com"
+      })
 
-    FinancialSystem.Core.Contacts.ContactRepository.update_contact_nickname(%{"account_id" => account.id, "new_nickname" => "ttest", "email" => "xx@xx.com"})
+      FinancialSystem.Core.Contacts.ContactRepository.update_contact_nickname(%{
+        "account_id" => account.id,
+        "new_nickname" => "ttest",
+        "email" => "xx@xx.com"
+      })
   """
   @callback update_contact_nickname(%{
               account_id: String.t(),

@@ -18,6 +18,11 @@ defmodule Core.MixProject do
         "coveralls.post": :test,
         "coveralls.html": :test
       ],
+      docs: [
+        main: "MyApp", # The main page in the docs
+        logo: "path/to/logo.png",
+        extras: ["README.md"]
+      ],
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -45,7 +50,8 @@ defmodule Core.MixProject do
       {:ecto, "~> 3.1"},
       {:ecto_sql, "~> 3.1"},
       {:postgrex, ">= 0.0.0"},
-      {:excoveralls, "~> 0.10", only: :test}
+      {:excoveralls, "~> 0.10", only: :test},
+      {:ex_doc, "~> 0.21", only: :dev, runtime: false},
     ]
   end
 end

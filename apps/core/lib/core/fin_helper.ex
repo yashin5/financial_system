@@ -182,23 +182,24 @@ defmodule FinancialSystem.Core.FinHelper do
   Unite the duplicated accounts in split_list.
 
   ## Examples
-    {_, account2} = FinancialSystem.Core.create(%{
-        "name" => "Yashin Santos",
-        "currency" => "EUR",
-        "value" => "220",
-        "email" => "xx@xx.com",
-        "password" => "B@xopn123"
-      })
-    {_, account3} = FinancialSystem.Core.create(%{
-        "name" => "Yashin Santos",
-        "currency" => "EUR",
-        "value" => "220",
-        "email" => "xx@xx.com",
-        "password" => "B@xopn123"
-      })
-    split_list = [%FinancialSystem.Core.Split{account: account2.id, percent: 80}, %FinancialSystem.Core.Split{account: account2.id, percent: 20}]
+      {_, account2} = FinancialSystem.Core.create(%{
+          "name" => "Yashin Santos",
+          "currency" => "EUR",
+          "value" => "220",
+          "email" => "xx@xx.com",
+          "password" => "B@xopn123"
+        })
+      {_, account3} = FinancialSystem.Core.create(%{
+          "name" => "Yashin Santos",
+          "currency" => "EUR",
+          "value" => "220",
+          "email" => "xx@xx.com",
+          "password" => "B@xopn123"
+        })
 
-    FinancialSystem.Core.FinHelper.unite_equal_account_split(split_list)
+      split_list = [%FinancialSystem.Core.Split{account: account2.id, percent: 80}, %FinancialSystem.Core.Split{account: account2.id, percent: 20}]
+
+      FinancialSystem.Core.FinHelper.unite_equal_account_split(split_list)
   """
   @spec unite_equal_account_split(list(Split.t()) | any()) ::
           {:ok, list(Split.t())} | {:error, atom()}
@@ -218,23 +219,23 @@ defmodule FinancialSystem.Core.FinHelper do
   Divides the amount to be transferred to each account in a split.
 
   ## Examples
-    {_, account2} = FinancialSystem.Core.create(%{
-        "name" => "Yashin Santos",
-        "currency" => "EUR",
-        "value" => "220",
-        "email" => "xx@xx.com",
-        "password" => "B@xopn123"
-      })
-    {_, account3} = FinancialSystem.Core.create(%{
-        "name" => "Yashin Santos",
-        "currency" => "EUR",
-        "value" => "220",
-        "email" => "xx@xx.com",
-        "password" => "B@xopn123"
-      })
-    split_list = [%FinancialSystem.Core.Split{account: account2.id, percent: 80}, %FinancialSystem.Core.Split{account: account2.id, percent: 20}]
+      {_, account2} = FinancialSystem.Core.create(%{
+          "name" => "Yashin Santos",
+          "currency" => "EUR",
+          "value" => "220",
+          "email" => "xx@xx.com",
+          "password" => "B@xopn123"
+        })
+      {_, account3} = FinancialSystem.Core.create(%{
+          "name" => "Yashin Santos",
+          "currency" => "EUR",
+          "value" => "220",
+          "email" => "xx@xx.com",
+          "password" => "B@xopn123"
+        })
+      split_list = [%FinancialSystem.Core.Split{account: account2.id, percent: 80}, %FinancialSystem.Core.Split{account: account2.id, percent: 20}]
 
-    FinancialSystem.Core.FinHelper.division_of_values_to_make_split_transfer(split_list, 100)
+      FinancialSystem.Core.FinHelper.division_of_values_to_make_split_transfer(split_list, 100)
   """
   @spec division_of_values_to_make_split_transfer(list(Split.t()) | any(), String.t() | any()) ::
           {:ok, list(map())} | {:error, atom()}

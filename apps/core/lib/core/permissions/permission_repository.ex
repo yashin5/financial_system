@@ -11,7 +11,7 @@ defmodule FinancialSystem.Core.Permissions.PermissionRepository do
   Verify if user has the necessary permission.
 
   ## Examples
-    FinancialSystem.Core.Permissions.PermissionRepository.can_do_this_action(%{permission: :can_create, role: "regular"})
+      FinancialSystem.Core.Permissions.PermissionRepository.can_do_this_action(%{permission: :can_create, role: "regular"})
   """
   @spec can_do_this_action(%{permission: String.t(), role: String.t()}) ::
           {:error, :invalid_permission | :invalid_role | :invalid_role_and_permission}

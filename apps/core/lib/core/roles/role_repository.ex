@@ -10,7 +10,7 @@ defmodule FinancialSystem.Core.Roles.RoleRepository do
   Get the role
 
   ## Examples
-    FinancialSystem.Core.Roles.RoleRepository.get_role("regular")
+      FinancialSystem.Core.Roles.RoleRepository.get_role("regular")
   """
   def get_role(role) do
     Role

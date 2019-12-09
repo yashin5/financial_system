@@ -15,16 +15,16 @@ defmodule FinancialSystem.Core.AccountOperations do
   Subtracts value in  operations.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create(
-      %{
-        "name" => "Yashin Santos",
-        "currency" => "EUR",
-        "value" => "220",
-        "email" => "xx@xx.com",
-        "password" => "B@xopn123"
-      })
+      {_, account} = FinancialSystem.Core.create(
+        %{
+          "name" => "Yashin Santos",
+          "currency" => "EUR",
+          "value" => "220",
+          "email" => "xx@xx.com",
+          "password" => "B@xopn123"
+        })
 
-    FinancialSystem.Core.AccountOperations.subtract_value_in_balance(account, 100, "withdraw")
+      FinancialSystem.Core.AccountOperations.subtract_value_in_balance(account, 100, "withdraw")
   """
   @spec subtract_value_in_balance(Account.t() | any(), pos_integer(), String.t() | any()) ::
           Account.t() | {:error, atom()}
@@ -46,16 +46,16 @@ defmodule FinancialSystem.Core.AccountOperations do
   Sum value in operations.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create(
-      %{
-        "name" => "Yashin Santos",
-        "currency" => "EUR",
-        "value" => "220",
-        "email" => "xx@xx.com",
-        "password" => "B@xopn123"
-      })
+      {_, account} = FinancialSystem.Core.create(
+        %{
+          "name" => "Yashin Santos",
+          "currency" => "EUR",
+          "value" => "220",
+          "email" => "xx@xx.com",
+          "password" => "B@xopn123"
+        })
 
-    FinancialSystem.Core.AccountOperations.sum_value_in_balance(account, 100, "deposit")
+      FinancialSystem.Core.AccountOperations.sum_value_in_balance(account, 100, "deposit")
   """
   @spec sum_value_in_balance(Account.t() | any(), pos_integer(), String.t() | any()) ::
           Account.t() | {:error, atom()}
@@ -106,18 +106,18 @@ defmodule FinancialSystem.Core.AccountOperations do
   Show the transactions from account.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create(
-      %{
-        "name" => "Yashin Santos",
-        "currency" => "EUR",
-        "value" => "220",
-        "email" => "xx@xx.com",
-        "password" => "B@xopn123"
-      })
+      {_, account} = FinancialSystem.Core.create(
+        %{
+          "name" => "Yashin Santos",
+          "currency" => "EUR",
+          "value" => "220",
+          "email" => "xx@xx.com",
+          "password" => "B@xopn123"
+        })
 
-    FinancialSystem.Core.deposit(account.id, "brl", "1")
+      FinancialSystem.Core.deposit(account.id, "brl", "1")
 
-    FinancialSystem.Core.AccountOperations.show_financial_statement(account.id)
+      FinancialSystem.Core.AccountOperations.show_financial_statement(account.id)
   """
   @spec show_financial_statement(String.t()) :: list(Transaction.t())
   def show_financial_statement(id, order \\ :desc) when is_binary(id) do

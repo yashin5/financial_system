@@ -12,16 +12,16 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
   Generate a token
 
   ## Examples
-    {:ok, account} = FinancialSystem.Core.create(
-      %{
-        "name" => "Yashin Santos",
-        "currency" => "EUR",
-        "value" => "220",
-        "email" => "xx@xx.com",
-        "password" => "B@xopn123"
-      })
+      {:ok, account} = FinancialSystem.Core.create(
+        %{
+          "name" => "Yashin Santos",
+          "currency" => "EUR",
+          "value" => "220",
+          "email" => "xx@xx.com",
+          "password" => "B@xopn123"
+        })
 
-    FinancialSystem.Core.Tokens.TokenRepository.generate_token(account.id)
+      FinancialSystem.Core.Tokens.TokenRepository.generate_token(account.id)
   """
   @spec generate_token(String.t()) :: {:ok, String.t()} | {:error, atom()}
   def generate_token(id) do
@@ -55,18 +55,17 @@ defmodule FinancialSystem.Core.Tokens.TokenRepository do
   Validate the token
 
   ## Examples
-    {:ok, account} = FinancialSystem.Core.create(%{
+      {:ok, account} = FinancialSystem.Core.create(%{
+          "name" => "Yashin Santos",
+          "currency" => "EUR",
+          "value" => "220",
+          "email" => "xx@xx.com",
+          "password" => "B@xopn123"
+        })
 
-        "name" => "Yashin Santos",
-        "currency" => "EUR",
-        "value" => "220",
-        "email" => "xx@xx.com",
-        "password" => "B@xopn123"
-      })
+      {:ok, token} = generate_token(account.id)
 
-    {:ok, token} = generate_token(account.id)
-
-    FinancialSystem.Core.Tokens.TokenRepository.validate_token(%{"token" => token})
+      FinancialSystem.Core.Tokens.TokenRepository.validate_token(%{"token" => token})
   """
   @callback validate_token(String.t()) :: {:ok, String.t()} | {:error, atom()}
   def validate_token(%{"token" => token}) when is_binary(token) do

@@ -9,7 +9,7 @@ defmodule FinancialSystem.Core.Currency do
   Convert a number in type string to decimal.
 
   ## Examples
-    FinancialSystem.Core.Currency.to_decimal("10.502323")
+      FinancialSystem.Core.Currency.to_decimal("10.502323")
   """
   @spec to_decimal(String.t() | number(), none() | integer(), none() | atom()) ::
           {:ok, Decimal.t()} | Decimal.t() | String.t() | no_return()
@@ -23,7 +23,7 @@ defmodule FinancialSystem.Core.Currency do
   Convert a number in integer type to decimal.
 
   ## Examples
-    FinancialSystem.Core.Currency.to_decimal(10)
+      FinancialSystem.Core.Currency.to_decimal(10)
   """
   def to_decimal(value) when is_integer(value) do
     {:ok, Decimal.new(value)}
@@ -33,7 +33,7 @@ defmodule FinancialSystem.Core.Currency do
   Convert a number in float type to decimal.
 
   ## Examples
-    FinancialSystem.Core.Currency.to_decimal(10.502323)
+      FinancialSystem.Core.Currency.to_decimal(10.502323)
   """
   def to_decimal(value) when is_float(value) do
     {:ok, Decimal.from_float(value)}
@@ -70,8 +70,8 @@ defmodule FinancialSystem.Core.Currency do
   integers.
 
   ## Examples
-    FinancialSystem.Core.Currency.convert("USD", "BRL", "10")
-    FinancialSystem.Core.Currency.convert("EUR", "BRL", "10")
+      FinancialSystem.Core.Currency.convert("USD", "BRL", "10")
+      FinancialSystem.Core.Currency.convert("EUR", "BRL", "10")
   """
   @spec convert(String.t(), String.t(), String.t()) :: {:ok, integer()} | {:error, atom()}
   def convert(currency_from, currency_to, value) when is_binary(currency_from) and is_binary(currency_to) and is_binary(value) and currency_from == currency_to do
@@ -155,7 +155,7 @@ defmodule FinancialSystem.Core.Currency do
   converts the value to string based in currency to show to the user.
 
   ## Examples
-    FinancialSystem.Core.Currency.amount_do(:show, 10, "BRL")
+      FinancialSystem.Core.Currency.amount_do(:show, 10, "BRL")
   """
   @spec amount_do(atom(), pos_integer() | String.t(), String.t()) ::
           {:ok, String.t() | pos_integer()} | {:error, atom()}
@@ -171,7 +171,7 @@ defmodule FinancialSystem.Core.Currency do
   converts the value to integer to store in the state.
 
   ## Examples
-    FinancialSystem.Core.Currency.amount_do(:store, "10", "BRL")
+      FinancialSystem.Core.Currency.amount_do(:store, "10", "BRL")
   """
   def amount_do(:store = operation, value, currency)
       when is_atom(operation) and is_binary(value) and is_binary(currency) do

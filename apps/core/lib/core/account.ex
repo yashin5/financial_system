@@ -17,7 +17,13 @@ defmodule FinancialSystem.Core.Account do
   Create user accounts
 
   ## Examples
-    FinancialSystem.Core.Account.create(%{ "name" => "Yashin Santos", "currency" => "EUR", "value" => "220", "email" => "xx@xx.com", "password" => "B@xopn123"})
+      FinancialSystem.Core.Account.create(%{
+        "name" => "Yashin Santos",
+        "currency" => "EUR",
+        "value" => "220",
+        "email" => "xx@xx.com",
+        "password" => "B@xopn123"
+      })
   """
   @callback create(%{
               name: String.t() | any(),
@@ -39,7 +45,7 @@ defmodule FinancialSystem.Core.Account do
              is_binary(currency) and is_binary(value) do
     with {:ok, currency_upcase} <- currency_finder().currency_is_valid(currency),
          {:ok, value_in_integer} <-
-           Currency.amount_do(:store, value |> IO.inspect(), currency_upcase),
+           Currency.amount_do(:store, value, currency_upcase),
          {:ok, user_created} <- UserRepository.new_user("regular", name, email, password),
          {:ok, account_created} <-
            currency_upcase
@@ -111,16 +117,15 @@ defmodule FinancialSystem.Core.Account do
   Delete a existent account.
 
   ## Examples
-    {:ok, account} = FinancialSystem.Core.Account.create(%{
+      {:ok, account} = FinancialSystem.Core.Account.create(%{
+          "name" => "Yashin Santos",
+          "currency" => "EUR",
+          "value" => "220",
+          "email" => "xx@xx.com",
+          "password" => "B@xopn123"
+        })
 
-        "name" => "Yashin Santos",
-        "currency" => "EUR",
-        "value" => "220",
-        "email" => "xx@xx.com",
-        "password" => "B@xopn123"
-      })
-
-    FinancialSystem.Core.Account.Account.delete(account.id)
+      FinancialSystem.Core.Account.Account.delete(account.id)
   """
   @callback delete(String.t()) :: {:ok | :error, atom()}
   def delete(%{

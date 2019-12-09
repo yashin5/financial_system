@@ -11,7 +11,7 @@ defmodule FinancialSystem.Core.Users.UserRepository do
   Create a user
 
   ## Examples
-    FinancialSystem.Core.Users.UserRepository.new_user("Yashin Santos",  "y@gmail.com", "B@kxin123")
+      FinancialSystem.Core.Users.UserRepository.new_user("Yashin Santos",  "y@gmail.com", "B@kxin123")
   """
   @spec new_user(String.t(), String.t(), String.t(), String.t()) ::
           {:ok, User.t()} | {:error, atom()}
@@ -35,17 +35,16 @@ defmodule FinancialSystem.Core.Users.UserRepository do
   Verify if email and password is valid
 
   ## Examples
-    {:ok, account} = FinancialSystem.Core.create(
-      %{
-        "name" => "Yashin Santos",
-        "currency" => "EUR",
-        "value" => "220",
-        "email" => "xx@xx.com",
-        "password" => "B@xopn123"
-      })
+      {:ok, account} = FinancialSystem.Core.create(
+        %{
+          "name" => "Yashin Santos",
+          "currency" => "EUR",
+          "value" => "220",
+          "email" => "xx@xx.com",
+          "password" => "B@xopn123"
+        })
 
-
-    FinancialSystem.Core.Users.UserRepository.authenticate(y@gmin.com", "B@kxin123")
+      FinancialSystem.Core.Users.UserRepository.authenticate(y@gmin.com", "B@kxin123")
   """
   @callback authenticate(%{email: String.t(), password: String.t()}) ::
               {:ok, String.t()} | {:error, atom()}
