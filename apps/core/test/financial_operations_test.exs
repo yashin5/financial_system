@@ -3,6 +3,7 @@ defmodule FinancialOperationsTest do
 
   import Mox
 
+  alias FinancialSystem.Core.FinancialOperations
   alias FinancialSystem.Core.Split
 
   setup :verify_on_exit!
@@ -24,15 +25,15 @@ defmodule FinancialOperationsTest do
           "password" => "f1aA678@"
         })
 
-      {:ok, account_value_accountid} = FinancialSystem.Core.show(%{"account_id" => account.id})
-      {:ok, account_value_emailid} = FinancialSystem.Core.show(%{"email" => "test@gmaxxil.com"})
+      {:ok, account_value_accountid} = FinancialOperations.show(%{"account_id" => account.id})
+      {:ok, account_value_emailid} = FinancialOperations.show(%{"email" => "test@gmaxxil.com"})
 
       assert account_value_accountid == "1.00"
       assert account_value_emailid == "1.00"
     end
 
     test "User dont should be able to see the value in account if pass a invalid account id" do
-      {:error, message} = FinancialSystem.Core.show(%{"account_id" => "account"})
+      {:error, message} = FinancialOperations.show(%{"account_id" => "account"})
 
       assert ^message = :invalid_account_id_type
     end
@@ -66,7 +67,7 @@ defmodule FinancialOperationsTest do
       end)
 
       {:ok, account_actual_state} =
-        FinancialSystem.Core.deposit(%{
+        FinancialOperations.deposit(%{
           "account_id" => account,
           "currency" => "brl",
           "value" => "1"
@@ -79,7 +80,7 @@ defmodule FinancialOperationsTest do
 
     test "Not should be able to insert a integer value in a account", %{account: account} do
       {:error, message} =
-        FinancialSystem.Core.deposit(%{
+        FinancialOperations.deposit(%{
           "account_id" => account,
           "currency" => "brl",
           "value" => 1
@@ -90,7 +91,7 @@ defmodule FinancialOperationsTest do
 
     test "Not should be able to insert a float value in a account", %{account: account} do
       {:error, message} =
-        FinancialSystem.Core.deposit(%{
+        FinancialOperations.deposit(%{
           "account_id" => account,
           "currency" => "brl",
           "value" => 1.0
@@ -99,9 +100,25 @@ defmodule FinancialOperationsTest do
       assert ^message = :invalid_value_type
     end
 
+    test "Not should be able to insert a value that is equal a zero after the conversion to the currency",
+         %{account: account} do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      {:error, message} =
+        FinancialOperations.deposit(%{
+          "account_id" => account,
+          "currency" => "MZN",
+          "value" => "0.0001"
+        })
+
+      assert ^message = :value_is_too_low_to_convert_to_the_currency
+    end
+
     test "Not should be able to make the deposit inserting a invalid account id" do
       {:error, message} =
-        FinancialSystem.Core.deposit(%{
+        FinancialOperations.deposit(%{
           "account_id" => "account",
           "currency" => "brl",
           "value" => "1"
@@ -118,7 +135,7 @@ defmodule FinancialOperationsTest do
       end)
 
       {:error, message} =
-        FinancialSystem.Core.deposit(%{
+        FinancialOperations.deposit(%{
           "account_id" => account,
           "currency" => "brrl",
           "value" => "1"
@@ -135,7 +152,7 @@ defmodule FinancialOperationsTest do
       end)
 
       {:error, message} =
-        FinancialSystem.Core.deposit(%{
+        FinancialOperations.deposit(%{
           "account_id" => account,
           "currency" => "brl",
           "value" => "-1"
@@ -267,14 +284,14 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      FinancialSystem.Core.transfer(%{
+      FinancialOperations.transfer(%{
         "value" => "1",
         "account_id" => account_id_from,
         "account_to" => account2_id_to
       })
 
-      {:ok, actual_value_from} = FinancialSystem.Core.show(%{"account_id" => account_id_from})
-      {:ok, actual_value_to} = FinancialSystem.Core.show(%{"account_id" => account2_id_to})
+      {:ok, actual_value_from} = FinancialOperations.show(%{"account_id" => account_id_from})
+      {:ok, actual_value_to} = FinancialOperations.show(%{"account_id" => account2_id_to})
 
       assert actual_value_from == "0.00"
       assert actual_value_to == "3.00"
@@ -284,7 +301,7 @@ defmodule FinancialOperationsTest do
       account2_id: account_id
     } do
       {:error, message} =
-        FinancialSystem.Core.transfer(%{
+        FinancialOperations.transfer(%{
           "value" => "1",
           "account_id" => "account_id_from",
           "account_to" => account_id
@@ -297,7 +314,7 @@ defmodule FinancialOperationsTest do
       account2_id: account_id
     } do
       {:error, message} =
-        FinancialSystem.Core.transfer(%{
+        FinancialOperations.transfer(%{
           "value" => "1",
           "account_id" => account_id,
           "account_to" => "account2_id_to"
@@ -311,7 +328,7 @@ defmodule FinancialOperationsTest do
       account2_id: account2_id_to
     } do
       {:error, message} =
-        FinancialSystem.Core.transfer(%{
+        FinancialOperations.transfer(%{
           "value" => 1,
           "account_id" => account_id_from,
           "account_to" => account2_id_to
@@ -325,7 +342,7 @@ defmodule FinancialOperationsTest do
       account2_id: account2_id_to
     } do
       {:error, message} =
-        FinancialSystem.Core.transfer(%{
+        FinancialOperations.transfer(%{
           "value" => 1.0,
           "account_id" => account_id_from,
           "account_to" => account2_id_to
@@ -339,7 +356,7 @@ defmodule FinancialOperationsTest do
       account2_id: account2_id_to
     } do
       {:error, message} =
-        FinancialSystem.Core.transfer(%{
+        FinancialOperations.transfer(%{
           "value" => "-1",
           "account_id" => account_id_from,
           "account_to" => account2_id_to
@@ -411,15 +428,15 @@ defmodule FinancialOperationsTest do
         {:ok, String.upcase(currency)}
       end)
 
-      FinancialSystem.Core.split(%{
+      FinancialOperations.split(%{
         "account_id" => account2,
         "split_list" => split_list,
         "value" => "1"
       })
 
-      {:ok, actual_value_account} = FinancialSystem.Core.show(%{"account_id" => account})
-      {:ok, actual_value_account2} = FinancialSystem.Core.show(%{"account_id" => account2})
-      {:ok, actual_value_account3} = FinancialSystem.Core.show(%{"account_id" => account3})
+      {:ok, actual_value_account} = FinancialOperations.show(%{"account_id" => account})
+      {:ok, actual_value_account2} = FinancialOperations.show(%{"account_id" => account2})
+      {:ok, actual_value_account3} = FinancialOperations.show(%{"account_id" => account3})
 
       assert actual_value_account2 == "0.00"
       assert actual_value_account3 == "5.80"
@@ -431,7 +448,7 @@ defmodule FinancialOperationsTest do
       list: split_list
     } do
       {:error, message} =
-        FinancialSystem.Core.split(%{
+        FinancialOperations.split(%{
           "account_id" => account,
           "split_list" => split_list,
           "value" => "1"
@@ -445,7 +462,7 @@ defmodule FinancialOperationsTest do
       list: split_list
     } do
       {:error, message} =
-        FinancialSystem.Core.split(%{
+        FinancialOperations.split(%{
           "account_id" => account,
           "split_list" => split_list,
           "value" => "-1"
@@ -458,7 +475,7 @@ defmodule FinancialOperationsTest do
       list: split_list
     } do
       {:error, message} =
-        FinancialSystem.Core.split(%{
+        FinancialOperations.split(%{
           "account_id" => "account2",
           "split_list" => split_list,
           "value" => "1"
@@ -472,7 +489,7 @@ defmodule FinancialOperationsTest do
       list: split_list
     } do
       {:error, message} =
-        FinancialSystem.Core.split(%{
+        FinancialOperations.split(%{
           "account_id" => account,
           "split_list" => split_list,
           "value" => 1
@@ -486,7 +503,7 @@ defmodule FinancialOperationsTest do
       list: split_list
     } do
       {:error, message} =
-        FinancialSystem.Core.split(%{
+        FinancialOperations.split(%{
           "account_id" => account,
           "split_list" => split_list,
           "value" => 1.0
@@ -511,17 +528,17 @@ defmodule FinancialOperationsTest do
           "password" => "f1aA678@"
         })
 
-      FinancialSystem.Core.deposit(%{
+      FinancialOperations.deposit(%{
         "account_id" => account.id,
         "currency" => "brl",
         "value" => "1"
       })
 
       {:ok, statement_struct} =
-        FinancialSystem.Core.financial_statement(%{"account_id" => account.id})
+        FinancialOperations.financial_statement(%{"account_id" => account.id})
 
       {:ok, statement_struct_email} =
-        FinancialSystem.Core.financial_statement(%{"email" => "test@asd.com"})
+        FinancialOperations.financial_statement(%{"email" => "test@asd.com"})
 
       statement = statement_struct.transactions |> List.first()
 
@@ -532,13 +549,13 @@ defmodule FinancialOperationsTest do
     end
 
     test "Should not be able inserting a invalid account id type" do
-      {:error, message} = FinancialSystem.Core.financial_statement(%{"account_id" => 1})
+      {:error, message} = FinancialOperations.financial_statement(%{"account_id" => 1})
 
       assert ^message = :invalid_account_id_type
     end
 
     test "Should not be able inserting a invalid email type" do
-      {:error, message} = FinancialSystem.Core.financial_statement(%{"email" => 1})
+      {:error, message} = FinancialOperations.financial_statement(%{"email" => 1})
 
       error = :invalid_email_type
 
@@ -546,8 +563,7 @@ defmodule FinancialOperationsTest do
     end
 
     test "Should not be able inserting a invalid account id" do
-      {:error, message} =
-        FinancialSystem.Core.financial_statement(%{"account_id" => UUID.uuid4()})
+      {:error, message} = FinancialOperations.financial_statement(%{"account_id" => UUID.uuid4()})
 
       error = :account_dont_exist
 

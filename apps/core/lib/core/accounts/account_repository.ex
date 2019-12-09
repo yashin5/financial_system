@@ -7,9 +7,9 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
   Register the account in system.
 
   ## Examples
-    account_struct = %FinancialSystem.Core.Accounts.Account{active: true, currency: "BRL", value: 100 }
+      account_struct = %FinancialSystem.Core.Accounts.Account{active: true, currency: "BRL", value: 100 }
 
-    FinancialSystem.Core.AccountRepository.register_account(account_struct)
+      FinancialSystem.Core.AccountRepository.register_account(account_struct)
   """
   def register_account(%Account{} = account, %User{} = user) do
     query = Ecto.build_assoc(user, :account, account)
@@ -28,16 +28,16 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
   Delete an account from system.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create(
-      %{
-        "name" => "Yashin Santos",
-        "currency" => "EUR",
-        "value" => "220",
-        "email" => "xx@xx.com",
-        "password" => "B@xopn123"
-      })
+      {_, account} = FinancialSystem.Core.create(
+        %{
+          "name" => "Yashin Santos",
+          "currency" => "EUR",
+          "value" => "220",
+          "email" => "xx@xx.com",
+          "password" => "B@xopn123"
+        })
 
-    FinancialSystem.Core.AccountRepository.delete_account(account)
+      FinancialSystem.Core.AccountRepository.delete_account(account)
   """
   def delete_account(%Account{} = account) do
     account
@@ -54,16 +54,16 @@ defmodule FinancialSystem.Core.Accounts.AccountRepository do
   Checks if the account exists.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.create(%{
+      {_, account} = FinancialSystem.Core.create(%{
 
-        "name" => "Yashin Santos",
-        "currency" => "EUR",
-        "value" => "220",
-        "email" => "xx@xx.com",
-        "password" => "B@xopn123"
-      })
+          "name" => "Yashin Santos",
+          "currency" => "EUR",
+          "value" => "220",
+          "email" => "xx@xx.com",
+          "password" => "B@xopn123"
+        })
 
-    FinancialSystem.Core.AccountRepository.find_account(:accountid, account.id)
+      FinancialSystem.Core.AccountRepository.find_account(:accountid, account.id)
   """
   @spec find_account(atom(), String.t()) :: {:ok, Account.t()} | {:error, atom()}
   def find_account(:accountid, account_id) when is_binary(account_id) do

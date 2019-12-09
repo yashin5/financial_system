@@ -54,7 +54,7 @@ defmodule FinancialSystem.Core.Currency.CurrencyImpl do
   Get the decimal precision of a currency.
 
   ## Examples
-    FinancialSystem.Core.Currency.CurrencyImpl.get_from_currency(:precision, "BRL")
+      FinancialSystem.Core.Currency.CurrencyImpl.get_from_currency(:precision, "BRL")
   """
   @impl CurrencyBehaviour
   def get_from_currency(:precision = operation, currency)
@@ -68,7 +68,7 @@ defmodule FinancialSystem.Core.Currency.CurrencyImpl do
   Get the current value of currency.
 
   ## Examples
-    FinancialSystem.Core.Currency.CurrencyImpl.get_from_currency(:value, "BRL")
+      FinancialSystem.Core.Currency.CurrencyImpl.get_from_currency(:value, "BRL")
   """
   def get_from_currency(:value = operation, currency)
       when is_atom(operation) and is_binary(currency) and byte_size(currency) > 0 do

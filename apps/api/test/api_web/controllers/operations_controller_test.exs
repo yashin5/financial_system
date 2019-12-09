@@ -169,6 +169,36 @@ defmodule ApiWeb.OperationsControllerTest do
       assert ^response = error
     end
 
+    test "value when converted become to zero, should return 400", %{conn: conn} do
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      Core.create(%{
+        "name" => "Yashin",
+        "currency" => "BRL",
+        "value" => "100",
+        "email" => "asdfg@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
+
+      {:ok, token} =
+        Core.authenticate(%{"email" => "asdfg@gmail.com", "password" => "fp3@naDSsjh2"})
+
+      params = %{currency: "MZN", value: "0.01"}
+
+      %{"error" => response} =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> post("/api/operations/deposit", params)
+        |> json_response(400)
+
+      error = "value_is_too_low_to_convert_to_the_currency"
+
+      assert ^response = error
+    end
+
     test "when currency is not invalid type, should return 400", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
         {:ok, String.upcase(currency)}
