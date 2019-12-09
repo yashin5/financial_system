@@ -17,7 +17,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
   Shows current formatted balance.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.FinancialOperations.create(%{
+    {_, account} = FinancialSystem.Core.create(%{
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -51,7 +51,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
   Deposit value in account.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.FinancialOperations.create(%{
+    {_, account} = FinancialSystem.Core.create(%{
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -108,7 +108,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
   Takes out the value of an account.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.FinancialOperations.create(%{
+    {_, account} = FinancialSystem.Core.create(%{
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
@@ -152,14 +152,14 @@ defmodule FinancialSystem.Core.FinancialOperations do
   Transfer of values ​​between accounts.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.FinancialOperations.create(%{
+    {_, account} = FinancialSystem.Core.create(%{
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
         "email" => "xx@xx.com",
         "password" => "B@xopn123"
       })
-    {_, account2} = FinancialSystem.Core.FinancialOperations.create(%{
+    {_, account2} = FinancialSystem.Core.create(%{
         "name" => "Yashin Santos",
         "currency" => "BRL",
         "value" => "100",
@@ -222,21 +222,21 @@ defmodule FinancialSystem.Core.FinancialOperations do
   Transfer of values ​​between multiple accounts.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.FinancialOperations.create(%{
+    {_, account} = FinancialSystem.Core.create(%{
         "name" => "Yashin Santos",
         "currency" => "EUR",
         "value" => "220",
         "email" => "xx@xx.com",
         "password" => "B@xopn123"
       })
-    {_, account2} = FinancialSystem.Core.FinancialOperations.create(%{
+    {_, account2} = FinancialSystem.Core.create(%{
         "name" => "Antonio Marcos",
         "currency" => "EUR",
         "value" => "220",
         "email" => "xxx@xx.com",
         "password" => "B@xopn123"
       })
-    {_, account3} = FinancialSystem.Core.FinancialOperations.create(%{
+    {_, account3} = FinancialSystem.Core.create(%{
         "name" => "Mateus Mathias",
         "currency" => "EUR",
         "value" => "220",
@@ -318,7 +318,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
   Show the financial statement from account.
 
   ## Examples
-    {_, account} = FinancialSystem.Core.FinancialOperations.create(%{
+    {_, account} = FinancialSystem.Core.create(%{
         "name" => "Mateus Mathias",
         "currency" => "EUR",
         "value" => "220",
@@ -384,7 +384,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
     with {:ok, account} <- AccountRepository.find_account(:accountid, account_id),
          {:ok, _} <- currency_finder().currency_is_valid(currency_from),
          {:ok, value_in_integer} <-
-           Currency.convert(currency_from, account.currency, value) do
+           Currency.convert(String.upcase(currency_from), String.upcase(account.currency), value) do
       {:ok, AccountOperations.sum_value_in_balance(account, value_in_integer, operation)}
     end
   end

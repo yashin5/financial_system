@@ -38,7 +38,8 @@ defmodule FinancialSystem.Core.Account do
       when is_binary(name) and
              is_binary(currency) and is_binary(value) do
     with {:ok, currency_upcase} <- currency_finder().currency_is_valid(currency),
-         {:ok, value_in_integer} <- Currency.amount_do(:store, value, currency_upcase),
+         {:ok, value_in_integer} <-
+           Currency.amount_do(:store, value |> IO.inspect(), currency_upcase),
          {:ok, user_created} <- UserRepository.new_user("regular", name, email, password),
          {:ok, account_created} <-
            currency_upcase
