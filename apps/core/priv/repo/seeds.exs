@@ -29,7 +29,6 @@
   })
   |> Repo.insert()
 
-
   admin_role =
     %Role{}
     |> Role.changeset(%{role: "admin"})
@@ -69,4 +68,3 @@ case Helpers.get_account_or_user(:account, :email, %{"email" => "qqwqw@gmail.com
   {:ok, _} -> :ok
   {:error, _} -> create_super_user.()
 end
-
