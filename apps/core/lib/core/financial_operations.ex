@@ -180,6 +180,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
       when is_binary(account_from) and is_binary(account_to) and is_binary(value) do
     with {:ok, account_from_valided} <- AccountRepository.find_account(:accountid, account_from),
          {:ok, _} <- FinHelper.transfer_have_account_from(account_from, account_to),
+         {:ok, _} <- verify_value_after_convertion(value, account_to, account_from_valided.currency),
          {:ok, withdraw_result} <- subtract_value(account_from, value, "transfer >"),
          {:ok, _} <-
            sum_value(account_to, account_from_valided.currency, value, "transfer <") do
@@ -379,10 +380,8 @@ defmodule FinancialSystem.Core.FinancialOperations do
   defp sum_value(account_id, currency_from, value, operation)
        when is_binary(operation) and operation in ["deposit", "transfer <"] and
               is_binary(account_id) and is_binary(value) do
-    with {:ok, account} <- AccountRepository.find_account(:accountid, account_id),
-         {:ok, _} <- currency_finder().currency_is_valid(currency_from),
-         {:ok, value_in_integer} <-
-           Currency.convert(String.upcase(currency_from), String.upcase(account.currency), value) do
+    with {:ok, {account, value_in_integer}} <-
+          verify_value_after_convertion(value, account_id, currency_from) do
       {:ok,
        account
        |> AccountOperations.sum_value_in_balance(value_in_integer, operation)
@@ -399,5 +398,18 @@ defmodule FinancialSystem.Core.FinancialOperations do
       )
 
     %FinancialSystem.Core.Accounts.Account{account_actual_state | value: value_formated}
+  end
+
+  defp verify_value_after_convertion(value, account_id, currency_from) do
+    with {:ok, account_to} <- AccountRepository.find_account(:accountid, account_id),
+         {:ok, _} <- currency_finder().currency_is_valid(currency_from),
+         {:ok, value_in_integer} <-
+           Currency.convert(
+             String.upcase(currency_from),
+             String.upcase(account_to.currency),
+             value
+           ) do
+      {:ok, {account_to, value_in_integer}}
+    end
   end
 end

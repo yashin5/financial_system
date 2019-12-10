@@ -293,7 +293,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
   describe "POST /api/operations/transfer" do
     test "POST /", %{conn: conn} do
-      expect(CurrencyMock, :currency_is_valid, 3, fn currency ->
+      expect(CurrencyMock, :currency_is_valid, 4, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
@@ -394,7 +394,7 @@ defmodule ApiWeb.OperationsControllerTest do
     end
 
     test "when params are valid but the action cannot  be taken, should return 422", %{conn: conn} do
-      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+      expect(CurrencyMock, :currency_is_valid, 3, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
@@ -502,7 +502,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
   describe "POST /api/operations/split" do
     test "POST /", %{conn: conn} do
-      expect(CurrencyMock, :currency_is_valid, 5, fn currency ->
+      expect(CurrencyMock, :currency_is_valid, 7, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
