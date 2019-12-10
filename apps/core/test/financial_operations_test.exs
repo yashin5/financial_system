@@ -25,9 +25,12 @@ defmodule FinancialOperationsTest do
           "password" => "f1aA678@"
         })
 
-      {:ok, account_value_accountid} = FinancialOperations.show(%{"account_id" => account.id})
+      {:ok, account_value_accountid} =
+        FinancialSystem.Core.FinancialOperations.show(%{"account_id" => account.id})
+
       {:ok, account_value_emailid} = FinancialOperations.show(%{"email" => "test@gmaxxil.com"})
 
+      account_value_emailid |> IO.inspect()
       assert account_value_accountid == "1.00"
       assert account_value_emailid == "1.00"
     end
@@ -75,7 +78,7 @@ defmodule FinancialOperationsTest do
 
       account_actual_value = account_actual_state.value
 
-      assert account_actual_value == 200
+      assert account_actual_value == "2.00"
     end
 
     test "Not should be able to insert a integer value in a account", %{account: account} do
@@ -194,7 +197,7 @@ defmodule FinancialOperationsTest do
 
       account_actual_value = account_actual_state.value
 
-      assert account_actual_value == 0
+      assert account_actual_value == "0.00"
     end
 
     test "Not should be able to make the withdraw inserting a invalid account id" do
@@ -434,9 +437,14 @@ defmodule FinancialOperationsTest do
         "value" => "1"
       })
 
-      {:ok, actual_value_account} = FinancialOperations.show(%{"account_id" => account})
-      {:ok, actual_value_account2} = FinancialOperations.show(%{"account_id" => account2})
-      {:ok, actual_value_account3} = FinancialOperations.show(%{"account_id" => account3})
+      {:ok, actual_value_account} =
+        FinancialSystem.Core.FinancialOperations.show(%{"account_id" => account})
+
+      {:ok, actual_value_account2} =
+        FinancialSystem.Core.FinancialOperations.show(%{"account_id" => account2})
+
+      {:ok, actual_value_account3} =
+        FinancialSystem.Core.FinancialOperations.show(%{"account_id" => account3})
 
       assert actual_value_account2 == "0.00"
       assert actual_value_account3 == "5.80"

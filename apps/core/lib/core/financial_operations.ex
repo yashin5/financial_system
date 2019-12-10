@@ -32,7 +32,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
     with {:ok, account} <- AccountRepository.find_account(:accountid, account_id) do
       %{value: value_formated} = format_value(account)
 
-      value_formated
+      {:ok, value_formated}
     end
   end
 
@@ -277,9 +277,9 @@ defmodule FinancialSystem.Core.FinancialOperations do
         )
       end)
 
-      {_, account_from_state} = AccountRepository.find_account(:accountid, account_from) |> format_value()
+      {_, account_from_state} = AccountRepository.find_account(:accountid, account_from)
 
-      {:ok, account_from_state }
+      {:ok, account_from_state |> format_value()}
     end
   end
 
