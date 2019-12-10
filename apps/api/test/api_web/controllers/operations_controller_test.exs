@@ -35,7 +35,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       expected = %{
         "account_id" => response["account_id"],
-        "new_balance" => 0
+        "new_balance" => "0.00"
       }
 
       assert response == expected
@@ -68,7 +68,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       expected = %{
         "account_id" => response["account_id"],
-        "new_balance" => 0
+        "new_balance" => "0.00"
       }
 
       assert response == expected
@@ -133,7 +133,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       expected = %{
         "account_id" => response["account_id"],
-        "new_balance" => 20_000
+        "new_balance" => "200.00"
       }
 
       assert response == expected
@@ -327,7 +327,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       expected = %{
         "account_id" => response["account_id"],
-        "new_balance" => 0
+        "new_balance" => "0.00"
       }
 
       assert response == expected
@@ -549,7 +549,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
       expected = %{
         "account_id" => response["account_id"],
-        "new_balance" => 0
+        "new_balance" => "0.00"
       }
 
       assert response == expected

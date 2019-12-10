@@ -30,11 +30,9 @@ defmodule FinancialSystem.Core.FinancialOperations do
   @impl true
   def show(%{"account_id" => account_id}) when is_binary(account_id) do
     with {:ok, account} <- AccountRepository.find_account(:accountid, account_id) do
-      Currency.amount_do(
-        :show,
-        account.value,
-        account.currency
-      )
+      %{value: value_formated} = format_value(account)
+
+      {:ok, value_formated}
     end
   end
 
@@ -55,7 +53,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
           "name" => "Yashin Santos",
           "currency" => "EUR",
           "value" => "220",
-          "email" => "xx@xx.com",
+          "email" => "xqqqx@xx.com",
           "password" => "B@xopn123"
         })
 
@@ -156,7 +154,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
           "name" => "Yashin Santos",
           "currency" => "EUR",
           "value" => "220",
-          "email" => "xx@xx.com",
+          "email" => "xqqx@xx.com",
           "password" => "B@xopn123"
         })
       {_, account2} = FinancialSystem.Core.create(%{
@@ -169,8 +167,8 @@ defmodule FinancialSystem.Core.FinancialOperations do
 
       FinancialSystem.Core.FinancialOperations.transfer(%{
           "value" => "15",
-          "account_id" => account,
-          "account_to" => account2
+          "account_id" => account.id,
+          "account_to" => account2.id
         })
   """
   @impl true
@@ -226,14 +224,14 @@ defmodule FinancialSystem.Core.FinancialOperations do
           "name" => "Yashin Santos",
           "currency" => "EUR",
           "value" => "220",
-          "email" => "xx@xx.com",
+          "email" => "xqx@xx.com",
           "password" => "B@xopn123"
         })
       {_, account2} = FinancialSystem.Core.create(%{
           "name" => "Antonio Marcos",
           "currency" => "EUR",
           "value" => "220",
-          "email" => "xxx@xx.com",
+          "email" => "xxzqqx@xx.com",
           "password" => "B@xopn123"
         })
       {_, account3} = FinancialSystem.Core.create(%{
@@ -244,7 +242,9 @@ defmodule FinancialSystem.Core.FinancialOperations do
           "password" => "B@xopn123"
         })
 
-      split_list = [%{account: account.id, percent: 49.9}, %{account: account3.id, percent: 50.1}]
+      split_list = [
+        %FinancialSystem.Core.Split{account: account.id, percent: 49.9},
+        %FinancialSystem.Core.Split{account: account3.id, percent: 50.1}]
 
       FinancialSystem.Core.FinancialOperations.split(%{
           "account_id" => account2.id,
@@ -279,7 +279,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
 
       {_, account_from_state} = AccountRepository.find_account(:accountid, account_from)
 
-      {:ok, account_from_state}
+      {:ok, account_from_state |> format_value()}
     end
   end
 
@@ -370,11 +370,9 @@ defmodule FinancialSystem.Core.FinancialOperations do
            Currency.amount_do(:store, value, account.currency),
          {:ok, _} <- FinHelper.funds(account, value_in_integer) do
       {:ok,
-       AccountOperations.subtract_value_in_balance(
-         account,
-         value_in_integer,
-         operation
-       )}
+       account
+       |> AccountOperations.subtract_value_in_balance(value_in_integer, operation)
+       |> format_value()}
     end
   end
 
@@ -385,7 +383,21 @@ defmodule FinancialSystem.Core.FinancialOperations do
          {:ok, _} <- currency_finder().currency_is_valid(currency_from),
          {:ok, value_in_integer} <-
            Currency.convert(String.upcase(currency_from), String.upcase(account.currency), value) do
-      {:ok, AccountOperations.sum_value_in_balance(account, value_in_integer, operation)}
+      {:ok,
+       account
+       |> AccountOperations.sum_value_in_balance(value_in_integer, operation)
+       |> format_value()}
     end
+  end
+
+  defp format_value(account_actual_state) do
+    {:ok, value_formated} =
+      Currency.amount_do(
+        :show,
+        account_actual_state.value,
+        account_actual_state.currency
+      )
+
+    %FinancialSystem.Core.Accounts.Account{account_actual_state | value: value_formated}
   end
 end

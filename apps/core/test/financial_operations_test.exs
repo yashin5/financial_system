@@ -3,6 +3,7 @@ defmodule FinancialOperationsTest do
 
   import Mox
 
+  alias FinancialSystem.Core
   alias FinancialSystem.Core.FinancialOperations
   alias FinancialSystem.Core.Split
 
@@ -17,7 +18,7 @@ defmodule FinancialOperationsTest do
       end)
 
       {:ok, account} =
-        FinancialSystem.Core.create(%{
+        Core.create(%{
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -25,7 +26,9 @@ defmodule FinancialOperationsTest do
           "password" => "f1aA678@"
         })
 
-      {:ok, account_value_accountid} = FinancialOperations.show(%{"account_id" => account.id})
+      {:ok, account_value_accountid} =
+        FinancialOperations.show(%{"account_id" => account.id})
+
       {:ok, account_value_emailid} = FinancialOperations.show(%{"email" => "test@gmaxxil.com"})
 
       assert account_value_accountid == "1.00"
@@ -46,7 +49,7 @@ defmodule FinancialOperationsTest do
       end)
 
       {:ok, account} =
-        FinancialSystem.Core.create(%{
+        Core.create(%{
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -75,7 +78,7 @@ defmodule FinancialOperationsTest do
 
       account_actual_value = account_actual_state.value
 
-      assert account_actual_value == 200
+      assert account_actual_value == "2.00"
     end
 
     test "Not should be able to insert a integer value in a account", %{account: account} do
@@ -169,7 +172,7 @@ defmodule FinancialOperationsTest do
       end)
 
       {:ok, account} =
-        FinancialSystem.Core.create(%{
+        Core.create(%{
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -187,19 +190,19 @@ defmodule FinancialOperationsTest do
     test "Should be able to take a value of an account inserting a value number in string type",
          %{account: account} do
       {:ok, account_actual_state} =
-        FinancialSystem.Core.withdraw(%{
+        FinancialOperations.withdraw(%{
           "account_id" => account,
           "value" => "1"
         })
 
       account_actual_value = account_actual_state.value
 
-      assert account_actual_value == 0
+      assert account_actual_value == "0.00"
     end
 
     test "Not should be able to make the withdraw inserting a invalid account id" do
       {:error, message} =
-        FinancialSystem.Core.withdraw(%{
+        FinancialOperations.withdraw(%{
           "account_id" => "account",
           "value" => "1"
         })
@@ -211,7 +214,7 @@ defmodule FinancialOperationsTest do
       account: account
     } do
       {:error, message} =
-        FinancialSystem.Core.withdraw(%{
+        FinancialOperations.withdraw(%{
           "account_id" => account,
           "value" => "-1"
         })
@@ -223,7 +226,7 @@ defmodule FinancialOperationsTest do
       account: account
     } do
       {:error, message} =
-        FinancialSystem.Core.withdraw(%{
+        FinancialOperations.withdraw(%{
           "account_id" => account,
           "value" => 1
         })
@@ -235,7 +238,7 @@ defmodule FinancialOperationsTest do
       account: account
     } do
       {:error, message} =
-        FinancialSystem.Core.withdraw(%{
+        FinancialOperations.withdraw(%{
           "account_id" => account,
           "value" => 1.0
         })
@@ -251,7 +254,7 @@ defmodule FinancialOperationsTest do
       end)
 
       {:ok, account} =
-        FinancialSystem.Core.create(%{
+        Core.create(%{
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -260,7 +263,7 @@ defmodule FinancialOperationsTest do
         })
 
       {:ok, account2} =
-        FinancialSystem.Core.create(%{
+        Core.create(%{
           "name" => "Oliver Tsubasa",
           "currency" => "BRL",
           "value" => "2",
@@ -373,7 +376,7 @@ defmodule FinancialOperationsTest do
       end)
 
       {:ok, account} =
-        FinancialSystem.Core.create(%{
+        Core.create(%{
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",
@@ -382,7 +385,7 @@ defmodule FinancialOperationsTest do
         })
 
       {:ok, account2} =
-        FinancialSystem.Core.create(%{
+        Core.create(%{
           "name" => "Oliver Tsubasa",
           "currency" => "BRL",
           "value" => "1",
@@ -391,7 +394,7 @@ defmodule FinancialOperationsTest do
         })
 
       {:ok, account3} =
-        FinancialSystem.Core.create(%{
+        Core.create(%{
           "name" => "Inu Yasha",
           "currency" => "BRL",
           "value" => "5",
@@ -434,9 +437,14 @@ defmodule FinancialOperationsTest do
         "value" => "1"
       })
 
-      {:ok, actual_value_account} = FinancialOperations.show(%{"account_id" => account})
-      {:ok, actual_value_account2} = FinancialOperations.show(%{"account_id" => account2})
-      {:ok, actual_value_account3} = FinancialOperations.show(%{"account_id" => account3})
+      {:ok, actual_value_account} =
+        FinancialOperations.show(%{"account_id" => account})
+
+      {:ok, actual_value_account2} =
+        FinancialOperations.show(%{"account_id" => account2})
+
+      {:ok, actual_value_account3} =
+        FinancialOperations.show(%{"account_id" => account3})
 
       assert actual_value_account2 == "0.00"
       assert actual_value_account3 == "5.80"
@@ -520,7 +528,7 @@ defmodule FinancialOperationsTest do
       end)
 
       {:ok, account} =
-        FinancialSystem.Core.create(%{
+        Core.create(%{
           "name" => "Yashin Santos",
           "currency" => "BRL",
           "value" => "1",

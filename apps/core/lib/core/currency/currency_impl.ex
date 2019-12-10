@@ -25,7 +25,8 @@ defmodule FinancialSystem.Core.Currency.CurrencyImpl do
   """
   @callback get_currencies :: [String.t()]
   def get_currencies do
-    Map.keys(load_from_config()["quotes"])
+    load_from_config()["quotes"]
+    |> Map.keys()
     |> Enum.map(fn item -> String.slice(item, 3..-1) end)
   end
 
