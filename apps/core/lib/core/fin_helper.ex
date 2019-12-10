@@ -84,7 +84,6 @@ defmodule FinancialSystem.Core.FinHelper do
     with {:ok, _} <- AccountRepository.find_account(:accountid, account_from) do
       split_list
       |> Enum.map(&have_or_not(&1))
-      |> IO.inspect()
       |> Enum.member?(account_from)
       |> do_transfer_have_account_from()
     end

@@ -30,7 +30,6 @@ defmodule FinancialOperationsTest do
 
       {:ok, account_value_emailid} = FinancialOperations.show(%{"email" => "test@gmaxxil.com"})
 
-      account_value_emailid |> IO.inspect()
       assert account_value_accountid == "1.00"
       assert account_value_emailid == "1.00"
     end
