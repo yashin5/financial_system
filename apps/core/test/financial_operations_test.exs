@@ -26,8 +26,7 @@ defmodule FinancialOperationsTest do
           "password" => "f1aA678@"
         })
 
-      {:ok, account_value_accountid} =
-        FinancialOperations.show(%{"account_id" => account.id})
+      {:ok, account_value_accountid} = FinancialOperations.show(%{"account_id" => account.id})
 
       {:ok, account_value_emailid} = FinancialOperations.show(%{"email" => "test@gmaxxil.com"})
 
@@ -283,7 +282,7 @@ defmodule FinancialOperationsTest do
            account_id: account_id_from,
            account2_id: account2_id_to
          } do
-      expect(CurrencyMock, :currency_is_valid, fn currency ->
+      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
@@ -358,6 +357,10 @@ defmodule FinancialOperationsTest do
       account_id: account_id_from,
       account2_id: account2_id_to
     } do
+      expect(CurrencyMock, :currency_is_valid, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
       {:error, message} =
         FinancialOperations.transfer(%{
           "value" => "-1",
@@ -427,7 +430,7 @@ defmodule FinancialOperationsTest do
            account3_id: account3,
            account2_id: account2
          } do
-      expect(CurrencyMock, :currency_is_valid, 2, fn currency ->
+      expect(CurrencyMock, :currency_is_valid, 4, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
@@ -437,14 +440,11 @@ defmodule FinancialOperationsTest do
         "value" => "1"
       })
 
-      {:ok, actual_value_account} =
-        FinancialOperations.show(%{"account_id" => account})
+      {:ok, actual_value_account} = FinancialOperations.show(%{"account_id" => account})
 
-      {:ok, actual_value_account2} =
-        FinancialOperations.show(%{"account_id" => account2})
+      {:ok, actual_value_account2} = FinancialOperations.show(%{"account_id" => account2})
 
-      {:ok, actual_value_account3} =
-        FinancialOperations.show(%{"account_id" => account3})
+      {:ok, actual_value_account3} = FinancialOperations.show(%{"account_id" => account3})
 
       assert actual_value_account2 == "0.00"
       assert actual_value_account3 == "5.80"
