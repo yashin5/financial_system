@@ -430,7 +430,7 @@ defmodule FinancialOperationsTest do
            account3_id: account3,
            account2_id: account2
          } do
-      expect(CurrencyMock, :currency_is_valid, 4, fn currency ->
+      expect(CurrencyMock, :currency_is_valid, 6, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 

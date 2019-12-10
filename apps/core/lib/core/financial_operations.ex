@@ -180,7 +180,8 @@ defmodule FinancialSystem.Core.FinancialOperations do
       when is_binary(account_from) and is_binary(account_to) and is_binary(value) do
     with {:ok, account_from_valided} <- AccountRepository.find_account(:accountid, account_from),
          {:ok, _} <- FinHelper.transfer_have_account_from(account_from, account_to),
-         {:ok, _} <- verify_value_after_convertion(value, account_to, account_from_valided.currency),
+         {:ok, _} <-
+           verify_value_after_convertion(value, account_to, account_from_valided.currency),
          {:ok, withdraw_result} <- subtract_value(account_from, value, "transfer >"),
          {:ok, _} <-
            sum_value(account_to, account_from_valided.currency, value, "transfer <") do
@@ -223,14 +224,14 @@ defmodule FinancialSystem.Core.FinancialOperations do
   ## Examples
       {_, account} = FinancialSystem.Core.create(%{
           "name" => "Yashin Santos",
-          "currency" => "EUR",
+          "currency" => "BRL",
           "value" => "220",
           "email" => "xqx@xx.com",
           "password" => "B@xopn123"
         })
       {_, account2} = FinancialSystem.Core.create(%{
           "name" => "Antonio Marcos",
-          "currency" => "EUR",
+          "currency" => "MZN",
           "value" => "220",
           "email" => "xxzqqx@xx.com",
           "password" => "B@xopn123"
@@ -250,7 +251,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
       FinancialSystem.Core.FinancialOperations.split(%{
           "account_id" => account2.id,
           "split_list" => split_list,
-          "value" => "100"
+          "value" => "0.2"
         })
   """
   @impl true
@@ -268,8 +269,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
            Currency.amount_do(:store, value, account.currency),
          {:ok, _} <-
            FinHelper.funds(account, value_in_integer),
-         {:ok, list_to_transfer} <-
-           FinHelper.division_of_values_to_make_split_transfer(united_accounts, value) do
+         {:ok, list_to_transfer} <- verify_values_from_split(value, account, united_accounts) do
       Enum.each(list_to_transfer, fn data_transfer ->
         transfer(
           data_transfer.value_to_transfer,
@@ -381,7 +381,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
        when is_binary(operation) and operation in ["deposit", "transfer <"] and
               is_binary(account_id) and is_binary(value) do
     with {:ok, {account, value_in_integer}} <-
-          verify_value_after_convertion(value, account_id, currency_from) do
+           verify_value_after_convertion(value, account_id, currency_from) do
       {:ok,
        account
        |> AccountOperations.sum_value_in_balance(value_in_integer, operation)
@@ -399,6 +399,23 @@ defmodule FinancialSystem.Core.FinancialOperations do
 
     %FinancialSystem.Core.Accounts.Account{account_actual_state | value: value_formated}
   end
+
+  defp verify_values_from_split(value, account, united_accounts) do
+    with {:ok, list_to_transfer} <-
+           FinHelper.division_of_values_to_make_split_transfer(united_accounts, value) do
+      list_to_transfer
+      |> Enum.map(fn data_transfer ->
+        verify_value_after_convertion(value, data_transfer.account_to_transfer, account.currency)
+      end)
+      |> Enum.member?({:error, :value_is_too_low_to_convert_to_the_currency})
+      |> do_verify_values_from_split(list_to_transfer)
+    end
+  end
+
+  defp do_verify_values_from_split(false, list_to_transfer), do: {:ok, list_to_transfer}
+
+  defp do_verify_values_from_split(true, _),
+    do: {:error, :value_is_too_low_to_convert_to_the_currency}
 
   defp verify_value_after_convertion(value, account_id, currency_from) do
     with {:ok, account_to} <- AccountRepository.find_account(:accountid, account_id),

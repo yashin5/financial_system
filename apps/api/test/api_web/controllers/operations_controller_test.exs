@@ -502,7 +502,7 @@ defmodule ApiWeb.OperationsControllerTest do
 
   describe "POST /api/operations/split" do
     test "POST /", %{conn: conn} do
-      expect(CurrencyMock, :currency_is_valid, 7, fn currency ->
+      expect(CurrencyMock, :currency_is_valid, 9, fn currency ->
         {:ok, String.upcase(currency)}
       end)
 
