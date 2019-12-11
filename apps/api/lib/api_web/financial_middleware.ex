@@ -15,20 +15,30 @@ defmodule ApiWeb.FinancialMiddleware do
 
   def make_split(params) do
     params
-    |> make_split_list
+    |> make_params_to_split()
     |> Core.split()
   end
 
-  defp make_split_list(list) do
+  defp make_params_to_split(list) do
     list
     |> Map.put(
       "split_list",
       list["split_list"]
-      |> Enum.map(fn item ->
-        {:ok, account} = Helpers.get_account_or_user(:account, :email, item)
-
-        %Split{account: account.id, percent: item["percent"]}
-      end)
+      |> Enum.reduce_while([], &(make_split_list(&1, &2)))
     )
+  end
+
+  defp make_split_list(item, acc) do
+    :account
+    |> Helpers.get_account_or_user(:email, item)
+    |> do_make_split_list({item, acc})
+  end
+
+  defp do_make_split_list({:ok, account}, {item, acc}) do
+    {:cont, [ %Split{account: account.id, percent: item["percent"]} | acc ]}
+  end
+
+  defp do_make_split_list({:error, message}, _) do
+    {:halt, message}
   end
 end
