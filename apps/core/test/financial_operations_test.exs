@@ -423,31 +423,13 @@ defmodule FinancialOperationsTest do
        ]}
     end
 
-    test "Should be able to transfer a value between multiple accounts inserting a value number in string type",
+    test "Should not be able to transfer to a inexistent account in split_list",
          %{
+           account_id: account,
+           list: split_list,
+           account3_id: account3,
            account2_id: account2
          } do
-
-      split_list = :user_dont_exist
-
-      response = FinancialOperations.split(%{
-        "account_id" => account2,
-        "split_list" => split_list,
-        "value" => "1"
-      })
-
-      error = {:error, :user_dont_exist}
-
-      assert response == error
-    end
-
-    test "Should not be able to transfer to a inexistent account in split_list",
-    %{
-      account_id: account,
-      list: split_list,
-      account3_id: account3,
-      account2_id: account2
-    } do
       expect(CurrencyMock, :currency_is_valid, 6, fn currency ->
         {:ok, String.upcase(currency)}
       end)
@@ -467,7 +449,7 @@ defmodule FinancialOperationsTest do
       assert actual_value_account2 == "0.00"
       assert actual_value_account3 == "5.80"
       assert actual_value_account == "1.20"
-      end
+    end
 
     test "Not should be able to make the transfer to the same account are sending", %{
       account_id: account,

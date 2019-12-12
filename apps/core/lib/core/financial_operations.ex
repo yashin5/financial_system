@@ -295,15 +295,6 @@ defmodule FinancialSystem.Core.FinancialOperations do
 
   def split(%{
         "account_id" => account_from,
-        "split_list" => error_message,
-        "value" => value
-      })
-      when is_binary(account_from) and not is_list(error_message) and is_binary(value) do
-    {:error, error_message}
-  end
-
-  def split(%{
-        "account_id" => account_from,
         "split_list" => split_list_another_format,
         "value" => value
       })
