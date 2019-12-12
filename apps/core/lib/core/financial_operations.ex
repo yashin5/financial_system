@@ -251,7 +251,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
       FinancialSystem.Core.FinancialOperations.split(%{
           "account_id" => account2.id,
           "split_list" => split_list,
-          "value" => "0.2"
+          "value" => "310.2"
         })
   """
   @impl true
@@ -395,18 +395,20 @@ defmodule FinancialSystem.Core.FinancialOperations do
     with {:ok, list_to_transfer} <-
            FinHelper.division_of_values_to_make_split_transfer(united_accounts, value) do
       list_to_transfer
-      |> Enum.map(fn data_transfer ->
-        verify_value_after_convertion(value, data_transfer.account_to_transfer, account.currency)
-      end)
-      |> Enum.member?({:error, :value_is_too_low_to_convert_to_the_currency})
-      |> do_verify_values_from_split(list_to_transfer)
+      |> Enum.reduce_while([], &verify_each_value_split(&1, &2, value, account, list_to_transfer))
     end
   end
 
-  defp do_verify_values_from_split(false, list_to_transfer), do: {:ok, list_to_transfer}
+  defp verify_each_value_split(data_transfer, _acc, value, account, list_to_transfer) do
+    value
+    |> verify_value_after_convertion(data_transfer.account_to_transfer, account.currency)
+    |> do_verify_each_value_split(list_to_transfer)
+  end
 
-  defp do_verify_values_from_split(true, _),
-    do: {:error, :value_is_too_low_to_convert_to_the_currency}
+  defp do_verify_each_value_split({:ok, _}, list_to_transfer),
+    do: {:cont, {:ok, list_to_transfer}}
+
+  defp do_verify_each_value_split({:error, _} = error, _), do: {:halt, error}
 
   defp verify_value_after_convertion(value, account_id, currency_from) do
     with {:ok, account_to} <- AccountRepository.find_account(:accountid, account_id),
