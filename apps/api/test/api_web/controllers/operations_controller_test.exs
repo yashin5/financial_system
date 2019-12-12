@@ -555,7 +555,9 @@ defmodule ApiWeb.OperationsControllerTest do
       assert response == expected
     end
 
-    test "When try make a split transfer to a inexistent account, should return 422", %{conn: conn} do
+    test "When try make a split transfer to a inexistent account, should return 422", %{
+      conn: conn
+    } do
       expect(CurrencyMock, :currency_is_valid, 9, fn currency ->
         {:ok, String.upcase(currency)}
       end)
