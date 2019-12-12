@@ -555,6 +555,59 @@ defmodule ApiWeb.OperationsControllerTest do
       assert response == expected
     end
 
+    test "When try make a split transfer to a inexistent account, should return 422", %{
+      conn: conn
+    } do
+      expect(CurrencyMock, :currency_is_valid, 9, fn currency ->
+        {:ok, String.upcase(currency)}
+      end)
+
+      Core.create(%{
+        "name" => "Yashin",
+        "currency" => "BRL",
+        "value" => "100",
+        "email" => "yashin@outlook.com",
+        "password" => "fp3@naDSsjh2"
+      })
+
+      Core.create(%{
+        "name" => "Yashin",
+        "currency" => "BRL",
+        "value" => "100",
+        "email" => "gggg@gmail.com",
+        "password" => "fp3@naDSsjh2"
+      })
+
+      {:ok, token} =
+        Core.authenticate(%{"email" => "gggg@gmail.com", "password" => "fp3@naDSsjh2"})
+
+      Core.create(%{
+        "name" => "Yashin",
+        "currency" => "BRL",
+        "value" => "100",
+        "email" => "yashin@yahoo.com",
+        "password" => "fp3@naDSsjh2"
+      })
+
+      split_list = [
+        %{"email" => "syashin@outlook.com", "percent" => 50},
+        %{"email" => "yashin@yahoo.com", "percent" => 50}
+      ]
+
+      params = %{split_list: split_list, value: "100"}
+
+      response =
+        conn
+        |> put_req_header("content-type", "application/json")
+        |> put_req_header("authorization", token)
+        |> post("/api/operations/split", params)
+        |> json_response(422)
+
+      expected = %{"error" => "user_dont_exist"}
+
+      assert response == expected
+    end
+
     test "should not be able to make split transfer if total percent not is 100", %{conn: conn} do
       expect(CurrencyMock, :currency_is_valid, 5, fn currency ->
         {:ok, String.upcase(currency)}

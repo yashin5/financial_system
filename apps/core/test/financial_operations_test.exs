@@ -423,7 +423,7 @@ defmodule FinancialOperationsTest do
        ]}
     end
 
-    test "Should be able to transfer a value between multiple accounts inserting a value number in string type",
+    test "Should not be able to transfer to a inexistent account in split_list",
          %{
            account_id: account,
            list: split_list,
