@@ -30,17 +30,8 @@ defmodule FinancialOperationsTest do
 
       {:ok, account_value_emailid} = FinancialOperations.show(%{"email" => "test@gmaxxil.com"})
 
-      expected = %{
-        email: "test@gmaxxil.com",
-        value_in_account: %{
-          currency: "BRL",
-          currency_precision: 2,
-          value: "1.00"
-        }
-      }
-
-      assert account_value_accountid == expected
-      assert account_value_emailid == expected
+      assert account_value_accountid == "1.00"
+      assert account_value_emailid == "1.00"
     end
 
     test "User dont should be able to see the value in account if pass a invalid account id" do
@@ -304,26 +295,8 @@ defmodule FinancialOperationsTest do
       {:ok, actual_value_from} = FinancialOperations.show(%{"account_id" => account_id_from})
       {:ok, actual_value_to} = FinancialOperations.show(%{"account_id" => account2_id_to})
 
-      expected_from = %{
-        email: "test@gmaddil.com",
-        value_in_account: %{
-          currency: "BRL",
-          currency_precision: 2,
-          value: "0.00"
-        }
-      }
-
-      expected_to = %{
-        email: "test@oufftlook.com",
-        value_in_account: %{
-          currency: "BRL",
-          currency_precision: 2,
-          value: "3.00"
-        }
-      }
-
-      assert actual_value_from == expected_from
-      assert actual_value_to == expected_to
+      assert actual_value_from == "0.00"
+      assert actual_value_to == "3.00"
     end
 
     test "Not should be able to make the transfer inserting a invalid account_id_from", %{
@@ -473,36 +446,9 @@ defmodule FinancialOperationsTest do
 
       {:ok, actual_value_account3} = FinancialOperations.show(%{"account_id" => account3})
 
-      expected_account = %{
-        email: "testx@outlqqook.com",
-        value_in_account: %{
-          currency: "BRL",
-          currency_precision: 2,
-          value: "1.20"
-        }
-      }
-
-      expected_account2 = %{
-        email: "test@wwgmail.com",
-        value_in_account: %{
-          currency: "BRL",
-          currency_precision: 2,
-          value: "0.00"
-        }
-      }
-
-      expected_account3 = %{
-        email: "test@yaheeoo.com",
-        value_in_account: %{
-          currency: "BRL",
-          currency_precision: 2,
-          value: "5.80"
-        }
-      }
-
-      assert actual_value_account == expected_account
-      assert actual_value_account2 == expected_account2
-      assert actual_value_account3 == expected_account3
+      assert actual_value_account2 == "0.00"
+      assert actual_value_account3 == "5.80"
+      assert actual_value_account == "1.20"
     end
 
     test "Not should be able to make the transfer to the same account are sending", %{
