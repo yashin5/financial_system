@@ -6,6 +6,7 @@ defmodule FinancialSystem.Core.FinancialOperations do
   alias FinancialSystem.Core.AccountOperations
   alias FinancialSystem.Core.Accounts.AccountRepository
   alias FinancialSystem.Core.Currency
+  alias FinancialSystem.Core.Currency.CurrencyImpl
   alias FinancialSystem.Core.FinHelper
   alias FinancialSystem.Core.Helpers
 
@@ -29,10 +30,20 @@ defmodule FinancialSystem.Core.FinancialOperations do
   """
   @impl true
   def show(%{"account_id" => account_id}) when is_binary(account_id) do
-    with {:ok, account} <- AccountRepository.find_account(:accountid, account_id) do
+    with {:ok, account} <- AccountRepository.find_account(:accountid, account_id),
+         {:ok, user} <- Helpers.get_account_or_user(:user, :account_id, account_id),
+         {:ok, currency_precision} <- CurrencyImpl.get_from_currency(:precision, account.currency) do
       %{value: value_formated} = format_value(account)
 
-      {:ok, value_formated}
+      {:ok,
+       %{
+         email: user.email,
+         value_in_account: %{
+           value: value_formated,
+           currency: account.currency,
+           currency_precision: currency_precision
+         }
+       }}
     end
   end
 

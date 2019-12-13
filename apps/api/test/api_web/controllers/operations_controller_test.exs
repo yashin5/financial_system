@@ -891,7 +891,16 @@ defmodule ApiWeb.OperationsControllerTest do
         |> get("/api/operations/show/")
         |> json_response(201)
 
-      expected = %{"value_in_account" => "100.00"}
+        expected = %{
+          "value_in_account" => %{
+            "email" => "qwqw@gmail.com",
+            "value_in_account" => %{
+              "currency" => "BRL",
+              "currency_precision" => 2,
+              "value" => "100.00"
+            }
+          }
+        }
 
       assert response == expected
     end
@@ -938,7 +947,16 @@ defmodule ApiWeb.OperationsControllerTest do
         |> get("/api/operations/show/" <> "qwqw@gmail.com")
         |> json_response(201)
 
-      expected = %{"value_in_account" => "100.00"}
+        expected = %{
+          "value_in_account" => %{
+            "email" => "wqqwqw@gmail.com",
+            "value_in_account" => %{
+              "currency" => "BRL",
+              "currency_precision" => 2,
+              "value" => "100.00"
+            }
+          }
+        }
 
       assert response == expected
     end
