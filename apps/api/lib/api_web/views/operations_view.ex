@@ -42,11 +42,17 @@ defmodule ApiWeb.OperationsView do
   end
 
   def render("show.json", %{
-        show: value_in_account
+        show: account_informations
       }) do
-    %{
-      value_in_account: value_in_account
-    }
+
+        %{
+          email: account_informations.email,
+          value_in_account: %{
+            currency: account_informations.value_in_account.currency,
+            currency_precision: account_informations.value_in_account.currency_precision,
+            value: account_informations.value_in_account.value
+          }
+        }
   end
 
   def render("view_all_accounts.json", %{

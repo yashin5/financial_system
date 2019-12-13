@@ -892,13 +892,11 @@ defmodule ApiWeb.OperationsControllerTest do
         |> json_response(201)
 
         expected = %{
+          "email" => "qwqw@gmail.com",
           "value_in_account" => %{
-            "email" => "qwqw@gmail.com",
-            "value_in_account" => %{
-              "currency" => "BRL",
-              "currency_precision" => 2,
-              "value" => "100.00"
-            }
+            "currency" => "BRL",
+            "currency_precision" => 2,
+            "value" => "100.00"
           }
         }
 
@@ -948,13 +946,11 @@ defmodule ApiWeb.OperationsControllerTest do
         |> json_response(201)
 
         expected = %{
+          "email" => "wqqwqw@gmail.com",
           "value_in_account" => %{
-            "email" => "wqqwqw@gmail.com",
-            "value_in_account" => %{
-              "currency" => "BRL",
-              "currency_precision" => 2,
-              "value" => "100.00"
-            }
+            "currency" => "BRL",
+            "currency_precision" => 2,
+            "value" => "100.00"
           }
         }
 
